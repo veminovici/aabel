@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Compile Include="TResult.fs" />
+    <Compile Include="TAsync.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

@@ -44,6 +44,7 @@
 
   <ItemGroup>
     <Compile Include="Result.fs"   />
+    <Compile Include="Async.fs"    />
   </ItemGroup>
 
 </Project>
