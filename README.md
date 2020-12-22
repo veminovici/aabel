@@ -68,6 +68,7 @@ Implementation for the **AR** (Async-Result) monad.
 <br />
 
 ## 2. Reader
+Implementations of the **Reader** monad and several related *Reader[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
 
 ### 2.1 Reader Monad
 Implementation of the **Reader** monad.
@@ -84,7 +85,7 @@ Implementation of the **Reader** monad.
 ```
 
 ### 2.2 ReaderR Monad
-Implementationof the **ReaderR** monad, a reader which return a **Result**.
+Implementation of the **ReaderR** monad, a reader which returns a **Result**.
 
 - Source: [ReaderR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderR.fs)
 - Test: [TReaderR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReaderR.fs)
@@ -100,7 +101,7 @@ let f = ReaderR.retn <| fun (s: string) -> s.Length
 ```
 
 ### 2.3 ReaderA Monad
-Implementationof the **ReaderA** monad, a reader which return an **Async**.
+Implementation of the **ReaderA** monad, a reader which returns an **Async**.
 
 - Source: [ReaderA.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderA.fs)
 - Test: [TReaderA.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReaderA.fs)
@@ -114,6 +115,23 @@ let y = ReaderA.retn 20
 ||> ReaderA.map2 fn
 |> ReaderA.run "env"
 |> (=) 30
+```
+
+### 2.4 ReaderAR Monad
+Implementation of the **ReaderAR** monad, a reader which returns an **AR** (Async-Result).
+
+- Source: [ReaderAR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderAR.fs)
+- Test: [TReaderAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReaderAR.fs)
+
+```fsharp
+let fnOk  (s: string) = s.Length
+let fnErr (s: string) = sprintf "%s1" s
+
+"abcde"
+|> ReaderAR.retn
+|> ReaderAR.mapEither fnOk fnErr
+|> ReaderAR.run  "env"
+|> (=) (Ok 5)
 ```
 
 <br />

@@ -14,6 +14,7 @@
     <Compile Include="TReader.fs"   />
     <Compile Include="TReaderR.fs"  />
     <Compile Include="TReaderA.fs"  />
+    <Compile Include="TReaderAR.fs" />
     <Compile Include="Program.fs"   />
   </ItemGroup>
 

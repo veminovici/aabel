@@ -49,6 +49,7 @@
     <Compile Include="Reader.fs"   />
     <Compile Include="ReaderR.fs"  />
     <Compile Include="ReaderA.fs"  />
+    <Compile Include="ReaderAR.fs" />
   </ItemGroup>
 
 </Project>
