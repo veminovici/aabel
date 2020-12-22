@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/veminovici/aabel?include_prereleases)](https://github.com/veminovici/aabel/releases)
 [![Repo size](https://img.shields.io/github/repo-size/veminovici/aabel)](https://github.com/veminovici/aabel)
 [![License](https://img.shields.io/github/license/veminovici/aabel)](https://opensource.org/licenses/Apache-2.0)
-[![Coverage Status](https://coveralls.io/repos/github/veminovici/aabel/badge.svg?branch=master&bust=1)](https://coveralls.io/github/veminovici/aabel)
+[![Coverage Status](https://coveralls.io/repos/github/veminovici/aabel/badge.svg?branch=main&bust=1)](https://coveralls.io/github/veminovici/aabel)
 
 <br />
 
