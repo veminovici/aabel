@@ -75,6 +75,11 @@ Implementation of the **Reader** monad.
 |> (=) 5
 ```
 
+### ReaderR
+Implementationof the **readerR** monad, a reader which return a **Result**.
+
+- Source: [ReaderR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderR.fs)
+- Test: [TReaderR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReaderR.fs)
 
 <br />
 

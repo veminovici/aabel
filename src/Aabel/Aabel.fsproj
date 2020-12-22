@@ -47,6 +47,7 @@
     <Compile Include="Async.fs"    />
     <Compile Include="AR.fs"       />
     <Compile Include="Reader.fs"   />
+    <Compile Include="ReaderR.fs"  />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,7 @@
     <Compile Include="TAsync.fs"    />
     <Compile Include="TAR.fs"       />
     <Compile Include="TReader.fs"   />
+    <Compile Include="TReaderR.fs"  />
     <Compile Include="Program.fs"   />
   </ItemGroup>
 
