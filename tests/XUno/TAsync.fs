@@ -31,10 +31,10 @@ module TAsync =
         [<Fact>]
         let ``Async bind`` () =
 
-            let f (s: string) = s.Length |> Async.singleton
+            let f (s: string) = s.Length |> Async.retn
 
             "abc"
-            |> Async.singleton
+            |> Async.retn
             |> Async.bind f
             |> Async.RunSynchronously
             |> (=) 3
@@ -46,8 +46,8 @@ module TAsync =
             let f (s: string) = s.Length
 
             f
-            |> Async.singleton
-            |> Async.apply (Async.singleton "abc")
+            |> Async.retn
+            |> Async.apply (Async.retn "abc")
             |> Async.RunSynchronously
             |> (=) 3
             |> Assert.True
@@ -58,7 +58,7 @@ module TAsync =
             let f (s: string) = s.Length
 
             "abc"
-            |> Async.singleton
+            |> Async.retn
             |> Async.map f
             |> Async.RunSynchronously
             |> (=) 3
@@ -69,7 +69,7 @@ module TAsync =
 
             let f (x: string) (y: string) = x + y
 
-            Async.map2 f (Async.singleton "ab") (Async.singleton "cd")
+            Async.map2 f (Async.retn "ab") (Async.retn "cd")
             |> Async.RunSynchronously
             |> (=) "abcd"
             |> Assert.True
@@ -77,7 +77,7 @@ module TAsync =
         [<Fact>]
         let ``Async zip`` () =
 
-            Async.zip (Async.singleton "ab") (Async.singleton 2)
+            Async.zip (Async.retn "ab") (Async.retn 2)
             |> Async.RunSynchronously
             |> (=) ("ab", 2)
             |> Assert.True
@@ -87,7 +87,7 @@ module TAsync =
 
             let f (x: string) (y: string) (z: string) = x + y + z
 
-            Async.map3 f (Async.singleton "ab") (Async.singleton "cd") (Async.singleton "ef")
+            Async.map3 f (Async.retn "ab") (Async.retn "cd") (Async.retn "ef")
             |> Async.RunSynchronously
             |> (=) "abcdef"
             |> Assert.True
@@ -98,7 +98,7 @@ module TAsync =
             let f (s: string) = s.Length
 
             "abc"
-            |> Async.singleton
+            |> Async.retn
             <!> f
             |> Async.RunSynchronously
             |> (=) 3
@@ -110,8 +110,8 @@ module TAsync =
             let f (s: string) = s.Length
 
             f
-            |> Async.singleton
-            <*> (Async.singleton "abc")
+            |> Async.retn
+            <*> (Async.retn "abc")
             |> Async.RunSynchronously
             |> (=) 3
             |> Assert.True
@@ -119,10 +119,10 @@ module TAsync =
         [<Fact>]
         let ``Async >>=`` () =
 
-            let f (s: string) = s.Length |> Async.singleton
+            let f (s: string) = s.Length |> Async.retn
 
             "abc"
-            |> Async.singleton
+            |> Async.retn
             >>= f
             |> Async.RunSynchronously
             |> (=) 3
