@@ -15,7 +15,11 @@
 ## Description
 A F# library for common functionality around Result, Async, Reader, and State monads.
 
-### Result
+<br />
+
+## 1. Basic Extensions
+
+### 1.1 Result
 A set of extensions for the **Result** type. 
 
 - Source: [Result.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Result.fs)
@@ -31,7 +35,7 @@ let errFn (s: string) = s.Length + 10
 |> (=) 3
 ```
 
-### Async
+### 1.2 Async
 A set of extensions for the **Async** type.
 
 - Source: [Async.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Async.fs)
@@ -47,7 +51,7 @@ Async.map2 f x y
 |> (=) 30
 ```
 
-### AR - Async-Result
+### 1.3 AR Monad
 Implementation for the **AR** (Async-Result) monad.
 
 - Source: [AR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/AR.fs)
@@ -61,7 +65,11 @@ Implementation for the **AR** (Async-Result) monad.
 |> (=) (Error 8)
 ```
 
-### Reader
+<br />
+
+## 2. Reader
+
+### 2.1 Reader Monad
 Implementation of the **Reader** monad.
 
 - Source: [Reader.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Reader.fs)
@@ -75,11 +83,38 @@ Implementation of the **Reader** monad.
 |> (=) 5
 ```
 
-### ReaderR
-Implementationof the **readerR** monad, a reader which return a **Result**.
+### 2.2 ReaderR Monad
+Implementationof the **ReaderR** monad, a reader which return a **Result**.
 
 - Source: [ReaderR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderR.fs)
 - Test: [TReaderR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReaderR.fs)
+
+```fsharp
+let f = ReaderR.retn <| fun (s: string) -> s.Length
+
+"abcde"
+|> ReaderR.retn
+|> ReaderR.apply f
+|> ReaderR.run "env"
+|> (=) (Ok 5)
+```
+
+### 2.3 ReaderA Monad
+Implementationof the **ReaderA** monad, a reader which return an **Async**.
+
+- Source: [ReaderA.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderA.fs)
+- Test: [TReaderA.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReaderA.fs)
+
+```fsharp
+let fn x y = x + y
+let x = ReaderA.retn 10
+let y = ReaderA.retn 20
+
+(x, y)
+||> ReaderA.map2 fn
+|> ReaderA.run "env"
+|> (=) 30
+```
 
 <br />
 
