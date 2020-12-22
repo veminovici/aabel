@@ -22,28 +22,29 @@ A set of extensions for the **Result** type.
 - Test: [TResult.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TResult.fs)
 
 ```fsharp
-let okF  (s: string) = s.Length
-let errF (s: string) = s.Length + 10
+let okFn  (s: string) = s.Length
+let errFn (s: string) = s.Length + 10
 
 "abc"
 |> Ok
-|> Result.either okF errF
+|> Result.either okFn errFn
 |> (=) 3
 ```
 
 ### Async
 A set of extensions for the **Async** type.
 
-- Source: [Result.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Async.fs)
-- Test: [TResult.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAsync.fs)
+- Source: [Async.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Async.fs)
+- Test: [TAsync.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAsync.fs)
 
 ```fsharp
-let f (x: string) (y: string) = x + y
+let f (x: int) (y: int) = x + y
+let x = Async.retn 10
+let y = Async.retn 20
 
-Async.map2 f (Async.retn "ab") (Async.retn "cd")
+Async.map2 f x y
 |> Async.RunSynchronously
-|> (=) "abcd"
-|> Assert.True
+|> (=) 30
 ```
 
 <br />
