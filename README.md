@@ -186,6 +186,23 @@ let y = StateA.retn 20
 |>  (=) 30
 ```
 
+### 3.4 StateAR Monad
+Implementation of the **StateAR** monad, a reader which returns an **AR** (Async-Result).
+
+- Source: [StateAR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/StateAR.fs)
+- Test: [TStateAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TStateAR.fs)
+
+```fsharp
+let fnOk  (s: string) = s.Length
+let fnErr (s: string) = sprintf "%s1" s
+
+"abcde"
+|> StateAR.retn
+|> StateAR.mapEither fnOk fnErr
+|> StateAR.eval  "env"
+|> (=) (Ok 5)
+```
+
 <br />
 
 ### Thank you!
