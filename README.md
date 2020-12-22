@@ -47,6 +47,22 @@ Async.map2 f x y
 |> (=) 30
 ```
 
+### AR - Async-Result
+Implementation for the **AR** (Async-Result) monad.
+
+- Source: [AR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/AR.fs)
+- Test: [TAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAR.fs)
+
+```fsharp
+let f (s: string) = s.Length
+
+"my error"
+|> AR.err
+|> AR.mapError f
+|> Async.RunSynchronously
+|> (=) (Error 8)
+```
+
 <br />
 
 ### Thank you!
