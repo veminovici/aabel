@@ -22,4 +22,13 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity d
+    - name: Generate Coverage Report
+      run: |
+        printenv
+        dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Exclude="[xunit*]\*" /p:CoverletOutput="./TestResults/"
+    - name: Publish Coverage Report
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./tests/xuno/TestResults/coverage.info
