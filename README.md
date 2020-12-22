@@ -136,6 +136,25 @@ let fnErr (s: string) = sprintf "%s1" s
 
 <br />
 
+## 2. State
+Implementations of the **State** monad and several related *State[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
+
+### 2.1 State Monad
+Implementation of the **State** monad.
+
+- Source: [State.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/State.fs)
+- Test: [TState.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TState.fs)
+
+```fsharp
+4
+|> State.retn
+|> State.map (fun x -> float x * 2.) 
+|> State.eval 10.
+|> (=) 8.
+```
+
+<br />
+
 ### Thank you!
 
 > You can contact me at veminovici@hotmail.com. Code designed and written in Päädu, on the beautiful island of [**Saaremaa**](https://goo.gl/maps/DmB9ewY2R3sPGFnTA), Estonia.
