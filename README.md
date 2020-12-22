@@ -136,10 +136,10 @@ let fnErr (s: string) = sprintf "%s1" s
 
 <br />
 
-## 2. State
+## 3. State
 Implementations of the **State** monad and several related *State[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
 
-### 2.1 State Monad
+### 3.1 State Monad
 Implementation of the **State** monad.
 
 - Source: [State.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/State.fs)
@@ -151,6 +151,22 @@ Implementation of the **State** monad.
 |> State.map (fun x -> float x * 2.) 
 |> State.eval 10.
 |> (=) 8.
+```
+
+### 3.2 StateR Monad
+Implementation of the **StateR** monad, a reader which returns a **Result**.
+
+- Source: [StateR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/StateR.fs)
+- Test: [TStateR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TStateR.fs)
+
+```fsharp
+let f = StateR.retn <| fun (s: string) -> s.Length
+
+"abcde"
+|> StateR.retn
+|> StateR.apply f
+|> StateR.eval "env"
+|> (=) (Ok 5)
 ```
 
 <br />

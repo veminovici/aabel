@@ -51,6 +51,7 @@
     <Compile Include="ReaderA.fs"  />
     <Compile Include="ReaderAR.fs" />
     <Compile Include="State.fs"    />
+    <Compile Include="StateR.fs"   />
   </ItemGroup>
 
 </Project>

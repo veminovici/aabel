@@ -16,6 +16,7 @@
     <Compile Include="TReaderA.fs"  />
     <Compile Include="TReaderAR.fs" />
     <Compile Include="TState.fs"    />
+    <Compile Include="TStateR.fs"   />
     <Compile Include="Program.fs"   />
   </ItemGroup>
 
