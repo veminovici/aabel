@@ -3,7 +3,7 @@
 <br />
 
 ## Builds
-[![Actions Status](https://github.com/veminovici/aabel/workflows/CI/badge.svg)](https://github.com/veminovici/aabel/actions)
+[![Github CI](https://github.com/veminovici/aabel/workflows/CINet/badge.svg)](https://github.com/veminovici/aabel/actions)
 [![Languages](https://img.shields.io/github/languages/top/veminovici/aabel?color=%23b845fc)](https://github.com/veminovici/aabel)
 [![Release](https://img.shields.io/github/v/release/veminovici/aabel?include_prereleases)](https://github.com/veminovici/aabel/releases)
 [![Repo size](https://img.shields.io/github/repo-size/veminovici/aabel)](https://github.com/veminovici/aabel)
