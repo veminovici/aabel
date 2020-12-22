@@ -154,7 +154,7 @@ Implementation of the **State** monad.
 ```
 
 ### 3.2 StateR Monad
-Implementation of the **StateR** monad, a reader which returns a **Result**.
+Implementation of the **StateR** monad, a state transition which returns a **Result**.
 
 - Source: [StateR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/StateR.fs)
 - Test: [TStateR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TStateR.fs)
@@ -167,6 +167,23 @@ let f = StateR.retn <| fun (s: string) -> s.Length
 |> StateR.apply f
 |> StateR.eval "env"
 |> (=) (Ok 5)
+```
+
+### 3.3 StateA Monad
+Implementation of the **StateA** monad, a state transition which returns an **Async**.
+
+- Source: [StateA.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/StateA.fs)
+- Test: [TStateA.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TStateA.fs)
+
+```fsharp
+let fn x y = x + y
+let x = StateA.retn 10
+let y = StateA.retn 20
+
+(x, y)
+||> StateA.map2 fn
+|>  StateA.eval "env"
+|>  (=) 30
 ```
 
 <br />
