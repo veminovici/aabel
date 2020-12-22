@@ -8,10 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="TResult.fs" />
-    <Compile Include="TAsync.fs"  />
-    <Compile Include="TAR.fs"     />
-    <Compile Include="Program.fs" />
+    <Compile Include="TResult.fs"   />
+    <Compile Include="TAsync.fs"    />
+    <Compile Include="TAR.fs"       />
+    <Compile Include="TReader.fs"   />
+    <Compile Include="Program.fs"   />
   </ItemGroup>
 
   <ItemGroup>

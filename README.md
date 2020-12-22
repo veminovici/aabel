@@ -54,14 +54,27 @@ Implementation for the **AR** (Async-Result) monad.
 - Test: [TAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAR.fs)
 
 ```fsharp
-let f (s: string) = s.Length
-
 "my error"
 |> AR.err
-|> AR.mapError f
+|> AR.mapError (fun (s: string) = s.Length)
 |> Async.RunSynchronously
 |> (=) (Error 8)
 ```
+
+### Reader
+Implementation of the **Reader** monad.
+
+- Source: [Reader.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Reader.fs)
+- Test: [TReader.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReader.fs)
+
+```fsharp
+"abcde"
+|> Reader.retn
+|> Reader.map (fun (s: string) -> s.Length)
+|> Reader.run "env"
+|> (=) 5
+```
+
 
 <br />
 
