@@ -574,3 +574,35 @@ module TStateAR =
             |> StateAR.eval "env"
             |> (=) (Ok ["ab"; "abc";"a"])
             |> Assert.True
+
+        [<Fact>]
+        let ``StateAR traverseA ok`` () =
+            let f (i: int) = StateAR.retn (i * 2)
+
+            [1..5]
+            |> StateAR.traverseA f
+            |> StateAR.eval "env"
+            |> (=) (Ok [2; 4; 6; 8; 10])
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR traverseA error`` () =
+            let f (i: int) = 
+                if i % 2 = 1 
+                then StateAR.retn (i * 2) 
+                else i |> sprintf "e%i" |> StateAR.err
+
+            [1..5]
+            |> StateAR.traverseA f
+            |> StateAR.eval "env"
+            |> (=) (Error ["e2"; "e4"])
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR sequenceA`` () =
+            [1..5]
+            |> List.map StateAR.retn
+            |> StateAR.sequenceA
+            |> StateAR.eval "env"
+            |> (=) (Ok [1..5])
+            |> Assert.True

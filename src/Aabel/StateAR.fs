@@ -160,6 +160,33 @@ module StateAR =
         [<RequireQualifiedAccess>]
         module StateAR = 
 
+            open Simplee.StateA.ComputationExpression
+            open Simplee.Result.Traversals
+
+            // ReaderR<'TEnv, 'a list, 'b list> -> ('c -> ReaderR<'TEnv, 'a, 'b>) -> 'c list -> ReaderR<'TEnv, 'a list, 'b list)
+            let private _traverseA (zro: StateAR<'S, 'a list, 'b list>) (f:'c -> StateAR<'S, 'a, 'b>) (xs:'c list) : StateAR<'S, 'a list, 'b list> =
+
+                let rec loop (acc: StateAR<'S, 'a list, 'b list>) (xs: 'c list) =
+                    match xs with
+                    | [] -> acc
+                    | h::tail ->
+                        let r = 
+                            stateA {
+                                let! y = f h
+                                let! ys = acc
+                                let yys = Result._traverseA ys (fun _ -> y) [h]
+                                return yys
+                            }
+                        loop r tail
+
+                loop zro xs
+
+            let traverseA f xs =
+                _traverseA (retn []) f xs
+
+            let sequenceA xs =
+                traverseA id xs
+
             let private _traversetM (zro: StateAR<'TEnv,'U list, 'E>) (f: 'T -> StateAR<'TEnv,'U, 'E>) (xs: 'T list) =
 
                 let rec loop (acc: StateAR<'TEnv, 'U list, 'E>) = function

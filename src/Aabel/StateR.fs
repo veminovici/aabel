@@ -157,36 +157,34 @@ module StateR =
 
         [<RequireQualifiedAccess>]
         module StateR = 
-(*
-            let private _traverseA state f xs =
 
-                let rec loop acc = function
+            open Simplee.State.ComputationExpression
+            open Simplee.Result.Traversals
+
+            // StateR<'S, 'a list, 'b list> -> ('c -> StateR<'S, 'a, 'b>) -> 'c list -> StateR<'S, 'a list, 'b list)
+            let private _traverseA (zro: StateR<'S, 'a list, 'b list>) (f:'c -> StateR<'S, 'a, 'b>) (xs:'c list) : StateR<'S, 'a list, 'b list> =
+
+                let rec loop (acc: StateR<'S, 'a list, 'b list>) (xs: 'c list) =
+                    match xs with
                     | [] -> acc
-                    | h :: tail ->
-                        async {
-                            let! s = acc
-                            let! fR = 
-                                h 
-                                |> f 
-                                |> mapError List.singleton
+                    | h::tail ->
+                        let r = 
+                            state {
+                                let! y = f h
+                                let! ys = acc
+                                let yys = Result._traverseA ys (fun _ -> y) [h]
+                                return yys
+                            }
+                        loop r tail
 
-                            match s, fR with
-                            | Ok ys, Ok y -> 
-                                return! loop (singleton (ys @ [y])) tail
-                            | Error errs, Error e -> 
-                                return! loop (err (errs @ e)) tail
-                            | Ok _, Error e 
-                            | Error e , Ok _  -> 
-                                return! loop (err e) tail }
-
-                loop state xs
+                loop zro xs
 
             let traverseA f xs =
-                _traverseA (singleton []) f xs
+                _traverseA (retn []) f xs
 
             let sequenceA xs =
                 traverseA id xs
-*)
+
             let private _traversetM (zro: StateR<'S, 'U list, 'E>) (f: 'T -> StateR<'S , 'U, 'E>) (xs: 'T list) : StateR<'S, 'U list, 'E> =
 
                 let rec loop (acc: StateR<'S, 'U list, 'E>) (xs: 'T list) =

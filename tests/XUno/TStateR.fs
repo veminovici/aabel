@@ -564,7 +564,7 @@ module TStateR =
             |> Assert.True
 
         [<Fact>]
-        let ``StateR traverse`` () =
+        let ``StateR traverseM`` () =
             let f (x: string) = StateR.retn x.Length
 
             ["ab"; "abc";"a"]
@@ -574,10 +574,43 @@ module TStateR =
             |> Assert.True
 
         [<Fact>]
-        let ``StateR sequence`` () =
+        let ``StateR sequenceM`` () =
             ["ab"; "abc"; "a"]
             |> List.map StateR.retn
             |> StateR.sequenceM
             |> StateR.eval "env"
             |> (=) (Ok ["ab"; "abc";"a"])
             |> Assert.True
+
+        [<Fact>]
+        let ``StateR traverseA ok`` () =
+            let f (i: int) = StateR.retn (i * 2)
+
+            [1..5]
+            |> StateR.traverseA f
+            |> StateR.eval "env"
+            |> (=) (Ok [2; 4; 6; 8; 10])
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR traverseA error`` () =
+            let f (i: int) = 
+                if i % 2 = 1 
+                then StateR.retn (i * 2) 
+                else i |> sprintf "e%i" |> StateR.err
+
+            [1..5]
+            |> StateR.traverseA f
+            |> StateR.eval "env"
+            |> (=) (Error ["e2"; "e4"])
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR sequenceA`` () =
+            [1..5]
+            |> List.map StateR.retn
+            |> StateR.sequenceA
+            |> StateR.eval "env"
+            |> (=) (Ok [1..5])
+            |> Assert.True
+
