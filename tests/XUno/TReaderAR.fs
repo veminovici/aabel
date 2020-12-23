@@ -548,7 +548,7 @@ module TReaderAR =
             |> Assert.True
 
         [<Fact>]
-        let ``ReaderAR traverse`` () =
+        let ``ReaderAR traverseM`` () =
             let f (x: string) = ReaderAR.retn x.Length
 
             ["ab"; "abc";"a"]
@@ -558,10 +558,42 @@ module TReaderAR =
             |> Assert.True
 
         [<Fact>]
-        let ``ReaderAR sequence`` () =
+        let ``ReaderAR sequenceM`` () =
             ["ab"; "abc"; "a"]
             |> List.map ReaderAR.retn
             |> ReaderAR.sequenceM
             |> ReaderAR.run "env"
             |> (=) (Ok ["ab"; "abc";"a"])
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR traverseA ok`` () =
+            let f (i: int) = ReaderAR.retn (i * 2)
+
+            [1..5]
+            |> ReaderAR.traverseA f
+            |> ReaderAR.run "env"
+            |> (=) (Ok [2; 4; 6; 8; 10])
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR traverseA error`` () =
+            let f (i: int) = 
+                if i % 2 = 1 
+                then ReaderAR.retn (i * 2) 
+                else i |> sprintf "e%i" |> ReaderAR.err
+
+            [1..5]
+            |> ReaderAR.traverseA f
+            |> ReaderAR.run "env"
+            |> (=) (Error ["e2"; "e4"])
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR sequenceA`` () =
+            [1..5]
+            |> List.map ReaderAR.retn
+            |> ReaderAR.sequenceA
+            |> ReaderAR.run "env"
+            |> (=) (Ok [1..5])
             |> Assert.True

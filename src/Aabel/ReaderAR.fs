@@ -158,6 +158,33 @@ module ReaderAR =
         [<RequireQualifiedAccess>]
         module ReaderAR = 
 
+            open Simplee.ReaderA.ComputationExpression
+            open Simplee.Result.Traversals
+
+            // ReaderR<'TEnv, 'a list, 'b list> -> ('c -> ReaderR<'TEnv, 'a, 'b>) -> 'c list -> ReaderR<'TEnv, 'a list, 'b list)
+            let private _traverseA (zro: ReaderAR<'TEnv, 'a list, 'b list>) (f:'c -> ReaderAR<'TEnv, 'a, 'b>) (xs:'c list) : ReaderAR<'TEnv, 'a list, 'b list> =
+
+                let rec loop (acc: ReaderAR<'TEnv, 'a list, 'b list>) (xs: 'c list) =
+                    match xs with
+                    | [] -> acc
+                    | h::tail ->
+                        let r = 
+                            readerA {
+                                let! y = f h
+                                let! ys = acc
+                                let yys = Result._traverseA ys (fun _ -> y) [h]
+                                return yys
+                            }
+                        loop r tail
+
+                loop zro xs
+
+            let traverseA f xs =
+                _traverseA (retn []) f xs
+
+            let sequenceA xs =
+                traverseA id xs
+
             let private _traversetM (zro: ReaderAR<'TEnv,'U list, 'E>) (f: 'T -> ReaderAR<'TEnv,'U, 'E>) (xs: 'T list) =
 
                 let rec loop (acc: ReaderAR<'TEnv, 'U list, 'E>) = function

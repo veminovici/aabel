@@ -197,7 +197,7 @@ module ReaderR =
                 loop zro xs
             
             let traverseM f xs = 
-                _traversetM (singleton []) f xs
+                _traversetM (retn []) f xs
 
             let sequenceM xs =
                 traverseM id xs
