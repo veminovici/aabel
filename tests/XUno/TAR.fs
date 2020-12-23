@@ -726,3 +726,43 @@ module TAR =
             |> AR.sequenceA
             |> Async.RunSynchronously
             |> (=)  (Error ["e"; "e1"])
+
+        [<Fact>]
+        let ``AR concat ok ok`` () =
+            let x = AR.retn [1; 2]
+            let y = AR.retn [3; 4]
+
+            (x, y)
+            ||> AR.concat
+            |> Async.RunSynchronously
+            |> (=)  (Ok [1..4])
+
+        [<Fact>]
+        let ``AR concat ok err`` () =
+            let x = AR.retn [1; 2]
+            let y = AR.err "ey"
+
+            (x, y)
+            ||> AR.concat
+            |> Async.RunSynchronously
+            |> (=)  (Error "ey")
+
+        [<Fact>]
+        let ``AR concat err ok`` () =
+            let x = AR.err "ex"
+            let y = AR.retn [3; 4]
+
+            (x, y)
+            ||> AR.concat
+            |> Async.RunSynchronously
+            |> (=)  (Error "ex")
+
+        [<Fact>]
+        let ``AR concat err err`` () =
+            let x = AR.err "ex"
+            let y = AR.err "ey"
+
+            (x, y)
+            ||> AR.concat
+            |> Async.RunSynchronously
+            |> (=)  (Error "ex")

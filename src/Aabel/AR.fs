@@ -91,6 +91,9 @@ module AR =
     let teeError f =
         Async.map (Result.teeError f)
 
+    let concat (x: AR<'a list, 'E>) (y: AR<'a list, 'E>) =
+        map2 (@) x y
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
