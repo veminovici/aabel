@@ -661,11 +661,37 @@ module TResult =
             |> (=)  (Error ["e"; "e1"])
 
         [<Fact>]
-        let ``Result sequenceA with error 1`` () =
-            let x = Ok 1
-            let y = Error "e"
-            let z = Error "e1"
+        let ``Result concat ok ok`` () =
+            let x = [1; 2] |> Ok
+            let y = [3; 4] |> Ok
 
-            [y; x; z]
-            |> Result.sequenceA
-            |> (=)  (Error ["e"; "e1"])
+            (x, y)
+            ||> Result.concat
+            |> (=)  (Ok [1..4])
+
+        [<Fact>]
+        let ``Result concat ok err`` () =
+            let x = [1; 2] |> Ok
+            let y = "ey" |> Error
+
+            (x, y)
+            ||> Result.concat
+            |> (=)  (Error "ey")
+
+        [<Fact>]
+        let ``Result concat err ok`` () =
+            let x = "ex" |> Error
+            let y = [3; 4] |> Ok
+
+            (x, y)
+            ||> Result.concat
+            |> (=)  (Error "ex")
+
+        [<Fact>]
+        let ``Result concat err err`` () =
+            let x = "ex" |> Error
+            let y = "ey" |> Error
+
+            (x, y)
+            ||> Result.concat
+            |> (=)  (Error "ex")

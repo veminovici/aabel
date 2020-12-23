@@ -96,6 +96,12 @@ module Result =
         | Error e ->
             return Error e }
 
+    let concat (x: Result<'T list, 'E>) (y: Result<'T list, 'E>) =
+        match x, y with
+        | Ok xs, Ok ys  -> Ok (xs @ ys)
+        | Ok _, Error e -> Error e
+        | Error e, _    -> Error e
+
     module Operators =
         let (<!>) m f = Result.map   f m
         let (<*>) f m = apply        m f
