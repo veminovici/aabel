@@ -174,7 +174,7 @@ module AR =
         module AR = 
 
             // AR<'a list, 'b list> -> ('c -> AR<'a, 'b>) -> 'c list -> AR<'a list, 'b list>
-            let private _traverseA state f xs =
+            let private _traverseA (zro: AR<'U list, 'E list>) (f:'T -> AR<'U, 'E>) (xs:'T list) : AR<'U list, 'E list> =
 
                 let rec loop acc = function
                     | [] -> acc
@@ -195,7 +195,7 @@ module AR =
                             | Error e , Ok _  -> 
                                 return! loop (err e) tail }
 
-                loop state xs
+                loop zro xs
 
             let traverseA f xs =
                 _traverseA (singleton []) f xs
@@ -203,7 +203,7 @@ module AR =
             let sequenceA xs =
                 traverseA id xs
 
-            let private _traversetM (state : Async<Result<'a list, 'TError>>) (f : _ -> Async<Result<_,_>>) xs : Async<Result<'a list, 'TError>> =
+            let private _traversetM (zro : AR<'U list, 'TError>) (f :'T -> AR<'U, 'TError>) (xs:'T list) : AR<'U list, 'TError> =
 
                 let rec loop acc xs =
                     match xs with
@@ -221,7 +221,7 @@ module AR =
                             | Error _ -> 
                                 return r }
 
-                loop state xs
+                loop zro xs
             
             let traverseM f xs = 
                 _traversetM (singleton []) f xs

@@ -607,3 +607,13 @@ module TReaderR =
             |> (=) (Ok [1..5])
             |> Assert.True
 
+        [<Fact>]
+        let ``ReaderR concat`` () =
+            let x = ReaderR.retn [1; 2]
+            let y = ReaderR.retn [3; 4]
+
+            (x, y)
+            ||> ReaderR.concat
+            |>  ReaderR.run "env"
+            |> (=) (Ok [1..4])
+            |> Assert.True

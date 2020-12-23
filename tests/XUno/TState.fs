@@ -360,6 +360,18 @@ module TState =
             |> (=) ["ab"; "abc";"a"]
             |> Assert.True
 
+        [<Fact>]
+        let ``State concat`` () =
+            let x = State.retn [1; 2]
+            let y = State.retn [3; 4]
+
+            (x, y)
+            ||> State.concat
+            |>  State.eval "env"
+            |> (=) [1..4]
+            |> Assert.True
+
+
     (*
         [<Fact>]
         let ``State unfold`` () =

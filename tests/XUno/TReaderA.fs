@@ -344,3 +344,14 @@ module TReaderA =
             |> Async.RunSynchronously
             |> (=) ["ab"; "abc"; "a"]
             |> Assert.True
+
+        [<Fact>]
+        let ``ReadeA concat`` () =
+            let x = ReaderA.retn [1; 2]
+            let y = ReaderA.retn [3; 4]
+
+            (x, y)
+            ||> ReaderA.concat
+            |>  ReaderA.run "env"
+            |> (=) [1..4]
+            |> Assert.True

@@ -86,6 +86,9 @@ module StateAR =
     let teeError f =
         StateA.map (Result.teeError f >> Ok)
 
+    let concat x y =
+        map2 (@) x y
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

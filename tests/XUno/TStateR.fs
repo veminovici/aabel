@@ -614,3 +614,15 @@ module TStateR =
             |> (=) (Ok [1..5])
             |> Assert.True
 
+        [<Fact>]
+        let ``StateR concat`` () =
+            let x = StateR.retn [1; 2]
+            let y = StateR.retn [3; 4]
+
+            (x, y)
+            ||> StateR.concat
+            |>  StateR.eval "env"
+            |> (=) (Ok [1..4])
+            |> Assert.True
+
+

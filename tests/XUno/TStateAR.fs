@@ -606,3 +606,14 @@ module TStateAR =
             |> StateAR.eval "env"
             |> (=) (Ok [1..5])
             |> Assert.True
+
+        [<Fact>]
+        let ``StateAR concat`` () =
+            let x = StateAR.retn [1; 2]
+            let y = StateAR.retn [3; 4]
+
+            (x, y)
+            ||> StateAR.concat
+            |>  StateAR.eval "env"
+            |> (=) (Ok [1..4])
+            |> Assert.True

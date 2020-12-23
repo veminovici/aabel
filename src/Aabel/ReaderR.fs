@@ -81,6 +81,9 @@ module ReaderR =
     let teeError f =
         Reader.map (Result.teeError f >> Ok)
 
+    let concat (x: ReaderR<'TEnv, 'T list, 'E>) (y: ReaderR<'TEnv,'T list, 'E>) : ReaderR<'TEnv, 'T list, 'E> =
+        map2 (@) x y
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

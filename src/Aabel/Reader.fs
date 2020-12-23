@@ -44,6 +44,9 @@ module Reader =
                 |> run env
                 |> Async.RunSynchronously }
 
+    let concat (x: Reader<'TEnv, 'T list>) (y: Reader<'TEnv, 'T list>) : Reader<'TEnv, 'T list> =
+        map2 (@) x y
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
@@ -118,7 +121,7 @@ module Reader =
         [<RequireQualifiedAccess>]
         module Reader = 
 
-            let private _traverseM (zro : Reader<'TEnv,'U list>) (f : 'T -> Reader<'TEnv,'U>) (xs: 'T list) =
+            let private _traverseM (zro : Reader<'TEnv, 'U list>) (f:'T -> Reader<'TEnv,'U>) (xs: 'T list) =
 
                 let rec loop (acc: Reader<'TEnv, 'U list>) = function
                     | [] -> acc

@@ -353,3 +353,14 @@ module TStateA =
             |> Async.RunSynchronously
             |> (=) ["ab"; "abc"; "a"]
             |> Assert.True
+
+        [<Fact>]
+        let ``StateA concat`` () =
+            let x = StateA.retn [1; 2]
+            let y = StateA.retn [3; 4]
+
+            (x, y)
+            ||> StateA.concat
+            |>  StateA.eval "env"
+            |> (=) [1..4]
+            |> Assert.True

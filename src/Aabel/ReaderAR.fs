@@ -84,6 +84,9 @@ module ReaderAR =
     let teeError f =
         ReaderA.map (Result.teeError f >> Ok)
 
+    let concat x y =
+        map2 (@) x y
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

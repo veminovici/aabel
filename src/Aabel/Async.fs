@@ -49,10 +49,7 @@ module Async =
                     |> Async.Parallel
                     |> map List.ofArray
 
-                [zro; xs']
-                |> Async.Parallel
-                |> map List.ofArray
-                |> map List.concat
+                (zro, xs') ||> concat
 
             let traverseA f xs =
                 _traverseA (retn []) f xs

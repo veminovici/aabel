@@ -354,3 +354,15 @@ module TReader =
             |> Reader.run "env"
             |> (=) ["ab"; "abc";"a"]
             |> Assert.True
+
+        [<Fact>]
+        let ``Reader concat`` () =
+
+            let x = Reader.retn [1; 2]
+            let y = Reader.retn [3; 4]
+
+            (x, y)
+            ||> Reader.concat
+            |> Reader.run "env"
+            |> (=) [1..4]
+            |> Assert.True

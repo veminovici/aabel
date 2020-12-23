@@ -597,3 +597,14 @@ module TReaderAR =
             |> ReaderAR.run "env"
             |> (=) (Ok [1..5])
             |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR concat`` () =
+            let x = ReaderAR.retn [1; 2]
+            let y = ReaderAR.retn [3; 4]
+
+            (x, y)
+            ||> ReaderAR.concat
+            |>  ReaderAR.run "env"
+            |> (=) (Ok [1..4])
+            |> Assert.True
