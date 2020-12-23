@@ -597,3 +597,13 @@ module TReaderR =
             |> ReaderR.run "env"
             |> (=) (Error ["e2"; "e4"])
             |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR sequenceA`` () =
+            [1..5]
+            |> List.map ReaderR.retn
+            |> ReaderR.sequenceA
+            |> ReaderR.run "env"
+            |> (=) (Ok [1..5])
+            |> Assert.True
+
