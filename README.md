@@ -81,6 +81,22 @@ Async.map2 f x y
 |> (=) 30
 ```
 
+The **Async** extensions implement the *traverseM* and *sequenceM* which executes sequencially a list of *async* flows, and *traverseA* and *sequenceA* which executes in parallel a list of *async* flows.
+
+```fsharp
+[1; 2; 3]
+|> List.map Async.retn
+|> Async.sequenceM
+|> Async.RunSynchronously
+|> (=) [1; 2; 3]
+
+[1; 2; 3]
+|> List.map Async.retn
+|> Async.sequenceA
+|> Async.RunSynchronously
+|> (=) [1; 2; 3]
+```
+
 ### 1.3 AR Monad
 Implementation for the **AR** (Async-Result) monad.
 

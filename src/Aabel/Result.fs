@@ -157,7 +157,7 @@ module Result =
         module Result = 
 
             // Result<'a list, 'e list> -> ('c -> Result<'a, 'e>) -> 'c list -> Result<'a list, 'b list>
-            let _traverseA state f xs =
+            let _traverseA zro f xs =
 
                 let rec loop acc = function
                     | [] -> acc
@@ -176,7 +176,7 @@ module Result =
                         | Error e , Ok _ -> 
                             loop (Error e) tail
 
-                loop state xs
+                loop zro xs
 
             let traverseA f xs =
                 _traverseA (Ok []) f xs

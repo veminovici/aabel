@@ -4,6 +4,7 @@ module TAsync =
 
     open Simplee
     open Simplee.Async.Operators
+    open Simplee.Async.Traversals
 
     open Xunit
     open Xunit.Abstractions
@@ -126,4 +127,24 @@ module TAsync =
             >>= f
             |> Async.RunSynchronously
             |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async sequenceM`` () =
+
+            [1; 2; 3]
+            |> List.map Async.retn
+            |> Async.sequenceM
+            |> Async.RunSynchronously
+            |> (=) [1; 2; 3]
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async sequenceA`` () =
+
+            [1; 2; 3]
+            |> List.map Async.retn
+            |> Async.sequenceA
+            |> Async.RunSynchronously
+            |> (=) [1; 2; 3]
             |> Assert.True
