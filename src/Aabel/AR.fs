@@ -170,6 +170,7 @@ module AR =
         [<RequireQualifiedAccess>]
         module AR = 
 
+            // AR<'a list, 'b list> -> ('c -> AR<'a, 'b>) -> 'c list -> AR<'a list, 'b list>
             let private _traverseA state f xs =
 
                 let rec loop acc = function

@@ -156,7 +156,8 @@ module Result =
         [<RequireQualifiedAccess>]
         module Result = 
 
-            let private _traverseA state f xs =
+            // Result<'a list, 'e list> -> ('c -> Result<'a, 'e>) -> 'c list -> Result<'a list, 'b list>
+            let _traverseA state f xs =
 
                 let rec loop acc = function
                     | [] -> acc

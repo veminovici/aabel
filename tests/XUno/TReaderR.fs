@@ -557,7 +557,7 @@ module TReaderR =
             |> Assert.True
 
         [<Fact>]
-        let ``ReaderR traverse`` () =
+        let ``ReaderR traverseM`` () =
             let f (x: string) = ReaderR.retn x.Length
 
             ["ab"; "abc";"a"]
@@ -567,10 +567,33 @@ module TReaderR =
             |> Assert.True
 
         [<Fact>]
-        let ``ReaderR sequence`` () =
+        let ``ReaderR sequenceM`` () =
             ["ab"; "abc"; "a"]
             |> List.map ReaderR.retn
             |> ReaderR.sequenceM
             |> ReaderR.run "env"
             |> (=) (Ok ["ab"; "abc";"a"])
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR traverseA ok`` () =
+            let f (i: int) = ReaderR.retn (i * 2)
+
+            [1..5]
+            |> ReaderR.traverseA f
+            |> ReaderR.run "env"
+            |> (=) (Ok [2; 4; 6; 8; 10])
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR traverseA error`` () =
+            let f (i: int) = 
+                if i % 2 = 1 
+                then ReaderR.retn (i * 2) 
+                else i |> sprintf "e%i" |> ReaderR.err
+
+            [1..5]
+            |> ReaderR.traverseA f
+            |> ReaderR.run "env"
+            |> (=) (Error ["e2"; "e4"])
             |> Assert.True

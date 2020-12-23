@@ -154,36 +154,34 @@ module ReaderR =
 
         [<RequireQualifiedAccess>]
         module ReaderR = 
-(*
-            let private _traverseA state f xs =
 
-                let rec loop acc = function
+            open Simplee.Reader.ComputationExpression
+            open Simplee.Result.Traversals
+
+            // ReaderR<'TEnv, 'a list, 'b list> -> ('c -> ReaderR<'TEnv, 'a, 'b>) -> 'c list -> ReaderR<'TEnv, 'a list, 'b list)
+            let private _traverseA (zro: ReaderR<'TEnv, 'a list, 'b list>) (f:'c -> ReaderR<'TEnv, 'a, 'b>) (xs:'c list) : ReaderR<'TEnv, 'a list, 'b list> =
+
+                let rec loop (acc: ReaderR<'TEnv, 'a list, 'b list>) (xs: 'c list) =
+                    match xs with
                     | [] -> acc
-                    | h :: tail ->
-                        async {
-                            let! s = acc
-                            let! fR = 
-                                h 
-                                |> f 
-                                |> mapError List.singleton
+                    | h::tail ->
+                        let r = 
+                            reader {
+                                let! y = f h
+                                let! ys = acc
+                                let yys = Result._traverseA ys (fun _ -> y) [h]
+                                return yys
+                            }
+                        loop r tail
 
-                            match s, fR with
-                            | Ok ys, Ok y -> 
-                                return! loop (singleton (ys @ [y])) tail
-                            | Error errs, Error e -> 
-                                return! loop (err (errs @ e)) tail
-                            | Ok _, Error e 
-                            | Error e , Ok _  -> 
-                                return! loop (err e) tail }
-
-                loop state xs
+                loop zro xs
 
             let traverseA f xs =
                 _traverseA (singleton []) f xs
 
             let sequenceA xs =
                 traverseA id xs
-*)
+
             let private _traversetM (zro: ReaderR<'TEnv, 'U list, 'E>) (f: 'T -> ReaderR<'TEnv , 'U, 'E>) (xs: 'T list) : ReaderR<'TEnv, 'U list, 'E> =
 
                 let rec loop (acc: ReaderR<'TEnv, 'U list, 'E>) (xs: 'T list) =
