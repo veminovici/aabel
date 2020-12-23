@@ -20,7 +20,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Release --no-restore
 
   test:
     needs: build
@@ -30,7 +30,7 @@ jobs:
     - name: Test
       run:  |
         printenv
-        dotnet test --no-build --verbosity d
+        dotnet test -c Release --no-build --verbosity d
 
   coverage:
     needs: build
@@ -40,9 +40,19 @@ jobs:
     - name: Generate Coverage Report
       run: |
         printenv
-        dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Exclude="[xunit*]\*" /p:CoverletOutput="./TestResults/"
+        dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Exclude="[xunit*]\*" /p:CoverletOutput="./TestResults/"
     - name: Publish Coverage Report
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ./tests/XUno/TestResults/coverage.info
+
+  pack:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Test
+      run:  |
+        printenv
+        dotnet pack -c-Release --verbosity d
