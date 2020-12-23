@@ -31,6 +31,12 @@ jobs:
       run:  |
         printenv
         dotnet test --no-build --verbosity d
+
+  coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
     - name: Generate Coverage Report
       run: |
         printenv
