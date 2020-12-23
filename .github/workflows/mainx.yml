@@ -26,10 +26,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Restore dependencies
-      run: dotnet restore
+    - uses: actions/checkout@v2
     - name: Test
-      run: dotnet test --no-build --verbosity d
+      run:  |
+        printenv
+        dotnet test --no-build --verbosity d
     - name: Generate Coverage Report
       run: |
         printenv
