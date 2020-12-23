@@ -148,3 +148,13 @@ module TAsync =
             |> Async.RunSynchronously
             |> (=) [1; 2; 3]
             |> Assert.True
+
+        [<Fact>]
+        let ``Async concat`` () =
+            let x = [1; 2] |> Async.retn
+            let y = [3; 4] |> Async.retn
+
+            (x, y)
+            ||> Async.concat
+            |>  Async.RunSynchronously
+            |> (=)  [1..4]

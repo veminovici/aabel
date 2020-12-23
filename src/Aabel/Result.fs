@@ -97,10 +97,7 @@ module Result =
             return Error e }
 
     let concat (x: Result<'T list, 'E>) (y: Result<'T list, 'E>) =
-        match x, y with
-        | Ok xs, Ok ys  -> Ok (xs @ ys)
-        | Ok _, Error e -> Error e
-        | Error e, _    -> Error e
+        map2 (@) x y
 
     module Operators =
         let (<!>) m f = Result.map   f m
