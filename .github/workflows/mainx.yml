@@ -48,11 +48,11 @@ jobs:
         path-to-lcov: ./tests/XUno/TestResults/coverage.info
 
   pack:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Test
       run:  |
         printenv
-        dotnet pack -c-Release --verbosity d
+        dotnet pack -c-Release
