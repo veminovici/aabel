@@ -24,7 +24,7 @@ jobs:
     - name: Generate Coverage Report
       run: |
         printenv
-        dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Exclude="[xunit*]\*" /p:CoverletOutput="./TestResults/"
+        dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Exclude="[xunit*]\*" /p:CoverletOutput="./TestResults/"
     - name: Publish Coverage Report
       uses: coverallsapp/github-action@master
       with:
