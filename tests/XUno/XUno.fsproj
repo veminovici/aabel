@@ -19,6 +19,7 @@
     <Compile Include="TStateR.fs"   />
     <Compile Include="TStateA.fs"   />
     <Compile Include="TStateAR.fs"  />
+    <Compile Include="TQueue.fs"    />
     <Compile Include="Program.fs"   />
   </ItemGroup>
 
