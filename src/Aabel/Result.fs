@@ -37,6 +37,10 @@ module Result =
     let map3 f x y z =
         apply (map2 f x y) z
 
+    let join = function
+    | Error e -> Error e
+    | Ok x    -> x
+
     let ofChoice = function
     | Choice1Of2 x -> Ok x
     | Choice2Of2 x -> Error x

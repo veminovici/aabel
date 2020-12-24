@@ -172,6 +172,33 @@ module TResult =
             |> Assert.True
 
         [<Fact>]
+        let ``Result join ok`` () =
+            let x = Ok 10
+
+            x
+            |> Ok
+            |> Result.join
+            |> (=) (Ok 10)
+            |> Assert.True
+
+            let y = Error "e"
+
+            y
+            |> Ok
+            |> Result.join
+            |> (=) (Error "e")
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result join ok`` () =
+    
+            "e"
+            |> Error
+            |> Result.join
+            |> (=) (Error "e")
+            |> Assert.True
+
+        [<Fact>]
         let ``Result zip`` () =
             Result.zip (Ok "ab") (Ok 2)
             |> (=) (Ok ("ab", 2))
