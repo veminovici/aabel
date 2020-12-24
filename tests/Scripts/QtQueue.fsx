@@ -16,45 +16,52 @@ open Simplee.Collections
 open Simplee.Collections.Queue.Operators
 
 let puree   a = 
-    printfn "Puree implementation: %A" a
     State.retn a
-let enq    xs = 
-    printfn "Enq implementation: %A" xs
-    StateR.retn ()
-let deq     n = 
-    printfn "Deq implementation: %d" n
-    StateR.retn [1..n]
-let peek    n = 
-    printfn "Peek implementation: %d" n
-    StateR.retn [1..n]
-let isFull () = 
-    printfn "IsFull implementation"
-    StateR.retn false
+
+let enq    ys = State <| fun xs ->
+    Ok (), xs @ ys
+
+let deq     n = State <| fun xs ->
+    let l = List.length xs
+    if l < n 
+    then Error "Not enough items", xs 
+    else Ok (List.take n xs), xs |> List.skip n
+
+let peek    n = State <| fun xs ->
+    let l = List.length xs
+    if l < n 
+    then Error "Not enough items", xs 
+    else Ok (List.take n xs), xs
+
+let isFull () = State <| fun xs ->
+    let l = List.length xs
+    Ok (l > 10), xs
 
 let fold f = Queue.fold puree enq deq peek isFull f
-let run s0 f = Queue.run puree enq deq peek isFull s0 f
 let eval s0 f = Queue.eval puree enq deq peek isFull s0 f
 
-"x"
+[1; 2]
+|> Ok
 |> Queue.Pure
-|> eval "evn"
+|> eval []
 |> printfn "puree:%A"
 
 [1; 2]
 |> Queue.enqueue
-|> eval "env"
+|> eval []
 |> printfn "enq=%A"
 
-3
+10
 |> Queue.dequeue
-|> eval "env"
+|> eval [1..5]
 |> printfn "deq=%A"
+
 
 3
 |> Queue.peek
-|> eval "env"
+|> eval [1..5]
 |> printfn "peek=%A"
 
 Queue.isFull
-|> eval "env"
+|> eval [1..100]
 |> printfn "isFull=%A"
