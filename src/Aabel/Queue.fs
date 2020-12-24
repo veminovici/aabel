@@ -88,7 +88,7 @@ module Queue =
         let (<*>) f m = apply f m
         let (>>=) m f = bind  f m
 
-    module CompurationExpression =
+    module ComputationExpression =
 
         type QueueBuilder () =
             member _.Return(x)     = retn x

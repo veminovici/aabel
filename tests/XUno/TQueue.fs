@@ -5,6 +5,7 @@ module TQueue =
     open Simplee
     open Simplee.Collections
     open Simplee.Collections.Queue.Operators
+    open Simplee.Collections.Queue.ComputationExpression
 
     open Xunit
     open Xunit.Abstractions
@@ -110,7 +111,7 @@ module TQueue =
             |> Assert.True
 
         [<Fact>]
-        let ``Queue CE <!>`` () =
+        let ``Queue <!>`` () =
             "abcde"
             |> Queue.retn
             <!> (fun (s: string) -> s.Length)
@@ -119,7 +120,7 @@ module TQueue =
             |> Assert.True
 
         [<Fact>]
-        let ``Queue CE <*>`` () =
+        let ``Queue <*>`` () =
             let f (s: string) = s.Length
             let f' = Queue.retn f
 
@@ -130,7 +131,7 @@ module TQueue =
             |> Assert.True
 
         [<Fact>]
-        let ``Queue CE >>=`` () =
+        let ``Queue >>=`` () =
             "abcde"
             |> Queue.retn
             >>= (fun (s: string) -> s.Length |> Queue.retn)
@@ -180,4 +181,51 @@ module TQueue =
             Queue.isFull
             |> Queue.eval puree enq deq peek isFull "env"
             |> (=) (Ok false)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE Return`` () =
+            queue {
+                return 10
+            } 
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 10
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE ReturnFrom`` () =
+            queue {
+                return! (Queue.retn 10)
+            } 
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 10
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE Yield`` () =
+            queue {
+                yield 10
+            } 
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 10
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE YieldFrom`` () =
+            queue {
+                yield! (Queue.retn 10)
+            } 
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 10
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE Bind`` () =
+            queue {
+                let! _  = Queue.enqueue [1;2;3]
+                let! xs = Queue.dequeue 2
+                return xs
+            } 
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) (Ok [1; 2])
             |> Assert.True
