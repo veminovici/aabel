@@ -11,11 +11,16 @@ module TQueue =
 
     type Tests (output: ITestOutputHelper) =
 
-        let puree   a = a |> StateR.retn
-        let enq    xs = () |> StateR.retn
-        let deq     n = [1..n] |> StateR.retn
-        let peek    n = [1..n] |> StateR.retn
-        let isFull () = false |> StateR.retn
+        let puree   a = 
+            State.retn a
+        let enq    xs = 
+            StateR.retn ()
+        let deq     n = 
+            StateR.retn [1..n]
+        let peek    n = 
+            StateR.retn [1..n]
+        let isFull () = 
+            StateR.retn false
 
         let eval s0 p = Queue.eval puree enq deq peek isFull s0 p
 
@@ -24,7 +29,7 @@ module TQueue =
             10
             |> Queue.retn
             |> eval "env"
-            |> (=) (Ok 10)
+            |> (=) 10
             |> Assert.True
 
         [<Fact>]
@@ -33,7 +38,7 @@ module TQueue =
             |> Queue.retn
             |> Queue.map (fun (s: string) -> s.Length)
             |> eval "env"
-            |> (=) (Ok 5)
+            |> (=) 5
             |> Assert.True
 
         [<Fact>]
@@ -42,7 +47,7 @@ module TQueue =
             |> Queue.retn
             |> Queue.bind (fun (s: string) -> s.Length |> Queue.retn)
             |> eval "env"
-            |> (=) (Ok 5)
+            |> (=) 5
             |> Assert.True
 
         [<Fact>]
@@ -54,7 +59,7 @@ module TQueue =
             |> Queue.retn
             |> Queue.apply f'
             |> eval "env"
-            |> (=) (Ok 5)
+            |> (=) 5
             |> Assert.True
 
         [<Fact>]
@@ -66,7 +71,7 @@ module TQueue =
             (x, y)
             ||> Queue.map2 f
             |> eval "env"
-            |> (=) (Ok 30)
+            |> (=) 30
             |> Assert.True
 
         [<Fact>]
@@ -77,7 +82,7 @@ module TQueue =
             (x, y)
             ||> Queue.zip
             |> eval "env"
-            |> (=) (Ok (10, 20))
+            |> (=) (10, 20)
             |> Assert.True
 
         [<Fact>]
@@ -90,7 +95,7 @@ module TQueue =
             (x, y, z)
             |||> Queue.map3 f
             |> eval "env"
-            |> (=) (Ok 60)
+            |> (=) 60
             |> Assert.True
 
         [<Fact>]
@@ -101,7 +106,7 @@ module TQueue =
             (x, y)
             ||> Queue.concat
             |> eval "env"
-            |> (=) (Ok [1..4])
+            |> (=) [1..4]
             |> Assert.True
 
         [<Fact>]
@@ -110,7 +115,7 @@ module TQueue =
             |> Queue.retn
             <!> (fun (s: string) -> s.Length)
             |> eval "env"
-            |> (=) (Ok 5)
+            |> (=) 5
             |> Assert.True
 
         [<Fact>]
@@ -121,7 +126,7 @@ module TQueue =
             f'
             <*> (Queue.retn "abcde")
             |> eval "env"
-            |> (=) (Ok 5)
+            |> (=) 5
             |> Assert.True
 
         [<Fact>]
@@ -130,7 +135,7 @@ module TQueue =
             |> Queue.retn
             >>= (fun (s: string) -> s.Length |> Queue.retn)
             |> eval "env"
-            |> (=) (Ok 5)
+            |> (=) 5
             |> Assert.True
 
         [<Fact>]
@@ -139,7 +144,7 @@ module TQueue =
             10
             |> Queue.retn
             |> Queue.eval puree enq deq peek isFull "env"
-            |> (=) (Ok 10)
+            |> (=) 10
             |> Assert.True
 
         [<Fact>]
@@ -148,7 +153,7 @@ module TQueue =
             [10; 20]
             |> Queue.enqueue
             |> Queue.eval puree enq deq peek isFull "env"
-            |> (=) (Ok (Ok ()))
+            |> (=) (Ok ())
             |> Assert.True
 
         [<Fact>]
@@ -157,7 +162,7 @@ module TQueue =
             3
             |> Queue.dequeue
             |> Queue.eval puree enq deq peek isFull "env"
-            |> (=) (Ok (Ok [1..3]))
+            |> (=) (Ok [1..3])
             |> Assert.True
 
         [<Fact>]
@@ -166,7 +171,7 @@ module TQueue =
             4
             |> Queue.peek
             |> Queue.eval puree enq deq peek isFull "env"
-            |> (=) (Ok (Ok [1..4]))
+            |> (=) (Ok [1..4])
             |> Assert.True
 
         [<Fact>]
@@ -174,5 +179,5 @@ module TQueue =
 
             Queue.isFull
             |> Queue.eval puree enq deq peek isFull "env"
-            |> (=) (Ok (Ok false))
+            |> (=) (Ok false)
             |> Assert.True

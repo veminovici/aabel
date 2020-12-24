@@ -50,43 +50,21 @@ module Queue =
     let peek    n  = Free (Peek    (n,  Pure))
     let isFull     = Free (IsFull       Pure)
 
-(*
-    let flip (a, b) = b, a
+    let fold
+        (puree:  'a      -> State<'S, 'b>)
+        (enq:    'T list -> StateR<'S, unit, 'TErr>)
+        (deq:    int     -> StateR<'S, 'T list, 'TErr>)
+        (peek:   int     -> StateR<'S, 'T list, 'TErr>)
+        (isFull: unit    -> StateR<'S, bool, 'TErr>)
+        (flow: Program<'T, 'a, 'TErr>) : State<'S, 'b> =
 
-    let fold enqImpl deqImpl peekImpl isFullImpl flow zro =
-
-        let rec loop flow stt =
+        let rec loop flow =
             match flow with
-            | Pure a -> stt, a
-            | Free (Enqueue (xs, k)) -> stt |> enqImpl xs |> fun (stt, r) -> (stt, k r) |> flip ||> loop
-            | Free (Dequeue (n,  k)) -> stt |> deqImpl  n |> fun (stt, r) -> (stt, k r) |> flip ||> loop
-            | Free (Peek    (n,  k)) -> stt |> peekImpl n |> fun (stt, r) -> (stt, k r) |> flip ||> loop
-            | Free (IsFull       k ) -> stt |> isFullImpl |> fun (stt, r) -> (stt, k r) |> flip ||> loop
-
-        loop flow zro
-*)
-
-    type PureeR<'S, 'a, 'b, 'TErr> = 'a      -> StateR<'S, 'b, 'TErr>
-    type EnqR<'S, 'T, 'TErr>       = 'T list -> StateR<'S, unit,    'TErr>
-    type DeqR<'S, 'T, 'TErr>       = int     -> StateR<'S, 'T list, 'TErr>
-    type PeekR<'S, 'T, 'TErr>      = int     -> StateR<'S, 'T list, 'TErr>
-    type IsFullR<'S, 'TErr>        = unit    -> StateR<'S, bool,    'TErr>
-
-    let fold 
-        (puree: PureeR<'S, 'a, 'b, 'TErr>)
-        (enq:   EnqR<'S, 'T, 'TErr>)
-        (deq:   DeqR<'S, 'T, 'TErr>)
-        (peek:  PeekR<'S, 'T, 'TErr>)
-        (isFull: IsFullR<'S, 'TErr>)
-        (flow: Program<'T, 'a, 'TErr>) : StateR<'S, 'b, 'TErr> =
-
-        let rec loop (flow: Program<'T, 'a, 'TErr>) : StateR<'S, 'b, 'TErr> =
-            match flow with
-            | Pure a                 -> a |> puree
-            | Free (Enqueue (xs, k)) -> xs |> enq    |> State.map k |> State.bind loop
-            | Free (Dequeue (n,  k)) ->  n |> deq    |> State.map k |> State.bind loop
-            | Free (Peek    (n,  k)) ->  n |> peek   |> State.map k |> State.bind loop
-            | Free (IsFull       k)  -> () |> isFull |> State.map k |> State.bind loop
+            | Pure a -> puree a
+            | Free (Enqueue (xs, k)) -> enq xs    |> State.map k |> State.bind loop
+            | Free (Dequeue (n,  k)) -> deq  n    |> State.map k |> State.bind loop
+            | Free (Peek    (n,  k)) -> peek n    |> State.map k |> State.bind loop
+            | Free (IsFull       k)  -> isFull () |> State.map k |> State.bind loop
 
         loop flow
 
