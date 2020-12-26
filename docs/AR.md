@@ -1,4 +1,4 @@
-## Simplee |> Aabel |> AR
+# Simplee |> Aabel |> AR
 Implementation of the **Async-Result** monad which represents an **async** operation which returns a **Result** value.
 
 - Namespaces: *Simplee.AR*, *Simplee.AR.ComputationExpression*, *Simplee.AR.Traversals* 
@@ -13,7 +13,10 @@ open Simplee
 open Simplee.AR.ComputationExpression
 ```
 
-### Monadic computation
+## The _ar Computation Expression
+The library implements a FSharp computation expression around the **AR** monad.
+
+### Monadic Computation
 Below is an example, where each of the three async computations return an *int* value wrapped into a *Results*. 
 Once the values are computed, the sum of their values is returned.
 
@@ -45,7 +48,8 @@ _ar {
     return x + y + z }
 |> Async.RunSynchronously
 ```
-### Applicative computation
+
+## Applicative Computation
 You can use applicative computation where all 3 values are computed, without checking the result of the previous operations.
 
 ```fsharp
@@ -60,3 +64,6 @@ _ar {
     return x + y + z }
 |> Async.RunSynchronously
 ```
+
+## Aabel Library
+For details related to other monads implemented by **Aabel** library, please check the main documentation [file](https://github.com/veminovici/aabel/blob/main/README.md).
