@@ -148,6 +148,8 @@ let z = AR.err "e1"
 |> (=)  (Error ["e"; "e1"])
 ```
 
+You can find more details and examples related to the *_ar compuration expression* at the [AR](https://github.com/veminovici/aabel/blob/main/docs/Aabel/AR.md)
+
 <br />
 
 ## 2. Reader
