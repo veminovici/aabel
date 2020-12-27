@@ -155,7 +155,7 @@ let z = AR.err "e1"
 ## 2. Reader
 Implementations of the **Reader** monad and several related *Reader[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
 
-You can find more details and examples related to the *_reader[X] compuration expressions* at the [Reader](https://github.com/veminovici/aabel/blob/main/docs/Reader.md) documentation file.
+You can find more details and examples related to the *reader[X] compuration expressions* at the [Reader](https://github.com/veminovici/aabel/blob/main/docs/Reader.md) documentation file.
 
 ### 2.1 Reader Monad
 Implementation of the **Reader** monad.
@@ -233,6 +233,8 @@ The **ReaderAR** implements both traversals, *traverseM* and *traverseA* (as wel
 
 ## 3. State
 Implementations of the **State** monad and several related *State[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
+
+You can find more details and examples related to the *state[X] compuration expressions* at the [State](https://github.com/veminovici/aabel/blob/main/docs/State.md) documentation file.
 
 ### 3.1 State Monad
 Implementation of the **State** monad.
