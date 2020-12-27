@@ -371,6 +371,20 @@ module TState =
             |> (=) [1..4]
             |> Assert.True
 
+        [<Fact>]
+        let ``State get`` () =
+            State.get
+            |>  State.eval "env"
+            |> (=) "env"
+            |> Assert.True
+
+        [<Fact>]
+        let ``State put`` () =
+            State.put "abc"
+            |> State.bind (fun _ -> State.get)
+            |>  State.eval "env"
+            |> (=) "abc"
+            |> Assert.True
 
     (*
         [<Fact>]

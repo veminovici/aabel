@@ -52,6 +52,9 @@ module State =
     let concat x y =
         map2 (@) x y
 
+    let get = State (fun s -> s, s)
+    let put s = State (fun _ -> (), s)
+
     module Operators = 
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
