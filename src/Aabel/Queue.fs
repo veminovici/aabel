@@ -99,6 +99,8 @@ module Queue =
 
             member _.Zero() = retn ()
 
-            member _.Bind(m, f) = bind f m
+            member _.Bind(m, f) = 
+                printfn "Bind: %A" m
+                bind f m
 
         let queue = QueueBuilder()

@@ -4,7 +4,8 @@ Implementation of the **Async-Result** monad which represents an **async** opera
 - Namespaces: *Simplee.AR*, *Simplee.AR.ComputationExpression*, *Simplee.AR.Traversals* 
 - Source: [AR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/AR.fs)
 - Test: [TAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAR.fs)
-- Script: [AR.fsx](https://github.com/veminovici/aabel/blob/main/tests/Scripts/AR.fsx)
+_ Computation expression: **_ar**
+- Script: [AR.fsx](https://github.com/veminovici/aabel/blob/main/tests/Scripts/QtAR.fsx)
 
 Open the relevand namespaces:
 
@@ -14,7 +15,7 @@ open Simplee.AR.ComputationExpression
 ```
 
 ## The _ar Computation Expression
-The library implements a FSharp computation expression around the **AR** monad.
+The library implements a FSharp computation expression **_ar** around the **AR** monad.
 
 ### Monadic Computation
 Below is an example, where each of the three async computations return an *int* value wrapped into a *Results*. 

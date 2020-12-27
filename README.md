@@ -155,6 +155,8 @@ You can find more details and examples related to the *_ar compuration expressio
 ## 2. Reader
 Implementations of the **Reader** monad and several related *Reader[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
 
+You can find more details and examples related to the *_reader[X] compuration expressions* at the [AR](https://github.com/veminovici/aabel/blob/main/docs/Reader.md) documentation file.
+
 ### 2.1 Reader Monad
 Implementation of the **Reader** monad.
 
