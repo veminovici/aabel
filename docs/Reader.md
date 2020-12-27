@@ -51,8 +51,7 @@ let getPassword () = Reader (fun (env: Map<string, string>) ->
 readerAR {
     let! user = getUser()
     let! pwd  = getPassword()
-    return (user, pwd)
-}
+    return (user, pwd) }
 |> ReaderAR.run env
 |> printfn "user/pwd: %A"
 ```
@@ -69,8 +68,7 @@ let getPassword () = Reader (fun (env: Map<string, string>) ->
 readerAR {
     let! user = getUser()
     let! pwd  = getPassword()
-    return (user, pwd)
-}
+    return (user, pwd) }
 |> ReaderAR.run env
 |> printfn "user/pwd: %A"
 ```
@@ -88,8 +86,7 @@ let getPassword () = Reader (fun (env: Map<string, string>) ->
 readerAR {
     let! user = getUser()
     and! pwd  = getPassword()
-    return (user, pwd)
-}
+    return (user, pwd) }
 |> ReaderAR.run env
 |> printfn "user/pwd: %A"
 ```
