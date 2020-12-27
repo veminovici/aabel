@@ -5,6 +5,8 @@ type StateA<'S, 'T> = State<'S, Async<'T>>
 [<RequireQualifiedAccess>]
 module StateA =
 
+    open Simplee
+
     open System.Threading.Tasks
 
     let run env (r: StateA<_,_>) =  
@@ -43,6 +45,9 @@ module StateA =
 
     let concat x y =
         map2 (@) x y
+
+    let get<'S> : StateA<'S, 'S> = State.get |> State.map Async.retn
+    let put s : StateA<'S, unit> = s |> State.put |> State.map Async.retn
 
     module Operators =
         let (<!>) m f = map   f m

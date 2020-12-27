@@ -617,3 +617,12 @@ module TStateAR =
             |>  StateAR.eval "env"
             |> (=) (Ok [1..4])
             |> Assert.True
+
+        [<Fact>]
+        let ``StateAR put and get`` () =
+            StateAR.put "abc"
+            |> StateAR.bind (fun _ -> StateAR.get)
+            |>  StateAR.eval "env"
+            |> (=) (Ok "abc")
+            |> Assert.True
+

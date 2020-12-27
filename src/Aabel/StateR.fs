@@ -87,6 +87,9 @@ module StateR =
     let concat x y =
         map2 (@) x y
 
+    let get<'S, 'TErr> : StateR<'S, 'S, 'TErr> = State.get |> State.map Ok
+    let put s : StateR<'S, unit, 'TErr> = s |> State.put |> State.map Ok
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

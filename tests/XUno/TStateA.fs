@@ -364,3 +364,12 @@ module TStateA =
             |>  StateA.eval "env"
             |> (=) [1..4]
             |> Assert.True
+
+        [<Fact>]
+        let ``StateA put and get`` () =
+            StateA.put "abc"
+            |> StateA.bind (fun _ -> StateA.get)
+            |>  StateA.eval "env"
+            |> (=) "abc"
+            |> Assert.True
+

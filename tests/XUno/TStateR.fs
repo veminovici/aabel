@@ -625,4 +625,11 @@ module TStateR =
             |> (=) (Ok [1..4])
             |> Assert.True
 
+        [<Fact>]
+        let ``StateR put and get`` () =
+            StateR.put "abc"
+            |> StateR.bind (fun _ -> StateR.get)
+            |>  StateR.eval "env"
+            |> (=) (Ok "abc")
+            |> Assert.True
 

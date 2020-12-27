@@ -5,6 +5,8 @@ type StateAR<'S, 'T, 'E> = State<'S, Async<Result<'T, 'E>>>
 [<RequireQualifiedAccess>]
 module StateAR =
 
+    open Simplee
+
     let run env (r: StateAR<_,_,_>) =  
         r 
         |> StateA.run env
@@ -88,6 +90,9 @@ module StateAR =
 
     let concat x y =
         map2 (@) x y
+
+    let get<'S, 'TErr> : StateAR<'S, 'S, 'TErr> = State.get |> State.map AR.retn
+    let put s : StateAR<'S, unit, 'TErr> = s |> State.put |> State.map AR.retn
 
     module Operators =
         let (<!>) m f = map   f m
