@@ -259,6 +259,18 @@ module TQueueR =
             |> Assert.True
 
         [<Fact>]
+        let ``QueueR CE Bind 3`` () =
+            _queueR {
+                let! r  = QueueR.enqueue [1;2;3]
+                let! xs = QueueR.err "My error"
+                let! ys = QueueR.isFull
+                return ys
+            } 
+            |> QueueR.eval puree enq deq peek isFull "env"
+            |> (=) (Error "My error")
+            |> Assert.True
+
+        [<Fact>]
         let ``QueueR CE zero`` () =
             _queueR {
                 let! x = QueueR.retn 10

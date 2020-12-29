@@ -40,6 +40,8 @@ module QueueR =
     // 'T -> Program<'a, Result<'T, 'TErr>, 'TErr>
     let retn a = a |> Ok |> Pure
 
+    let err e = e |> Error |> Pure
+
     // ('T -> Program<'a, Result<'U, 'TErr>, 'TErr>) -> Program<'a, Result<'T, 'TErr>, 'TErr> -> Program<'a, Result<'U, 'TErr>, 'TErr>
     let rec bind f m =
         match m with

@@ -282,6 +282,19 @@ module TQueueAR =
             |> Assert.True
 
         [<Fact>]
+        let ``QueueAR CE Bind 3`` () =
+            _queueAR {
+                let! r  = QueueAR.enqueue [1;2;3]
+                let! xs = QueueAR.err "My error"
+                let! ys = QueueAR.isFull
+                return ys
+            } 
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Error "My error")
+            |> Assert.True
+
+        [<Fact>]
         let ``QueueAR CE zero`` () =
             _queueAR {
                 let! x = QueueAR.retn 10

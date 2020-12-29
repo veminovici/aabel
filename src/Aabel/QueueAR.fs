@@ -25,7 +25,8 @@ module QueueAR =
     let peek    n  : Program<'a, AR<'a list, 'TErr>, 'TErr> = Free (Peek    (n,  Pure))
     let isFull     : Program<'a, AR<bool, 'TErr>, 'TErr>    = Free (IsFull       Pure)
 
-    let retn a = a |> Ok |> Async.retn |> Pure
+    let retn a = a |> AR.retn |> Pure
+    let err  e = e |> AR.err  |> Pure
 
     let rec bind 
         (f: 'T -> Program<'a, AR<'U, 'TErr>, 'TErr>) 
