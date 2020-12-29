@@ -15,6 +15,11 @@
 ## Description
 A F# library for common functionality around Result, Async, Reader, and State monads.
 
+- [Basic Extensions (Result, Async, and Async-Result)](https://github.com/veminovici/aabel#1-basic-extensions)
+- [Reader](https://github.com/veminovici/aabel#2-reader)
+- [State](https://github.com/veminovici/aabel#3-state)
+- [Queue](https://github.com/veminovici/aabel#4-queue)
+
 <br />
 
 ## 1. Basic Extensions
@@ -307,6 +312,70 @@ let fnErr (s: string) = sprintf "%s1" s
 ```
 
 The **StateAR** implements both traversals, *traverseM* and *traverseA* (as well as their paired sequence functions).
+
+<br />
+
+## 4. Queue
+Implementations of the **Queue** monad and several related *Queue[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
+
+You can find more details and examples related to the *state[X] compuration expressions* at the [Queue](https://github.com/veminovici/aabel/blob/main/docs/Queue.md) documentation file.
+
+### 3.1 Queue Monad
+Implementation of the **Queue** monad.
+
+- Namespaces: *Simplee.Queue*, *Simplee.Queue.ComputationExpression*
+- Source: [Queue.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Queue.fs)
+- Test: [TQueue.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TQueue.fs)
+
+```fsharp
+open Simplee
+open Simplee.Collections
+open Simplee.Collections.Queue.ComputationExpression
+
+let puree   a = State.retn a
+let enq    xs = StateR.retn ()
+let deq     n = StateR.retn [1..n]
+let peek    n = StateR.retn [1..n]
+let isFull () = StateR.retn false
+let eval s0 p = Queue.eval puree enq deq peek isFull s0 p
+
+"abcde"
+|> Queue.retn
+|> Queue.map (fun (s: string) -> s.Length)
+|> eval "env"
+|> (=) 5
+|> Assert.True
+```
+
+### 3.2 QueueR Monad
+Implementation of the **QueueR** monad, a state transition which returns a **Result** and the error values are automatically handled by the **bind** function, so the flow stops when the first error is encountered.
+
+- Namespaces: *Simplee.QueueR*, *Simplee.QueueR.ComputationExpression*
+- Source: [QueueR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/QueueR.fs)
+- Test: [TQueueR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TQueueR.fs)
+
+```fsharp
+open Simplee
+open Simplee.Collections
+open Simplee.Collections.QueueR.ComputationExpression
+
+let puree   a = StateR.retn a
+let enq    xs = StateR.retn ()
+let deq     n = StateR.retn [1..n]
+let peek    n = StateR.retn [1..n]
+let isFull () = StateR.retn false
+let eval s0 p = QueueR.eval puree enq deq peek isFull s0 p
+
+let f x y = x + y
+let x = QueueR.retn 10
+let y = QueueR.retn 20
+
+(x, y)
+||> QueueR.map2 f
+|> eval "env"
+|> (=) (Ok 30)
+|> Assert.True
+```
 
 <br />
 
