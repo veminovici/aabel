@@ -16,24 +16,24 @@
 A F# library for common functionality around Result, Async, Reader, State, and Queue monads.
 
 - [Basic Extensions (Result, Async, and Async-Result)](https://github.com/veminovici/aabel#1-basic-extensions)
-    - [Documentation](https://github.com/veminovici/aabel/blob/main/docs/AR.md)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/readme/AR.md)
     - [Result Monad](https://github.com/veminovici/aabel#11-result)
     - [Async Monad](https://github.com/veminovici/aabel#12-async)
     - [AR Monad](https://github.com/veminovici/aabel#13-ar-monad)
 - [Reader](https://github.com/veminovici/aabel#2-reader)
-    - [Documentation](https://github.com/veminovici/aabel/blob/main/docs/Reader.md)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/readme/Reader.md)
     - [Reader Monad](https://github.com/veminovici/aabel#21-reader-monad)
     - [ReaderR Monad](https://github.com/veminovici/aabel#22-readerr-monad)
     - [ReaderR Monad](https://github.com/veminovici/aabel#23-readera-monad)
     - [ReaderAR Monad](https://github.com/veminovici/aabel#24-readerar-monad)
 - [State](https://github.com/veminovici/aabel#3-state)
-    - [Documentation](https://github.com/veminovici/aabel/blob/main/docs/State.md)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/readme/State.md)
     - [State Monad](https://github.com/veminovici/aabel#31-state-monad)
     - [StateR Monad](https://github.com/veminovici/aabel#32-stater-monad)
     - [StateA Monad](https://github.com/veminovici/aabel#33-statea-monad)
     - [StateAR Monad](https://github.com/veminovici/aabel#34-statear-monad)
 - [Queue](https://github.com/veminovici/aabel#4-queue)
-    - [Documentation](https://github.com/veminovici/aabel/blob/main/docs/Queue.md)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/readme/Queue.md)
     - [Queue Monad](https://github.com/veminovici/aabel#41-queue-monad)
     - [QueueR Monad](https://github.com/veminovici/aabel#42-queuer-monad)
 
@@ -126,7 +126,7 @@ Implementation for the **AR** (Async-Result) monad.
 - Source: [AR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/AR.fs)
 - Test: [TAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAR.fs)
 
-You can find more details and examples related to the *_ar compuration expression* at the [AR](https://github.com/veminovici/aabel/blob/main/docs/AR.md) documentation file.
+You can find more details and examples related to the *_ar compuration expression* at the [AR](https://github.com/veminovici/aabel/blob/main/readme/AR.md) documentation file.
 
 ```fsharp
 "my error"
@@ -177,7 +177,7 @@ let z = AR.err "e1"
 ## 2. Reader
 Implementations of the **Reader** monad and several related *Reader[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
 
-You can find more details and examples related to the *reader[X] compuration expressions* at the [Reader](https://github.com/veminovici/aabel/blob/main/docs/Reader.md) documentation file.
+You can find more details and examples related to the *reader[X] compuration expressions* at the [Reader](https://github.com/veminovici/aabel/blob/main/readme/Reader.md) documentation file.
 
 ### 2.1 Reader Monad
 Implementation of the **Reader** monad.
@@ -256,7 +256,7 @@ The **ReaderAR** implements both traversals, *traverseM* and *traverseA* (as wel
 ## 3. State
 Implementations of the **State** monad and several related *State[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
 
-You can find more details and examples related to the *state[X] compuration expressions* at the [State](https://github.com/veminovici/aabel/blob/main/docs/State.md) documentation file.
+You can find more details and examples related to the *state[X] compuration expressions* at the [State](https://github.com/veminovici/aabel/blob/main/readme/State.md) documentation file.
 
 ### 3.1 State Monad
 Implementation of the **State** monad.
@@ -335,7 +335,7 @@ The **StateAR** implements both traversals, *traverseM* and *traverseA* (as well
 ## 4. Queue
 Implementations of the **Queue** monad and several related *Queue[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
 
-You can find more details and examples related to the *state[X] compuration expressions* at the [Queue](https://github.com/veminovici/aabel/blob/main/docs/Queue.md) documentation file.
+You can find more details and examples related to the *state[X] compuration expressions* at the [Queue](https://github.com/veminovici/aabel/blob/main/readme/Queue.md) documentation file.
 
 ### 4.1 Queue Monad
 Implementation of the **Queue** monad.
