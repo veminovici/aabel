@@ -12,18 +12,14 @@ module TQueue =
 
     type Tests (output: ITestOutputHelper) =
 
-        let puree   a = 
-            State.retn a
-        let enq    xs = 
-            StateR.retn ()
-        let deq     n = 
-            StateR.retn [1..n]
-        let peek    n = 
-            StateR.retn [1..n]
-        let isFull () = 
-            StateR.retn false
+        let puree   a = State.retn a
+        let enq    xs = StateR.retn ()
+        let deq     n = StateR.retn [1..n]
+        let peek    n = StateR.retn [1..n]
+        let isFull () = StateR.retn false
 
         let eval s0 p = Queue.eval puree enq deq peek isFull s0 p
+        let exec s0 p = Queue.exec puree enq deq peek isFull s0 p
 
         [<Fact>]
         let ``Queue retn`` () =
@@ -31,6 +27,14 @@ module TQueue =
             |> Queue.retn
             |> eval "env"
             |> (=) 10
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue exec`` () =
+            10
+            |> Queue.retn
+            |> exec "env"
+            |> (=) "env"
             |> Assert.True
 
         [<Fact>]
@@ -228,4 +232,101 @@ module TQueue =
             } 
             |> Queue.eval puree enq deq peek isFull "env"
             |> (=) (Ok [1; 2])
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE zero`` () =
+            _queue {
+                let! x = Queue.retn 10
+                if x = 20 then return ()
+            }
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) ()
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE while`` () =
+            let mutable i = 1
+            let test   () = i < 5
+            let inc    () = i <- i + 1
+
+            _queue {
+                while test() do
+                    inc()
+            }
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) ()
+            |> Assert.True
+
+            i
+            |> (=) 5
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE trywith`` () =
+            _queue {
+                try
+                    failwith "error"
+                    return 0
+                with
+                | _ -> return 10
+            }
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 10
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE tryfinally`` () =
+            _queue {
+                let mutable x = 0
+                try
+                    x <- x + 1
+                finally
+                    x <- x + 2
+
+                return x
+            }
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE using`` () =
+
+            let makeResource name = 
+                { new System.IDisposable with
+                member _.Dispose() = () }
+                |> Queue.retn
+
+            _queue {
+                use! x = makeResource "hello"
+                return 10
+            }
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 10
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE MergeSources`` () =
+            _queue {
+                let! x = Queue.retn 10
+                and! y = Queue.retn 20
+                return x + y
+            }
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 30
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE for-loop`` () =
+            let mutable x = 0
+
+            _queue {
+                for i in [1; 2; 3] do
+                    x <- x + i
+
+                return x
+            }
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) 6
             |> Assert.True
