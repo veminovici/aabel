@@ -404,7 +404,7 @@ Implementation of the **QueueAR** monad, a state transition which returns asynch
 ```fsharp
 open Simplee
 open Simplee.Collections
-open Simplee.Collections.QueueR.ComputationExpression
+open Simplee.Collections.QueueAR.ComputationExpression
 
 let puree   a = StateAR.retn a
 let enq    xs = StateAR.retn ()
