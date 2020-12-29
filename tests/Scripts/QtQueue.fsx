@@ -83,4 +83,16 @@ let test1() =
     |> Queue.eval puree enq deq peek isFull []
     |> printfn "Result: %A"
 
+let test2() =
+    queueR {
+        let! _  = Queue.enqueue [1;2;]
+        let! xs = Queue.dequeue 3
+        let! _  = Queue.enqueue [3;4;5]
+        let! xs = Queue.dequeue 2
+        return xs
+    } 
+    |> Queue.eval puree enq deq peek isFull []
+    |> printfn "Result: %A"
+
 test1 ()
+test2 ()

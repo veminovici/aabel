@@ -1,8 +1,12 @@
 namespace Simplee.Collections
 
-module Queue =
+module QueueR =
 
     open Simplee
+
+    //
+    // Queue
+    //
 
     type Instruction<'T, 'a, 'TErr> =
         | Enqueue of 'T list * (Result<unit,    'TErr> -> 'a)
@@ -20,15 +24,33 @@ module Queue =
         | Pure of 'a
         | Free of Instruction<'T, Program<'T, 'a, 'TErr>, 'TErr>
 
+    //
+    // Queue operations
+    //
+
+    let enqueue xs : Program<'a, Result<unit, 'TErr>, 'TErr>    = Free (Enqueue (xs, Pure))
+    let dequeue n  : Program<'a, Result<'a list, 'TErr>, 'TErr> = Free (Dequeue (n,  Pure))
+    let peek    n  : Program<'a, Result<'a list, 'TErr>, 'TErr> = Free (Peek    (n,  Pure))
+    let isFull     : Program<'a, Result<bool, 'TErr>, 'TErr>    = Free (IsFull       Pure)
+
+    //
+    // Monad operations
+    //
+
+    // 'T -> Program<'a, Result<'T, 'TErr>, 'TErr>
+    let retn a = a |> Ok |> Pure
+
+    // ('T -> Program<'a, Result<'U, 'TErr>, 'TErr>) -> Program<'a, Result<'T, 'TErr>, 'TErr> -> Program<'a, Result<'U, 'TErr>, 'TErr>
     let rec bind f m =
         match m with
-        | Pure a -> f a
-        | Free i -> i |> mapI (bind f) |> Free
+        | Pure (Ok a)    -> f a
+        | Pure (Error e) -> Pure (Error e)
+        | Free i          -> i |> mapI (bind f) |> Free
 
-    let retn a = Pure a
-
-    let map f m = bind (f >> retn) m
-
+    // ('T -> 'U) -> Program<'a, Result<'T, 'TErr>, 'TErr> -> Program<'a, Result<'U, 'TErr>, 'TErr>
+    let map f m =
+        bind (f >> retn) m
+     
     let apply f m =
         bind (fun f -> 
             bind (f >> retn) m) f
@@ -45,22 +67,18 @@ module Queue =
     let concat x y =
         map2 (@) x y
 
-    let enqueue xs : Program<'a, Result<unit, 'TErr>, 'TErr>    = Free (Enqueue (xs, Pure))
-    let dequeue n  : Program<'a, Result<'a list, 'TErr>, 'TErr> = Free (Dequeue (n,  Pure))
-    let peek    n  : Program<'a, Result<'a list, 'TErr>, 'TErr> = Free (Peek    (n,  Pure))
-    let isFull     : Program<'a, Result<bool, 'TErr>, 'TErr>    = Free (IsFull       Pure)
-
     let fold
-        (puree:  'a      -> State<'S, 'b>)
+        (puree:  'a      -> StateR<'S, 'b, 'TErr>)
         (enq:    'T list -> StateR<'S, unit, 'TErr>)
         (deq:    int     -> StateR<'S, 'T list, 'TErr>)
         (peek:   int     -> StateR<'S, 'T list, 'TErr>)
         (isFull: unit    -> StateR<'S, bool, 'TErr>)
-        (flow: Program<'T, 'a, 'TErr>) : State<'S, 'b> =
+        (flow: Program<'T, Result<'a, 'TErr>, 'TErr>) : StateR<'S, 'b, 'TErr> =
 
-        let rec loop flow =
+        let rec loop (flow: Program<'T, Result<'a, 'TErr>, 'TErr>) =
             match flow with
-            | Pure a -> puree a
+            | Pure (Ok a)    -> puree a
+            | Pure (Error e) -> StateR.err e
             | Free (Enqueue (xs, k)) -> enq xs    |> State.map k |> State.bind loop
             | Free (Dequeue (n,  k)) -> deq  n    |> State.map k |> State.bind loop
             | Free (Peek    (n,  k)) -> peek n    |> State.map k |> State.bind loop
@@ -89,46 +107,14 @@ module Queue =
         let (>>=) m f = bind  f m
 
     module ComputationExpression =
+        type QueueRBuilder internal () =
+            member _.Return(x) = retn x
+            member _.ReturnFrom(x) = x
 
-        /// The caller has to handle the erorrs.
-        type QueueBuilder () =
-            member _.Return(x)     = retn x
-            member _.ReturnFrom(m) = m
+            member _.Yield(x) = retn x
+            member _.YieldFrom(x) = x
+            
+            member _.Bind(m, f) = bind f m
 
-            member _.Yield(x)     = retn x
-            member _.YieldFrom(m) = m
+        let _queueR = QueueRBuilder()
 
-            member _.Zero() = 
-                retn ()
-
-            member _.Bind(m, f) =
-                printfn "The regular bind"
-                bind f m
-
-        let queue = QueueBuilder()
-
-        /// The errors are handled automatically for you.
-        type QueueRBuilder () =
-            member _.Return(x)     = retn x
-            member _.ReturnFrom(m) = m
-
-            member _.Yield(x)     = retn x
-            member _.YieldFrom(m) = m
-
-            member _.Zero() = 
-                retn ()
-
-            member _.Bind(m: Program<'a, Result<'b, 'TErr>, 'TErr>, f: Result<'b, 'TErr> -> Program<'a, Result<'d, 'TErr>, 'TErr>) =
-                printfn "The special bind ('b)"
-
-                let f' = function
-                | Ok _ as r    -> 
-                    let r' = f r
-                    r'
-                | Error e -> 
-                    let r' = retn (Error e)
-                    r'
-
-                bind f' m
-
-        let queueR = QueueRBuilder()

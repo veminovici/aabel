@@ -222,7 +222,7 @@ module TQueue =
         [<Fact>]
         let ``Queue CE Bind`` () =
             queue {
-                let! _  = Queue.enqueue [1;2;3]
+                let! r  = Queue.enqueue [1;2;3]
                 let! xs = Queue.dequeue 2
                 return xs
             } 

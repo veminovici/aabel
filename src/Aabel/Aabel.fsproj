@@ -54,7 +54,8 @@
     <Compile Include="StateR.fs"   />
     <Compile Include="StateA.fs"   />
     <Compile Include="StateAR.fs"  />
-    <Compile Include="Queue.fs"  />
+    <Compile Include="Queue.fs"    />
+    <Compile Include="QueueR.fs"   />
   </ItemGroup>
 
 </Project>
