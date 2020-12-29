@@ -383,15 +383,44 @@ let peek    n = StateR.retn [1..n]
 let isFull () = StateR.retn false
 let eval s0 p = QueueR.eval puree enq deq peek isFull s0 p
 
-let f x y = x + y
-let x = QueueR.retn 10
-let y = QueueR.retn 20
+_queueR {
+    do! QueueR.enqueue [1..5]
+    let! xs = QueueR.dequeue 2
+    let! ys = QueueR.dequeue 1
+    return (xs, ys)
+} 
+|> QueueR.eval puree enq deq peek isFull []
+|> printfn "Result: %A" // ok ([1;2], [3])
+```
 
-(x, y)
-||> QueueR.map2 f
-|> eval "env"
-|> (=) (Ok 30)
-|> Assert.True
+### 4.2 QueueAR Monad
+Implementation of the **QueueAR** monad, a state transition which returns asynchronously a **Result** and the error values are automatically handled by the **bind** function, so the flow stops when the first error is encountered.
+
+- Namespaces: *Simplee.QueueAR*, *Simplee.QueueAR.ComputationExpression*
+- Source: [QueueAR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/QueueAR.fs)
+- Test: [TQueueAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TQueueAR.fs)
+
+```fsharp
+open Simplee
+open Simplee.Collections
+open Simplee.Collections.QueueR.ComputationExpression
+
+let puree   a = StateAR.retn a
+let enq    xs = StateAR.retn ()
+let deq     n = StateAR.retn [1..n]
+let peek    n = StateAR.retn [1..n]
+let isFull () = StateAR.retn false
+let eval s0 p = QueueAR.eval puree enq deq peek isFull s0 p
+
+_queueAR {
+    do! QueueAR.enqueue [1..5]
+    let! xs = QueueAR.dequeue 2
+    let! ys = QueueAR.dequeue 1
+    return (xs, ys)
+} 
+|> QueueAR.eval puree enq deq peek isFull []
+|> Async.RunSynchronously
+|> printfn "Result: %A"  // Ok ([1;2], [3])
 ```
 
 <br />
