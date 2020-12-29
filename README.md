@@ -36,6 +36,7 @@ A F# library for common functionality around Result, Async, Reader, State, and Q
     - [Documentation](https://github.com/veminovici/aabel/blob/main/readme/Queue.md)
     - [Queue Monad](https://github.com/veminovici/aabel#41-queue-monad)
     - [QueueR Monad](https://github.com/veminovici/aabel#42-queuer-monad)
+    - [QueueAR Monad](https://github.com/veminovici/aabel#43-queuear-monad)
 
 <br />
 
@@ -393,7 +394,7 @@ _queueR {
 |> printfn "Result: %A" // ok ([1;2], [3])
 ```
 
-### 4.2 QueueAR Monad
+### 4.3 QueueAR Monad
 Implementation of the **QueueAR** monad, a state transition which returns asynchronously a **Result** and the error values are automatically handled by the **bind** function, so the flow stops when the first error is encountered.
 
 - Namespaces: *Simplee.QueueAR*, *Simplee.QueueAR.ComputationExpression*
