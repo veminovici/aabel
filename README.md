@@ -13,12 +13,29 @@
 <br />
 
 ## Description
-A F# library for common functionality around Result, Async, Reader, and State monads.
+A F# library for common functionality around Result, Async, Reader, State, and Queue monads.
 
 - [Basic Extensions (Result, Async, and Async-Result)](https://github.com/veminovici/aabel#1-basic-extensions)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/docs/AR.md)
+    - [Result Monad](https://github.com/veminovici/aabel#11-result)
+    - [Async Monad](https://github.com/veminovici/aabel#12-async)
+    - [AR Monad](https://github.com/veminovici/aabel#13-ar-monad)
 - [Reader](https://github.com/veminovici/aabel#2-reader)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/docs/Reader.md)
+    - [Reader Monad](https://github.com/veminovici/aabel#21-reader-monad)
+    - [ReaderR Monad](https://github.com/veminovici/aabel#22-readerr-monad)
+    - [ReaderR Monad](https://github.com/veminovici/aabel#23-readera-monad)
+    - [ReaderAR Monad](https://github.com/veminovici/aabel#24-readerar-monad)
 - [State](https://github.com/veminovici/aabel#3-state)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/docs/State.md)
+    - [State Monad](https://github.com/veminovici/aabel#31-state-monad)
+    - [StateR Monad](https://github.com/veminovici/aabel#32-stater-monad)
+    - [StateA Monad](https://github.com/veminovici/aabel#33-statea-monad)
+    - [StateAR Monad](https://github.com/veminovici/aabel#34-statear-monad)
 - [Queue](https://github.com/veminovici/aabel#4-queue)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/docs/Queue.md)
+    - [Queue Monad](https://github.com/veminovici/aabel#41-queue-monad)
+    - [QueueR Monad](https://github.com/veminovici/aabel#42-queuer-monad)
 
 <br />
 
@@ -320,7 +337,7 @@ Implementations of the **Queue** monad and several related *Queue[X]* monads whi
 
 You can find more details and examples related to the *state[X] compuration expressions* at the [Queue](https://github.com/veminovici/aabel/blob/main/docs/Queue.md) documentation file.
 
-### 3.1 Queue Monad
+### 4.1 Queue Monad
 Implementation of the **Queue** monad.
 
 - Namespaces: *Simplee.Queue*, *Simplee.Queue.ComputationExpression*
@@ -347,7 +364,7 @@ let eval s0 p = Queue.eval puree enq deq peek isFull s0 p
 |> Assert.True
 ```
 
-### 3.2 QueueR Monad
+### 4.2 QueueR Monad
 Implementation of the **QueueR** monad, a state transition which returns a **Result** and the error values are automatically handled by the **bind** function, so the flow stops when the first error is encountered.
 
 - Namespaces: *Simplee.QueueR*, *Simplee.QueueR.ComputationExpression*
