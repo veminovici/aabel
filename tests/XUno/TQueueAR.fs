@@ -28,12 +28,24 @@ module TQueueAR =
             |> QueueAR.eval puree enq deq peek isFull s0
             |> Async.RunSynchronously
 
+        let exec s0 p = 
+            p
+            |> QueueAR.exec puree enq deq peek isFull s0
+
         [<Fact>]
         let ``QueueAR retn`` () =
             10
             |> QueueAR.retn
             |> eval "env"
             |> (=) (Ok 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR exec`` () =
+            10
+            |> QueueAR.retn
+            |> exec "env"
+            |> (=) "env"
             |> Assert.True
 
         [<Fact>]
@@ -241,4 +253,134 @@ module TQueueAR =
             |> QueueAR.eval puree enq deq peek isFull "env"
             |> Async.RunSynchronously
             |> (=) (Ok [1; 2])
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE Bind 1`` () =
+            _queueAR {
+                let! r  = QueueAR.enqueue [1;2;3]
+                let! xs = QueueAR.dequeue 2
+                let! ys = QueueAR.peek 2
+                return ys
+            } 
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok [1; 2])
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE Bind 2`` () =
+            _queueAR {
+                let! r  = QueueAR.enqueue [1;2;3]
+                let! xs = QueueAR.dequeue 2
+                let! ys = QueueAR.isFull
+                return ys
+            } 
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok false)
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE zero`` () =
+            _queueAR {
+                let! x = QueueAR.retn 10
+                if x = 20 then return ()
+            }
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok ())
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE while`` () =
+            let mutable i = 1
+            let test   () = i < 5
+            let inc    () = i <- i + 1
+
+            _queueAR {
+                while test() do
+                    inc()
+            }
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok ())
+            |> Assert.True
+
+            i
+            |> (=) 5
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE trywith`` () =
+            _queueAR {
+                try
+                    failwith "error"
+                    return 0
+                with
+                | _ -> return 10
+            }
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE tryfinally`` () =
+            _queueAR {
+                let mutable x = 0
+                try
+                    x <- x + 1
+                finally
+                    x <- x + 2
+
+                return x
+            }
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE using`` () =
+
+            let makeResource name = 
+                { new System.IDisposable with
+                member _.Dispose() = () }
+                |> QueueAR.retn
+
+            _queueAR {
+                use! x = makeResource "hello"
+                return 10
+            }
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE MergeSources`` () =
+            _queueAR {
+                let! x = QueueAR.retn 10
+                and! y = QueueAR.retn 20
+                return x + y
+            }
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok 30)
+            |> Assert.True
+
+        [<Fact>]
+        let ``QueueAR CE for-loop`` () =
+            let mutable x = 0
+
+            _queueAR {
+                for i in [1; 2; 3] do
+                    x <- x + i
+
+                return x
+            }
+            |> QueueAR.eval puree enq deq peek isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Ok 6)
             |> Assert.True

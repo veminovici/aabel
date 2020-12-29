@@ -235,6 +235,30 @@ module TQueue =
             |> Assert.True
 
         [<Fact>]
+        let ``Queue CE Bind 1`` () =
+            _queue {
+                let! r  = Queue.enqueue [1;2;3]
+                let! xs = Queue.dequeue 2
+                let! ys = Queue.peek 2
+                return ys
+            } 
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) (Ok [1; 2])
+            |> Assert.True
+
+        [<Fact>]
+        let ``Queue CE Bind 2`` () =
+            _queue {
+                let! r  = Queue.enqueue [1;2;3]
+                let! xs = Queue.dequeue 2
+                let! ys = Queue.isFull
+                return ys
+            } 
+            |> Queue.eval puree enq deq peek isFull "env"
+            |> (=) (Ok false)
+            |> Assert.True
+
+        [<Fact>]
         let ``Queue CE zero`` () =
             _queue {
                 let! x = Queue.retn 10
