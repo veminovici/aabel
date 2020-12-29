@@ -105,30 +105,4 @@ module Queue =
                 printfn "The regular bind"
                 bind f m
 
-        let queue = QueueBuilder()
-
-        /// The errors are handled automatically for you.
-        type QueueRBuilder () =
-            member _.Return(x)     = retn x
-            member _.ReturnFrom(m) = m
-
-            member _.Yield(x)     = retn x
-            member _.YieldFrom(m) = m
-
-            member _.Zero() = 
-                retn ()
-
-            member _.Bind(m: Program<'a, Result<'b, 'TErr>, 'TErr>, f: Result<'b, 'TErr> -> Program<'a, Result<'d, 'TErr>, 'TErr>) =
-                printfn "The special bind ('b)"
-
-                let f' = function
-                | Ok _ as r    -> 
-                    let r' = f r
-                    r'
-                | Error e -> 
-                    let r' = retn (Error e)
-                    r'
-
-                bind f' m
-
-        let queueR = QueueRBuilder()
+        let _queue = QueueBuilder()

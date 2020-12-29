@@ -185,7 +185,7 @@ module TQueue =
 
         [<Fact>]
         let ``Queue CE Return`` () =
-            queue {
+            _queue {
                 return 10
             } 
             |> Queue.eval puree enq deq peek isFull "env"
@@ -194,7 +194,7 @@ module TQueue =
 
         [<Fact>]
         let ``Queue CE ReturnFrom`` () =
-            queue {
+            _queue {
                 return! (Queue.retn 10)
             } 
             |> Queue.eval puree enq deq peek isFull "env"
@@ -203,7 +203,7 @@ module TQueue =
 
         [<Fact>]
         let ``Queue CE Yield`` () =
-            queue {
+            _queue {
                 yield 10
             } 
             |> Queue.eval puree enq deq peek isFull "env"
@@ -212,7 +212,7 @@ module TQueue =
 
         [<Fact>]
         let ``Queue CE YieldFrom`` () =
-            queue {
+            _queue {
                 yield! (Queue.retn 10)
             } 
             |> Queue.eval puree enq deq peek isFull "env"
@@ -221,7 +221,7 @@ module TQueue =
 
         [<Fact>]
         let ``Queue CE Bind`` () =
-            queue {
+            _queue {
                 let! r  = Queue.enqueue [1;2;3]
                 let! xs = Queue.dequeue 2
                 return xs
