@@ -1,14 +1,14 @@
 namespace Simplee.Collections
 
-module Queue =
+module QueueAR =
 
     open Simplee
 
     type Instruction<'T, 'a, 'TErr> =
-        | Enqueue of 'T list * (Result<unit,    'TErr> -> 'a)
-        | Dequeue of int     * (Result<'T list, 'TErr> -> 'a)
-        | Peek    of int     * (Result<'T list, 'TErr> -> 'a)
-        | IsFull  of           (Result<bool,    'TErr> -> 'a)
+        | Enqueue of 'T list * (AR<unit,    'TErr> -> 'a)
+        | Dequeue of int     * (AR<'T list, 'TErr> -> 'a)
+        | Peek    of int     * (AR<'T list, 'TErr> -> 'a)
+        | IsFull  of           (AR<bool,    'TErr> -> 'a)
 
     let private mapI f = function
         | Enqueue (xs, k) -> Enqueue (xs, k >> f)
@@ -20,17 +20,25 @@ module Queue =
         | Pure of 'a
         | Free of Instruction<'T, Program<'T, 'a, 'TErr>, 'TErr>
 
-    let enqueue xs : Program<'a, Result<unit, 'TErr>, 'TErr>    = Free (Enqueue (xs, Pure))
-    let dequeue n  : Program<'a, Result<'a list, 'TErr>, 'TErr> = Free (Dequeue (n,  Pure))
-    let peek    n  : Program<'a, Result<'a list, 'TErr>, 'TErr> = Free (Peek    (n,  Pure))
-    let isFull     : Program<'a, Result<bool, 'TErr>, 'TErr>    = Free (IsFull       Pure)
+    let enqueue xs : Program<'a, AR<unit, 'TErr>, 'TErr>    = Free (Enqueue (xs, Pure))
+    let dequeue n  : Program<'a, AR<'a list, 'TErr>, 'TErr> = Free (Dequeue (n,  Pure))
+    let peek    n  : Program<'a, AR<'a list, 'TErr>, 'TErr> = Free (Peek    (n,  Pure))
+    let isFull     : Program<'a, AR<bool, 'TErr>, 'TErr>    = Free (IsFull       Pure)
 
-    let rec bind f m =
+    let retn a = a |> Ok |> Async.retn |> Pure
+
+    let rec bind 
+        (f: 'T -> Program<'a, AR<'U, 'TErr>, 'TErr>) 
+        (m: Program<'a, AR<'T, 'TErr>, 'TErr>)
+        : Program<'a, AR<'U, 'TErr>, 'TErr> =
         match m with
-        | Pure a -> f a
+        | Pure a -> 
+            a 
+            |> Async.RunSynchronously 
+            |> function
+            | Ok a -> f a
+            | Error e -> e |> Error |> Async.retn |> Pure
         | Free i -> i |> mapI (bind f) |> Free
-
-    let retn a = Pure a
 
     let map f m = bind (f >> retn) m
 
@@ -50,18 +58,20 @@ module Queue =
     let concat x y =
         map2 (@) x y
 
-
     let fold
-        (puree:  'a      -> State<'S, 'b>)
-        (enq:    'T list -> StateR<'S, unit, 'TErr>)
-        (deq:    int     -> StateR<'S, 'T list, 'TErr>)
-        (peek:   int     -> StateR<'S, 'T list, 'TErr>)
-        (isFull: unit    -> StateR<'S, bool, 'TErr>)
-        (flow: Program<'T, 'a, 'TErr>) : State<'S, 'b> =
+        (puree:  'a      -> StateAR<'S, 'b, 'TErr>)
+        (enq:    'T list -> StateAR<'S, unit, 'TErr>)
+        (deq:    int     -> StateAR<'S, 'T list, 'TErr>)
+        (peek:   int     -> StateAR<'S, 'T list, 'TErr>)
+        (isFull: unit    -> StateAR<'S, bool, 'TErr>)
+        (flow: Program<'T, AR<'a, 'TErr>, 'TErr>) : StateAR<'S, 'b, 'TErr> =
 
-        let rec loop flow =
+        let rec loop (flow: Program<'T, AR<'a, 'TErr>, 'TErr>) : StateAR<'S, 'b, 'TErr> =
             match flow with
-            | Pure a -> puree a
+            | Pure ar -> 
+                ar 
+                |> AR.fold puree (fun e -> e |> StateAR.err) 
+                |> Async.RunSynchronously
             | Free (Enqueue (xs, k)) -> enq xs    |> State.map k |> State.bind loop
             | Free (Dequeue (n,  k)) -> deq  n    |> State.map k |> State.bind loop
             | Free (Peek    (n,  k)) -> peek n    |> State.map k |> State.bind loop
@@ -92,7 +102,7 @@ module Queue =
     module ComputationExpression =
 
         /// The caller has to handle the erorrs.
-        type QueueBuilder () =
+        type QueueARBuilder () =
             member _.Return(x)     = retn x
             member _.ReturnFrom(m) = m
 
@@ -105,4 +115,4 @@ module Queue =
             member _.Bind(m, f) =
                 bind f m
 
-        let _queue = QueueBuilder()
+        let _queueAR = QueueARBuilder()
