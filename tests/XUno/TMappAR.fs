@@ -270,7 +270,7 @@ module TMappAR =
             |> Assert.True
 
         [<Fact>]
-        let ``MapAR CE Bind 2`` () =
+        let ``MappAR CE Bind 2`` () =
             _mappAR {
                 let! r  = MappAR.add ([1;2;3] |> List.map (fun k -> k, sprintf "v%d" k))
                 let! r' = MappAR.del [2]
@@ -280,6 +280,19 @@ module TMappAR =
             |> MappAR.eval puree add del find isFull "env"
             |> Async.RunSynchronously
             |> (=) (Ok false)
+            |> Assert.True
+
+        [<Fact>]
+        let ``MappAR CE Bind 3`` () =
+            _mappAR {
+                let! r  = MappAR.add ([1;2;3] |> List.map (fun k -> k, sprintf "v%d" k))
+                let! xs = MappAR.err "My error"
+                let! ys = MappAR.isFull
+                return ys
+            } 
+            |> MappAR.eval puree add del find isFull "env"
+            |> Async.RunSynchronously
+            |> (=) (Error "My error")
             |> Assert.True
 
         [<Fact>]

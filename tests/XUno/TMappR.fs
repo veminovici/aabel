@@ -260,6 +260,18 @@ module TMappR =
             |> Assert.True
 
         [<Fact>]
+        let ``MappR CE Bind 3`` () =
+            _mappR {
+                let! r  = MappR.add ([1;2;3] |> List.map (fun k -> k, sprintf "v%d" k))
+                let! xs = MappR.err "My error"
+                let! ys = MappR.isFull
+                return ys
+            } 
+            |> MappR.eval puree add del find isFull "env"
+            |> (=) (Error "My error")
+            |> Assert.True
+
+        [<Fact>]
         let ``MappR CE zero`` () =
             _mappR {
                 let! x = MappR.retn 10
