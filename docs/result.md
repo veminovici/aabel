@@ -1,5 +1,7 @@
 # Simplee |> Aabel |> Result
 
+<br />
+
 ## 1. Result
 The library implements several extension functions that enhance the functionality of the **Result** type.
 - Namespaces: *Simplee*, *Simplee.Result.Operators*, *Simplee.Result.ComputationExpression*, *Simplee.Result.Traversals*
@@ -93,18 +95,15 @@ let z = Error "the 2nd error here"
 
 <br />
 
-## Async
-- Namespaces: *Simplee*
-- Source: [Mapp.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Async.fs)
-- Test: [TMapp.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAsync.fs)
-- Computation expression: **async**
+
+## 2. Related Topics
+
+- [Aabel](./index.md)
+- [Async](./async.md)
+- [Async-Result](./ar/md)
 
 <br />
 
-## AR
-- Namespaces: *Simplee*
-- Source: [Mapp.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/AR.fs)
-- Test: [TMapp.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAR.fs)
-- Computation expression: **async**
+## 3. Support or Contact
+Having trouble with the library? [Contact support](https://github.com/veminovici) and we’ll help you sort it out.
 
-<br />

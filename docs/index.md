@@ -6,7 +6,7 @@ A F# library for common functionality for **Result**, **Async**, **Async-Result*
     - [Result](./result.md)
     - [Async](./async.md)
     - [Async-Result](./ar.md)
-- *Monads**
+- **Monads**
     - [Reader monad](./reader.md)
     - [State monad](./state.md)
 - **Collections**
