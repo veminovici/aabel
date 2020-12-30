@@ -17,6 +17,7 @@
 
 ## Description
 A F# library for common functionality for **Result**, **Async**, **Async-Result**, **Reader**, **State**, **Queue**, and **Mapp** monads.
+For more details please see the full [documentation](https://veminovici.github.io/aabel/).
 
 - [Basic Extensions (Result, Async, and Async-Result)](https://github.com/veminovici/aabel#1-basic-extensions)
     - [Documentation](https://github.com/veminovici/aabel/blob/main/readme/AR.md)
