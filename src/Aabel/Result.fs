@@ -112,7 +112,7 @@ module Result =
 
         open System
 
-        type ResultBuilder () =
+        type ResultBuilder internal () =
             member _.Return(x)     = Ok x
             member _.ReturnFrom(x) = x
 
@@ -154,7 +154,7 @@ module Result =
             member _.Source(s: #seq<_>) = 
                 s
 
-        let result = ResultBuilder()
+        let _result = ResultBuilder()
 
     module Traversals = 
 

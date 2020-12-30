@@ -431,7 +431,7 @@ module TResult =
         [<Fact>]
         let ``Result sequenceAsync`` () =
 
-            let a = async { return 1}
+            let a = async { return 1 }
 
             a
             |> Ok
@@ -497,13 +497,13 @@ module TResult =
 
         [<Fact>]
         let ``Result CE return`` () =
-            result { return "abc" }
+            _result { return "abc" }
             |> (=) (Ok "abc")
             |> Assert.True
 
         [<Fact>]
         let ``Result CE returnFrom`` () =
-            result { return! Ok "abc" }
+            _result { return! Ok "abc" }
             |> (=) (Ok "abc")
             |> Assert.True
 
@@ -512,13 +512,13 @@ module TResult =
             let a = Ok "abc"
             let f (s: string) = Ok s.Length
 
-            result.Zero ()
+            _result.Zero ()
             |> (=) (Ok ())
             |> Assert.True
 
         [<Fact>]
         let ``Result CE yield`` () =
-            result { 
+            _result { 
                 yield "ab"
                 yield "cd" }
             |> (=) (Ok "cd")
@@ -526,7 +526,7 @@ module TResult =
 
         [<Fact>]
         let ``Result CE yieldFrom`` () =
-            result { yield! Ok "abc" }
+            _result { yield! Ok "abc" }
             |> (=) (Ok "abc")
             |> Assert.True
 
@@ -535,13 +535,13 @@ module TResult =
             let a = Ok "abc"
             let f (s: string) = Ok s.Length
 
-            result.Combine (a, f)
+            _result.Combine (a, f)
             |> (=) (Ok 3)
             |> Assert.True
 
         [<Fact>]
         let ``Result CE bind`` () =
-            result {
+            _result {
                 let! x = Ok 10
                 return x
             }
@@ -550,7 +550,7 @@ module TResult =
 
         [<Fact>]
         let ``Result CE bind error`` () =
-            result {
+            _result {
                 let! x = Error "e"
                 return x + 10
             }
@@ -563,7 +563,7 @@ module TResult =
             let test() = i < 5
             let inc() = i <- i + 1
 
-            result {
+            _result {
                 while test() do
                     inc()
             }
@@ -578,7 +578,7 @@ module TResult =
         let ``Result CE for loop`` () =
             let mutable x = 0
 
-            result {
+            _result {
                 for i in [1; 2; 3] do
                     x <- x + i
 
@@ -589,7 +589,7 @@ module TResult =
 
         [<Fact>]
         let ``Result CE trywith`` () =
-            result {
+            _result {
                 try
                     failwith "error"
                     return 0
@@ -601,7 +601,7 @@ module TResult =
 
         [<Fact>]
         let ``Result CE tryfinally`` () =
-            result {
+            _result {
                 let mutable x = 0
                 try
                     x <- x + 1
@@ -621,7 +621,7 @@ module TResult =
                 new System.IDisposable with
                 member _.Dispose() = () }
 
-            result {
+            _result {
                 use! x = makeResource "hello"
                 return 1
             }
@@ -633,13 +633,13 @@ module TResult =
             let a = Ok "abc"
             let f (s: string) = s.Length
 
-            result.BindReturn (a, f)
+            _result.BindReturn (a, f)
             |> (=) (Ok 3)
             |> Assert.True
 
         [<Fact>]
         let ``AReader CE MergeSources`` () =
-            result {
+            _result {
                 let! x = Ok 10
                 and! y = Ok 20
                 return x + y
