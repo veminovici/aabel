@@ -19,6 +19,7 @@ You can find the usual functor, applicative, and monadic functions: **retn**, **
 |>  Assert.True
 ```
 
+### 1.2 Create Functions
 The library also provides a set of functions which check if values meet different conditions and returning a **result** value: **requireTrue**, **requireFalse**, **requireSome**, **requireNone** etc.
 
 ```fsharp
@@ -29,8 +30,11 @@ The library also provides a set of functions which check if values meet differen
 |> Assert.True
 ```
 
-### 1.2 The *_result* Computation Expression
+## 2 The *_result* Computation Expression
 You can use also the **_result** computation expression.
+
+### 2.1 Monadic Style
+The *_result* computation expression can be use in monadic style, where an error stops the compuration and it is returned as a result of the computation.
 
 ```fsharp
 _result {
@@ -52,7 +56,7 @@ _result {
 |> Assert.True
 ```
 
-### 1.3 Using *_result* in applicative style
+### 2.2 Applicative style
 The computation expression supports applicative style:
 
 ```fsharp
@@ -64,7 +68,7 @@ _result {
 |> Assert.True
 ```
 
-### 1.4 Traversals
+## 3 Traversals
 There are supported both **traverseA** and **traverseM** and long with their *sequence* sibling functions:
 
 ```fsharp
@@ -95,15 +99,14 @@ let z = Error "the 2nd error here"
 
 <br />
 
-
-## 2. Related Topics
+## 4. Related Topics
 
 - [Aabel](./index.md)
 - [Async](./async.md)
-- [Async-Result](./ar/md)
+- [Async-Result](./ar.md)
 
 <br />
 
-## 3. Support or Contact
+## 5. Support or Contact
 Having trouble with the library? [Contact support](https://github.com/veminovici) and we’ll help you sort it out.
 
