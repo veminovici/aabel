@@ -58,6 +58,8 @@
     <Compile Include="QueueR.fs"   />
     <Compile Include="QueueAR.fs"  />
     <Compile Include="Mapp.fs"     />
+    <Compile Include="MappR.fs"    />
+    <Compile Include="MappAR.fs"   />
   </ItemGroup>
 
 </Project>

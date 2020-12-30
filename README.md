@@ -37,6 +37,11 @@ A F# library for common functionality around Result, Async, Reader, State, and Q
     - [Queue Monad](https://github.com/veminovici/aabel#41-queue-monad)
     - [QueueR Monad](https://github.com/veminovici/aabel#42-queuer-monad)
     - [QueueAR Monad](https://github.com/veminovici/aabel#43-queuear-monad)
+- [Mapp](https://github.com/veminovici/aabel#5-mapp)
+    - [Documentation](https://github.com/veminovici/aabel/blob/main/readme/Mapp.md)
+    - [Mapp Monad](https://github.com/veminovici/aabel#51-mapp-monad)
+    - [MappR Monad](https://github.com/veminovici/aabel#52-mappr-monad)
+    - [MappAR Monad](https://github.com/veminovici/aabel#53-mappar-monad)
 
 <br />
 
@@ -336,7 +341,7 @@ The **StateAR** implements both traversals, *traverseM* and *traverseA* (as well
 ## 4. Queue
 Implementations of the **Queue** monad and several related *Queue[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
 
-You can find more details and examples related to the *state[X] compuration expressions* at the [Queue](https://github.com/veminovici/aabel/blob/main/readme/Queue.md) documentation file.
+You can find more details and examples related to the *_queue[X] compuration expressions* at the [Queue](https://github.com/veminovici/aabel/blob/main/readme/Queue.md) documentation file.
 
 ### 4.1 Queue Monad
 Implementation of the **Queue** monad.
@@ -426,6 +431,97 @@ _queueAR {
 
 <br />
 
+## 5. Mapp
+Implementations of the **Mapp** monad and several related *Mapp[X]* monads which return *Result*, *Async*, or a combination of both *Async-Result*.
+
+You can find more details and examples related to the *_mapp[X] compuration expressions* at the [Mapp](https://github.com/veminovici/aabel/blob/main/readme/Mapp.md) documentation file.
+
+### 5.1 Mapp Monad
+Implementation of the **Mapp** monad.
+
+- Namespaces: *Simplee.Mapp*, *Simplee.Mapp.ComputationExpression*
+- Source: [Mapp.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Mapp.fs)
+- Test: [TMapp.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TMapp.fs)
+
+```fsharp
+open Simplee
+open Simplee.Collections
+open Simplee.Collections.Mapp.ComputationExpression
+
+let puree   a  = State.retn a
+let add    kvs = StateR.retn ()
+let del     ks = StateR.retn ()
+let find    ks = ks |> List.map (fun k -> k, sprintf "v%d" k) |> StateR.retn
+let isFull  () = StateR.retn false
+let eval s0 p = Mapp.eval puree add del find isFull s0 p
+
+_mapp {
+    let! r  = Mapp.add ([1;2;3] |> List.map (fun k -> k, sprintf "v%d" k))
+    let! r' = Mapp.del [2]
+    let! ys = Mapp.isFull
+    return ys
+} 
+|> Mapp.eval puree add del find isFull "env"
+```
+
+### 5.2 MappR Monad
+Implementation of the **MapPR** monad, a state transition which returns a **Result** and the error values are automatically handled by the **bind** function, so the flow stops when the first error is encountered.
+
+- Namespaces: *Simplee.MappR*, *Simplee.MappR.ComputationExpression*
+- Source: [MappR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/MappR.fs)
+- Test: [TMappR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TMappR.fs)
+
+```fsharp
+open Simplee
+open Simplee.Collections
+open Simplee.Collections.MappR.ComputationExpression
+
+let puree   a  = State.retn a
+let add    kvs = StateR.retn ()
+let del     ks = StateR.retn ()
+let find    ks = ks |> List.map (fun k -> k, sprintf "v%d" k) |> StateR.retn
+let isFull  () = StateR.retn false
+let eval s0 p = MappR.eval puree add del find isFull s0 p
+
+_mappR {
+    let! r  = MappR.add ([1;2;3] |> List.map (fun k -> k, sprintf "v%d" k))
+    let! r' = MappR.del [2]
+    let! ys = MappR.isFull
+    return ys
+} 
+|> MappR.eval puree add del find isFull "env"
+```
+
+### 5.3 MappAR Monad
+Implementation of the **MappAR** monad, a state transition which returns asynchronously a **Result** and the error values are automatically handled by the **bind** function, so the flow stops when the first error is encountered.
+
+- Namespaces: *Simplee.MappAR*, *Simplee.MappAR.ComputationExpression*
+- Source: [MappAR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/MappAR.fs)
+- Test: [TMappAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TMappAR.fs)
+
+```fsharp
+open Simplee
+open Simplee.Collections
+open Simplee.Collections.MappAR.ComputationExpression
+
+let puree   a  = StateAR.retn a
+let add    kvs = StateAR.retn ()
+let del     ks = StateAR.retn ()
+let find    ks = ks |> List.map (fun k -> k, sprintf "v%d" k) |> StateAR.retn
+let isFull  () = StateAR.retn false
+let eval s0 p = MappAR.eval puree add del find isFull s0 p
+
+_mappAR {
+    let! r  = MappAR.add ([1;2;3] |> List.map (fun k -> k, sprintf "v%d" k))
+    let! r' = MappAR.del [2]
+    let! ys = MappAR.isFull
+    return ys
+} 
+|> MappAR.eval puree add del find isFull "env"
+|> Async.RunSynchronously
+```
+
+<br />
 
 ### Thank you!
 

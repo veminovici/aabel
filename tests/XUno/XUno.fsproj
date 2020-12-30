@@ -23,6 +23,8 @@
     <Compile Include="TQueueR.fs"   />
     <Compile Include="TQueueAR.fs"  />
     <Compile Include="TMapp.fs"     />
+    <Compile Include="TMappR.fs"    />
+    <Compile Include="TMappAR.fs"   />
     <Compile Include="Program.fs"   />
   </ItemGroup>
 
