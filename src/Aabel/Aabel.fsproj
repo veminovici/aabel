@@ -57,6 +57,7 @@
     <Compile Include="Queue.fs"    />
     <Compile Include="QueueR.fs"   />
     <Compile Include="QueueAR.fs"  />
+    <Compile Include="Mapp.fs"     />
   </ItemGroup>
 
 </Project>
