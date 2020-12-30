@@ -2,14 +2,14 @@
 
 <br />
 
-## 1. Async
+## 1. Async-Result
 
 Implementation of the **Async-Result** monad which represents an **async** operation which returns a **Result** value.
 
 - Namespaces: *Simplee.AR*, *Simplee.AR.ComputationExpression*, *Simplee.AR.Traversals* 
 - Source: [AR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/AR.fs)
 - Test: [TAR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TAR.fs)
-_ Computation expression: **_ar**
+- Computation expression: **_ar**
 - Script: [AR.fsx](https://github.com/veminovici/aabel/blob/main/tests/Scripts/QtAR.fsx)
 
 Open the relevand namespaces:
@@ -19,7 +19,7 @@ open Simplee
 open Simplee.AR.ComputationExpression
 ```
 
-## 2. The *_ar* Computation Expression
+## 2. The *_ar*  Computation Expression
 The library implements a FSharp computation expression **_ar** around the **AR** monad.
 
 ### 2.1. Monadic Computation
