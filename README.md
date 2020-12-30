@@ -11,6 +11,8 @@
 [![License](https://img.shields.io/github/license/veminovici/aabel)](https://opensource.org/licenses/Apache-2.0)
 [![Coverage Status](https://coveralls.io/repos/github/veminovici/aabel/badge.svg?branch=main&bust=1)](https://coveralls.io/github/veminovici/aabel)
 
+[![Github Actions](https://buildstats.info/github/chart/veminovici/aabel)](https://github.com/veminovici/aabel)
+
 <br />
 
 ## Description
