@@ -3,7 +3,7 @@ namespace Simplee.Tests
 module TTimed =
 
     open Simplee
-    open Simplee.Diagnostics.Timed
+    open Simplee.Diagnostics
     open Simplee.Diagnostics.Timed.ComputationExpression
 
     open System
@@ -14,40 +14,90 @@ module TTimed =
     type Tests (output: ITestOutputHelper) =
 
         [<Fact>]
-        let ``Timed ctor`` () =
-            let tr = { Result = 1; Elapsed = TimeSpan.Zero }
+        let ``Timed make`` () =
 
-            tr.Result
+            let t = Timed.ofValue 1 in
+
+            t
+            |> Timed.result
             |> (=) 1
             |> Assert.True
 
-            tr.Elapsed
+            t
+            |> Timed.elapsed
             |> (=) TimeSpan.Zero
             |> Assert.True
 
         [<Fact>]
-        let ``Timed Return`` () =
-            let tr = timed.Return 1
-            tr.Result
+        let ``Timed with`` () =
+
+            let t = 
+                1 
+                |> Timed.ofValue 
+                |> Timed.withResult 2 
+                |> Timed.withElapsed (TimeSpan.FromMilliseconds 10.)
+
+            t
+            |> Timed.result
+            |> (=) 2
+            |> Assert.True
+
+            t
+            |> Timed.elapsed
+            |> (=) (TimeSpan.FromMilliseconds 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Timed add`` () =
+
+            let t = 
+                1 
+                |> Timed.ofValue 
+                |> Timed.withResult 2 
+                |> Timed.addElapsed (TimeSpan.FromMilliseconds 10.)
+                |> Timed.addElapsed (TimeSpan.FromMilliseconds 20.)
+
+            t
+            |> Timed.result
+            |> (=) 2
+            |> Assert.True
+
+            t
+            |> Timed.elapsed
+            |> (=) (TimeSpan.FromMilliseconds 30.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Timed CE Return`` () =
+
+            let flow = 
+                _timed {
+                    return 1
+                }
+
+            flow
+            |> Timed.result
             |> (=) 1
             |> Assert.True
 
-            tr.Elapsed
-            |> (=) TimeSpan.Zero
+            flow
+            |> Timed.elapsed
+            |> (<>) TimeSpan.Zero
             |> Assert.True
 
         [<Fact>]
         let ``Timed Delay`` () =
             let oneMinute = TimeSpan.FromMinutes 1.
-            let f () = 
-                { Result = 5; Elapsed = oneMinute }
+            let f () = Timed.ofValue 5 |> Timed.withElapsed oneMinute
 
-            let tr = timed.Delay f
+            let tr = _timed.Delay f
 
-            tr.Result
+            tr
+            |> Timed.result
             |> (=) 5
             |> Assert.True
 
-            tr.Elapsed
+            tr
+            |> Timed.elapsed
             |> (<=) oneMinute
             |> Assert.True
