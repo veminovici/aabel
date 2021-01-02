@@ -1,4 +1,8 @@
 # Simplee |> Aabel |> Reader
+
+<br />
+
+## 1. Reader Monads
 The implementation of the **Reader** monad and some of its variations: **ReaderR** a reader that returns a **Result** value, and **ReaderAR** a reader that returns a **Async-Reeuslt** value.
 
 ### Reader
@@ -24,11 +28,10 @@ The implementation of the **Reader** monad and some of its variations: **ReaderR
 
 More examples: [QtReaderAR.fsx](https://github.com/veminovici/aabel/blob/main/tests/Scripts/QtReaderAR.fsx)
 
-## The Computation Expressions
+## 2. The *_reader[X]* Computation Expressions
 The library implements a FSharp computation expression **reader** around the **Reader** monad, the **readerR** around **ReaderR** monad, **readerA** around **ReaderA** monad, and **readerAR** around **ReaderAR**
 
-### Monadic Computation
-
+### 2.1 Monadic Computation
 In below example, we have a configuration that stores the user name and the password. We have two
 functions which read the user name and password. The computation flow calls these two functions and
 returns the two values as pair.
@@ -73,7 +76,7 @@ readerAR {
 |> printfn "user/pwd: %A"
 ```
 
-## Applicative Computation
+### 2.2 Applicative Computation
 You can use applicative computation where all 3 values are computed, without checking the result of the previous operations.
 
 ```fsharp
@@ -91,5 +94,14 @@ readerAR {
 |> printfn "user/pwd: %A"
 ```
 
-## Aabel Library
-For details related to other monads implemented by **Aabel** library, please check the main documentation [file](https://github.com/veminovici/aabel/blob/main/README.md).
+<br />
+
+## 3. Related Topics
+
+- [Aabel](./index.md)
+- [State](./state.md)
+
+<br />
+
+## 4. Support or Contact
+Having trouble with the library? [Contact support](https://github.com/veminovici) and we’ll help you sort it out.

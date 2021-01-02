@@ -60,6 +60,7 @@
     <Compile Include="Mapp.fs"     />
     <Compile Include="MappR.fs"    />
     <Compile Include="MappAR.fs"   />
+    <Compile Include="Timed.fs"    />
   </ItemGroup>
 
 </Project>

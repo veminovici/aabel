@@ -25,6 +25,7 @@
     <Compile Include="TMapp.fs"     />
     <Compile Include="TMappR.fs"    />
     <Compile Include="TMappAR.fs"   />
+    <Compile Include="TTimed.fs"    />
     <Compile Include="Program.fs"   />
   </ItemGroup>
 
