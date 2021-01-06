@@ -366,3 +366,25 @@ module TReader =
             |> Reader.run "env"
             |> (=) [1..4]
             |> Assert.True
+
+        [<Fact>]
+        let ``Reader lift1`` () =
+            let f e (a: 'a) = sprintf "%s-%A" e a
+            let f' a = a |> Reader.lift1 f
+
+            10
+            |> f'
+            |> Reader.run "env"
+            |> (=) "env-10"
+            |> Assert.True
+
+        [<Fact>]
+        let ``Reader lift2`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b
+            let f' a b = (a, b) ||> Reader.lift2 f
+
+            (10, 11)
+            ||> f'
+            |> Reader.run "env"
+            |> (=) "env-10-11"
+            |> Assert.True

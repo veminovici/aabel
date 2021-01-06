@@ -148,29 +148,3 @@ module State =
 
             let sequenceM xs =
                 traverseM id xs
-
-(*
-    let traverse (f: 'T -> State<'S, 'U>) (lst:'T list) : State<'S, 'U list> =
-
-        let cons h t = h @ [t]
-        let zero = retn []
-        
-        let folder mh t =
-            mh >>= (fun head ->
-                f t >>= (fun tail ->
-                    retn (cons head tail)))
-
-        List.fold folder zero lst
-
-    let sequence lst = traverse id lst
-
-    let private unfld m s =
-        m
-        |> run s
-        |> function
-            | (Some r, s') -> Some <| (r, s')
-            | (None,    _) -> None
-
-    let unfold m =
-        Seq.unfold (unfld m)
-*)

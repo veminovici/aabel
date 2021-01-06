@@ -37,6 +37,15 @@ module Reader =
     let map3 f x y z =
         apply (map2 f x y) z
 
+    let lift1 (f: 'E -> 'a -> 'b) : 'a -> Reader<'E, 'b> =
+        fun a -> Reader <| fun e -> f e a
+
+    let lift2 (f: 'E -> 'a -> 'b -> 'c) : 'a -> 'b -> Reader<'E, 'c> =
+        fun a b -> Reader <| fun e -> f e a b
+
+    let liftE (f: 'E2 -> 'E1) (Reader fn) =
+        Reader (f >> fn)
+
     let sequenceAsync (r: Reader<_, Async<_>>) = async {
         return 
             Reader <| fun env ->
