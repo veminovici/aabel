@@ -608,3 +608,69 @@ module TReaderAR =
             |>  ReaderAR.run "env"
             |> (=) (Ok [1..4])
             |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR lift1`` () =
+            let f e (a: 'a) = a |> sprintf "%s-%A" e |> AR.retn
+            let f' a = a |> ReaderAR.lift1 f
+
+            10
+            |> f'
+            |> ReaderAR.run "env"
+            |> (=) (Ok "env-10")
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR lift1R`` () =
+            let f e (a: 'a) = a |> sprintf "%s-%A" e |> Ok
+            let f' a = a |> ReaderAR.lift1R f
+
+            10
+            |> f'
+            |> ReaderAR.run "env"
+            |> (=) (Ok "env-10")
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR lift1A`` () =
+            let f e (a: 'a) = a |> sprintf "%s-%A" e |> Async.retn
+            let f' a = a |> ReaderAR.lift1A f
+
+            10
+            |> f'
+            |> ReaderAR.run "env"
+            |> (=) (Ok "env-10")
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR lift2`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> AR.retn
+            let f' a b = (a, b) ||> ReaderAR.lift2 f
+
+            (10, 11)
+            ||> f'
+            |> ReaderAR.run "env"
+            |> (=) (Ok "env-10-11")
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR lift2R`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> Ok
+            let f' a b = (a, b) ||> ReaderAR.lift2R f
+
+            (10, 11)
+            ||> f'
+            |> ReaderAR.run "env"
+            |> (=) (Ok "env-10-11")
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR lift2A`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> Async.retn
+            let f' a b = (a, b) ||> ReaderAR.lift2A f
+
+            (10, 11)
+            ||> f'
+            |> ReaderAR.run "env"
+            |> (=) (Ok "env-10-11")
+            |> Assert.True

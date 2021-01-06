@@ -373,3 +373,25 @@ module TStateA =
             |> (=) "abc"
             |> Assert.True
 
+        [<Fact>]
+        let ``StateA lift1`` () =
+            let f e (a: 'a) = sprintf "%s-%A" e a |> Async.retn
+            let f' a = a |> StateA.lift1 f
+
+            10
+            |> f'
+            |> StateA.eval "env"
+            |> (=) "env-10"
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateA lift2`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> Async.retn
+            let f' a b = (a, b) ||> StateA.lift2 f
+
+            (10, 11)
+            ||> f'
+            |> StateA.eval "env"
+            |> (=) "env-10-11"
+            |> Assert.True
+

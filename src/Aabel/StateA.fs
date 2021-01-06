@@ -46,6 +46,12 @@ module StateA =
     let concat x y =
         map2 (@) x y
 
+    let lift1 (f: 'S -> 'a -> Async<'b>) : 'a -> StateA<'S, 'b> =
+        fun a -> State <| fun s -> f s a, s
+
+    let lift2 (f:'S -> 'a -> 'b -> Async<'c>) : 'a -> 'b -> StateA<'S, 'c> =
+        fun a b -> State <| fun s -> f s a b, s
+
     let get<'S> : StateA<'S, 'S> = State.get |> State.map Async.retn
     let put s : StateA<'S, unit> = s |> State.put |> State.map Async.retn
 

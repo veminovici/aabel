@@ -94,6 +94,24 @@ module StateAR =
     let get<'S, 'TErr> : StateAR<'S, 'S, 'TErr> = State.get |> State.map AR.retn
     let put s : StateAR<'S, unit, 'TErr> = s |> State.put |> State.map AR.retn
 
+    let lift1R (f: 'S -> 'a -> Result<'b, 'TErr>) : 'a -> StateAR<'S, 'b, 'TErr> =
+        fun a -> State <| fun s -> f s a |> Async.retn, s 
+
+    let lift1A (f: 'S -> 'a -> Async<'b>) : 'a -> StateAR<'S, 'b, 'TErr> =
+        fun a -> State <| fun s -> f s a |> Async.map Ok, s 
+
+    let lift1 (f: 'S -> 'a -> AR<'b, 'TErr>) : 'a -> StateAR<'S, 'b, 'TErr> =
+        fun a -> State <| fun s -> f s a, s
+
+    let lift2R (f:'S -> 'a -> 'b -> Result<'c, 'TErr>) : 'a -> 'b -> StateAR<'S, 'c, 'TErr> =
+        fun a b -> (State <| fun s -> f s a b, s) |> State.map Async.retn
+
+    let lift2A (f:'S -> 'a -> 'b -> Async<'c>) : 'a -> 'b -> StateAR<'S, 'c, 'TErr> =
+        fun a b -> State <| fun s -> f s a b |> Async.map Ok, s
+
+    let lift2 (f:'S -> 'a -> 'b -> AR<'c, 'TErr>) : 'a -> 'b -> StateAR<'S, 'c, 'TErr> =
+        fun a b -> State <| fun s -> f s a b, s
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

@@ -87,6 +87,24 @@ module ReaderAR =
     let concat x y =
         map2 (@) x y
 
+    let lift1R (f: 'E -> 'a -> Result<'b, 'TErr>) : 'a -> ReaderAR<'E, 'b, 'TErr> =
+        fun a -> Reader <| fun e -> f e a |> Async.retn
+
+    let lift1A (f: 'E -> 'a -> Async<'b>) : 'a -> ReaderAR<'E, 'b, 'TErr> =
+        fun a -> Reader <| fun e -> f e a |> Async.map Ok
+
+    let lift1 (f: 'E -> 'a -> AR<'b, 'TErr>) : 'a -> ReaderAR<'E, 'b, 'TErr> =
+        fun a -> Reader <| fun e -> f e a
+
+    let lift2R (f: 'E -> 'a -> 'b -> Result<'c, 'TErr>) : 'a -> 'b -> ReaderAR<'E, 'c, 'TErr> =
+        fun a b -> Reader <| fun e -> f e a b |> Async.retn
+
+    let lift2A (f: 'E -> 'a -> 'b -> Async<'c>) : 'a -> 'b -> ReaderAR<'E, 'c, 'TErr> =
+        fun a b -> Reader <| fun e -> f e a b |> Async.map Ok
+
+    let lift2 (f: 'E -> 'a -> 'b -> AR<'c, 'TErr>) : 'a -> 'b -> ReaderAR<'E, 'c, 'TErr> =
+        fun a b -> Reader <| fun e -> f e a b
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

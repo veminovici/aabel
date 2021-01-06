@@ -84,6 +84,12 @@ module ReaderR =
     let concat (x: ReaderR<'TEnv, 'T list, 'E>) (y: ReaderR<'TEnv,'T list, 'E>) : ReaderR<'TEnv, 'T list, 'E> =
         map2 (@) x y
 
+    let lift1 (f: 'TEnv -> 'a -> Result<'b, 'TErr>) : 'a -> ReaderR<'TEnv, 'b, 'TErr> =
+        fun a -> Reader <| fun e -> f e a
+
+    let lift2 (f: 'TEnv -> 'a -> 'b -> Result<'c, 'TErr>) : 'a -> 'b -> ReaderR<'TEnv, 'c, 'TErr> =
+        fun a b -> Reader <| fun e -> f e a b
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

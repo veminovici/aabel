@@ -90,6 +90,12 @@ module StateR =
     let get<'S, 'TErr> : StateR<'S, 'S, 'TErr> = State.get |> State.map Ok
     let put s : StateR<'S, unit, 'TErr> = s |> State.put |> State.map Ok
 
+    let lift1 (f: 'S -> 'a -> Result<'b, 'TErr>) : 'a -> StateR<'S, 'b, 'TErr> =
+        fun a -> State <| fun s -> f s a, s
+
+    let lift2 (f:'S -> 'a -> 'b -> Result<'c, 'TErr>) : 'a -> 'b -> StateR<'S, 'c, 'TErr> =
+        fun a b -> State <| fun s -> f s a b, s
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

@@ -633,3 +633,25 @@ module TStateR =
             |> (=) (Ok "abc")
             |> Assert.True
 
+        [<Fact>]
+        let ``StateR lift1`` () =
+            let f e (a: 'a) = sprintf "%s-%A" e a |> Ok
+            let f' a = a |> StateR.lift1 f
+
+            10
+            |> f'
+            |> StateR.eval "env"
+            |> (=) (Ok "env-10")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR lift2`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> Ok
+            let f' a b = (a, b) ||> StateR.lift2 f
+
+            (10, 11)
+            ||> f'
+            |> StateR.eval "env"
+            |> (=) (Ok "env-10-11")
+            |> Assert.True
+

@@ -626,3 +626,68 @@ module TStateAR =
             |> (=) (Ok "abc")
             |> Assert.True
 
+        [<Fact>]
+        let ``StateAR lift1`` () =
+            let f e (a: 'a) = sprintf "%s-%A" e a |> AR.retn
+            let f' a = a |> StateAR.lift1 f
+
+            10
+            |> f'
+            |> StateAR.eval "env"
+            |> (=) (Ok "env-10")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR lift1R`` () =
+            let f e (a: 'a) = sprintf "%s-%A" e a |> Ok
+            let f' a = a |> StateAR.lift1R f
+
+            10
+            |> f'
+            |> StateAR.eval "env"
+            |> (=) (Ok "env-10")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR lift1A`` () =
+            let f e (a: 'a) = sprintf "%s-%A" e a |> Async.retn
+            let f' a = a |> StateAR.lift1A f
+
+            10
+            |> f'
+            |> StateAR.eval "env"
+            |> (=) (Ok "env-10")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR lift2`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> AR.retn
+            let f' a b = (a, b) ||> StateAR.lift2 f
+
+            (10, 11)
+            ||> f'
+            |> StateAR.eval "env"
+            |> (=) (Ok "env-10-11")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR lift2R`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> Ok
+            let f' a b = (a, b) ||> StateAR.lift2R f
+
+            (10, 11)
+            ||> f'
+            |> StateAR.eval "env"
+            |> (=) (Ok "env-10-11")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR lift2A`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> Async.retn
+            let f' a b = (a, b) ||> StateAR.lift2A f
+
+            (10, 11)
+            ||> f'
+            |> StateAR.eval "env"
+            |> (=) (Ok "env-10-11")
+            |> Assert.True
