@@ -388,3 +388,23 @@ module TReader =
             |> Reader.run "env"
             |> (=) "env-10-11"
             |> Assert.True
+
+        [<Fact>]
+        let ``Reader liftE`` () =
+
+            let rdr x = Reader <| fun env ->
+                sprintf "%A-%A" env x
+
+            1
+            |> rdr
+            |> Reader.liftE fst
+            |> Reader.run ("env", 10)
+            |> (=) "\"env\"-1"
+            |> Assert.True
+
+            1
+            |> rdr
+            |> Reader.liftE snd
+            |> Reader.run ("env", 10)
+            |> (=) "10-1"
+            |> Assert.True

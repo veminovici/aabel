@@ -43,7 +43,7 @@ module Reader =
     let lift2 (f: 'E -> 'a -> 'b -> 'c) : 'a -> 'b -> Reader<'E, 'c> =
         fun a b -> Reader <| fun e -> f e a b
 
-    let liftE (f: 'E2 -> 'E1) (Reader fn) =
+    let liftE (f:'E2 -> 'E1) (Reader fn) : Reader<'E2, 'a> =
         Reader (f >> fn)
 
     let sequenceAsync (r: Reader<_, Async<_>>) = async {
