@@ -43,6 +43,18 @@ module State =
         let x = f1 s
         bind f2 x
 
+    let lift1 (f: 'S -> 'a -> 'b) : 'a -> State<'S, 'b> =
+        fun a -> State <| fun s -> f s a, s
+
+    let lift2 (f:'S -> 'a -> 'b -> 'c) : 'a -> 'b -> State<'S, 'c> =
+        fun a b -> State <| fun s -> f s a b, s
+
+    let liftE (f:'S2 -> 'S1) (State fn) : State<'S2, 'T> =
+        State <| fun s2 ->
+            let s1 = f s2
+            let (t, _) = fn s1
+            t, s2
+
     let sequenceAsync (r: State<_, Async<_>>) = async {
         return 
             State <| fun env ->

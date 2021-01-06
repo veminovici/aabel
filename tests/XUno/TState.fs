@@ -386,17 +386,44 @@ module TState =
             |> (=) "abc"
             |> Assert.True
 
-    (*
         [<Fact>]
-        let ``State unfold`` () =
-            let stt = State(fun i ->
-                if i = 10 then None, i + 1
-                else Some (sprintf "%d" i), i + 1)
+        let ``State lift1`` () =
+            let f e (a: 'a) = sprintf "%s-%A" e a
+            let f' a = a |> State.lift1 f
 
-            0
-            |> State.unfold stt
-            |> Seq.toList
-            |> List.length
-            |> (=) 10
+            10
+            |> f'
+            |> State.eval "env"
+            |> (=) "env-10"
             |> Assert.True
-    *)
+
+        [<Fact>]
+        let ``State lift2`` () =
+            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b
+            let f' a b = (a, b) ||> State.lift2 f
+
+            (10, 11)
+            ||> f'
+            |> State.eval "env"
+            |> (=) "env-10-11"
+            |> Assert.True
+
+        [<Fact>]
+        let ``State liftE`` () =
+
+            let stt x = State <| fun s ->
+                sprintf "%A-%A" s x, s
+
+            1
+            |> stt
+            |> State.liftE fst
+            |> State.eval ("env", 10)
+            |> (=) "\"env\"-1"
+            |> Assert.True
+
+            1
+            |> stt
+            |> State.liftE snd
+            |> State.eval ("env", 10)
+            |> (=) "10-1"
+            |> Assert.True
