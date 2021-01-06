@@ -102,6 +102,57 @@ readerAR {
 
 <br />
 
+## 3. Dependency Injection
+Below you can find an example of how the **Reader** monad and its **lift** functions could be used to do *dependency injections*.
+
+We have two interfaces, *IResources* and *IOutput*, which expose functions. The functions are wrapped as *Reader* instances but calling *Reader.lift1* function. The next step is to use the lifted functions within a *reader* computation expression workflow. Since the environment will contain both *IResources* and *IOutput*, we use *Reader.liftE* function to move from a pair of values to the right value. Finally, we run the worflow passing the dependencies, as a pair of values.
+
+```fsharp
+open Simplee
+open Simplee.Reader.Operators
+open Simplee.Reader.ComputationExpression
+
+// The interfaces
+
+type IResources =
+    abstract GetString: unit -> string
+
+type IOutput =
+    abstract Print: string -> unit
+
+// Workflow
+
+let getWorld = Reader.lift1 (fun (res: IResources) -> res.GetString) ()
+let print    = Reader.lift1 (fun (out: IOutput)    -> out.Print)
+
+let flow () = reader {
+    let! text = 
+        getWorld                // a reader that uses an IResources to obtain a string
+        |> Reader.liftE fst     // obtain the IResource from a pair of values by getting the first value
+        <!> sprintf "Hello %s"  // map the result of reader.
+
+    do! 
+        text
+        |> print                // a reader taht uses an IOutput to print and return unit
+        |> Reader.liftE snd }   // obtain the IOutput from a pair of values by getting the second value
+
+// Run the workflow using spefic implementations
+
+let resources = { new IResources with
+    member _.GetString() = "World" }
+
+let output = { new IOutput with
+    member _.Print s = printfn "%s" s }
+
+()
+|> flow 
+|> Reader.run (resources, output)
+```
+
+For a full running code, please check [QtDepInjection.fsx](https://github.com/veminovici/aabel/blob/main/tests/Scripts/QtDelInjection.fsx)
+
+<br />
+
 ## 3. Related Topics
 
 - [Aabel](./index.md)
