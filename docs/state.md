@@ -6,21 +6,28 @@ The implementation of the **State** monad and some of its variations: **StateR**
 - Source: [State.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/State.fs)
 - Test: [TState.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TState.fs)
 - Cmputation expression: **state**
+
+
 ### StateR
 - Namespaces: *Simplee.StateR*, *Simplee.StateR.ComputationExpression*, *Simplee.StateR.Traversals* 
 - Source: [StateR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/StateR.fs)
 - Test: [TStateR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TStateR.fs)
 - Computation expression: **stateR**
+
+
 ### StateA
 - Namespaces: *Simplee.StateA*, *Simplee.StateA.ComputationExpression*, *Simplee.StateA.Traversals* 
 - Source: [StateR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/StateA.fs)
 - Test: [TStateR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TStateA.fs)
 - Computation expression: **stateA**
+
+
 ### StateAR
 - Namespaces: *Simplee.StateAR*, *Simplee.StateAR.ComputationExpression*, *Simplee.StateAR.Traversals* 
 - Source: [StateR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/StateAR.fs)
 - Test: [TStateR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TStateAR.fs)
 - Computation expression: **stateAR**
+
 
 More examples: [QtStateAR.fsx](https://github.com/veminovici/aabel/blob/main/tests/Scripts/QtStateAR.fsx)
 

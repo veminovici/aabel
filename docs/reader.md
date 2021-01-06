@@ -10,16 +10,22 @@ The implementation of the **Reader** monad and some of its variations: **ReaderR
 - Source: [Reader.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/Reader.fs)
 - Test: [TReader.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReader.fs)
 - Cmputation expression: **reader**
+
+
 ### ReaderR
 - Namespaces: *Simplee.ReaderR*, *Simplee.ReaderR.ComputationExpression*, *Simplee.ReaderR.Traversals* 
 - Source: [ReaderR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderR.fs)
 - Test: [TReaderR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReaderR.fs)
 - Computation expression: **readerR**
+
+
 ### ReaderA
 - Namespaces: *Simplee.ReaderA*, *Simplee.ReaderA.ComputationExpression*, *Simplee.ReaderA.Traversals* 
 - Source: [ReaderR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderA.fs)
 - Test: [TReaderR.fs](https://github.com/veminovici/aabel/blob/main/tests/XUno/TReaderA.fs)
 - Computation expression: **readerA**
+
+
 ### ReaderAR
 - Namespaces: *Simplee.ReaderAR*, *Simplee.ReaderAR.ComputationExpression*, *Simplee.ReaderAR.Traversals* 
 - Source: [ReaderR.fs](https://github.com/veminovici/aabel/blob/main/src/Aabel/ReaderAR.fs)
