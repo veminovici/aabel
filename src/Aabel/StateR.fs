@@ -96,6 +96,16 @@ module StateR =
     let lift2 (f:'S -> 'a -> 'b -> Result<'c, 'TErr>) : 'a -> 'b -> StateR<'S, 'c, 'TErr> =
         fun a b -> State <| fun s -> f s a b, s
 
+    let unfold iter =
+        let gen stt = 
+            iter
+            |> run stt
+            |> function
+            | (Ok a, s)     -> Some (a, s)
+            | (Error e, s)  -> None
+
+        Seq.unfold gen
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

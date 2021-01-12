@@ -429,7 +429,7 @@ module TState =
             |> Assert.True
 
         [<Fact>]
-        let ``State unfol`` () =
+        let ``State unfold`` () =
             let iter = State <| fun stt ->
                 stt, stt + 1
 

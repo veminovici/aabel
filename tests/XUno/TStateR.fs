@@ -655,3 +655,27 @@ module TStateR =
             |> (=) (Ok "env-10-11")
             |> Assert.True
 
+        [<Fact>]
+        let ``StateR unfold`` () =
+            let iter = State <| fun stt ->
+                Ok stt, stt + 1
+
+            0
+            |> StateR.unfold iter
+            |> Seq.take 3
+            |> List.ofSeq
+            |> (=) [0; 1; 2]
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR unfold`` () =
+            let iter = State <| fun stt ->
+                let r = if stt < 2 then Ok stt else Error "my error"
+                r, stt + 1
+
+            0
+            |> StateR.unfold iter
+            |> List.ofSeq
+            |> (=) [0; 1]
+            |> Assert.True
+
