@@ -640,3 +640,17 @@ module TReaderR =
             |> (=) (Ok "env-10-11")
             |> Assert.True
 
+        [<Fact>]
+        let ``ReaderR unfold`` () =
+            let mutable i = 0
+
+            let iter = Reader <| fun env ->
+                i <- i + 1
+                if i < 3 then Ok (env + 1) else Error "my error"
+
+            0
+            |> ReaderR.unfold iter
+            |> List.ofSeq
+            |> (=) [1; 1]
+            |> Assert.True
+

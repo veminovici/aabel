@@ -357,24 +357,14 @@ module TReaderA =
             |> Assert.True
 
         [<Fact>]
-        let ``ReaderA lift1`` () =
-            let f e (a: 'a) = a |> sprintf "%s-%A" e |> Async.retn
-            let f' a = a |> ReaderA.lift1 f
+        let ``ReaderA unfold`` () =
+            let iter = Reader <| fun env ->
+                Async.retn (env + 1)
 
-            10
-            |> f'
-            |> ReaderA.run "env"
-            |> (=) "env-10"
-            |> Assert.True
-
-        [<Fact>]
-        let ``ReaderA lift2`` () =
-            let f e (a: 'a) (b: 'b) = sprintf "%s-%A-%A" e a b |> Async.retn
-            let f' a b = (a, b) ||> ReaderA.lift2 f
-
-            (10, 11)
-            ||> f'
-            |> ReaderA.run "env"
-            |> (=) "env-10-11"
+            0
+            |> ReaderA.unfold iter
+            |> Seq.take 3
+            |> List.ofSeq
+            |> (=) [1; 1; 1]
             |> Assert.True
 

@@ -90,6 +90,16 @@ module ReaderR =
     let lift2 (f: 'TEnv -> 'a -> 'b -> Result<'c, 'TErr>) : 'a -> 'b -> ReaderR<'TEnv, 'c, 'TErr> =
         fun a b -> Reader <| fun e -> f e a b
 
+    let unfold iter =
+        let gen env = 
+            iter
+            |> run env
+            |> function
+            | Ok r    -> Some (r, env)
+            | Error _ -> None
+
+        Seq.unfold gen
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

@@ -674,3 +674,19 @@ module TReaderAR =
             |> ReaderAR.run "env"
             |> (=) (Ok "env-10-11")
             |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR unfold`` () =
+            let mutable i = 0
+
+            let iter = Reader <| fun env ->
+                i <- i + 1
+                let r = if i < 3 then Ok (env + 1) else Error "my error"
+                Async.retn r
+
+            0
+            |> ReaderAR.unfold iter
+            |> List.ofSeq
+            |> (=) [1; 1]
+            |> Assert.True
+

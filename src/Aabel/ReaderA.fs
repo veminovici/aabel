@@ -48,6 +48,14 @@ module ReaderA =
     let lift2 (f: 'E -> 'a -> 'b -> Async<'c>) : 'a -> 'b -> ReaderA<'E, 'c> =
         fun a b -> Reader <| fun e -> f e a b
 
+    let unfold iter =
+        let gen env = 
+            iter
+            |> run env
+            |> fun r -> Some (r, env)
+
+        Seq.unfold gen
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
