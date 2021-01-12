@@ -691,3 +691,15 @@ module TStateAR =
             |> StateAR.eval "env"
             |> (=) (Ok "env-10-11")
             |> Assert.True
+
+        [<Fact>]
+        let ``StateAR unfold`` () =
+            let iter = State <| fun stt ->
+                let r = if stt < 2 then Ok stt else Error "my error"
+                Async.retn r, stt + 1
+
+            0
+            |> StateAR.unfold iter
+            |> List.ofSeq
+            |> (=) [0; 1]
+            |> Assert.True
