@@ -55,6 +55,14 @@ module StateA =
     let get<'S> : StateA<'S, 'S> = State.get |> State.map Async.retn
     let put s : StateA<'S, unit> = s |> State.put |> State.map Async.retn
 
+    let unfold iter =
+        let gen stt = 
+            iter
+            |> run stt
+            |> Some
+
+        Seq.unfold gen
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

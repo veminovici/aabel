@@ -395,3 +395,14 @@ module TStateA =
             |> (=) "env-10-11"
             |> Assert.True
 
+        [<Fact>]
+        let ``StateA unfold`` () =
+            let iter = State <| fun stt ->
+                Async.retn stt, stt + 1
+
+            0
+            |> StateA.unfold iter
+            |> Seq.take 3
+            |> List.ofSeq
+            |> (=) [0; 1; 2]
+            |> Assert.True
