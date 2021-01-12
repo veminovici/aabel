@@ -56,6 +56,14 @@ module Reader =
     let concat (x: Reader<'TEnv, 'T list>) (y: Reader<'TEnv, 'T list>) : Reader<'TEnv, 'T list> =
         map2 (@) x y
 
+    let unfold iter =
+        let gen env = 
+            iter
+            |> run env
+            |> fun r -> Some (r, env)
+
+        Seq.unfold gen
+
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m

@@ -408,3 +408,16 @@ module TReader =
             |> Reader.run ("env", 10)
             |> (=) "10-1"
             |> Assert.True
+
+        [<Fact>]
+        let ``Reader unfold`` () =
+            let iter = Reader <| fun env ->
+                env + 1
+
+            0
+            |> Reader.unfold iter
+            |> Seq.take 3
+            |> List.ofSeq
+            |> (=) [1; 1; 1]
+            |> Assert.True
+
