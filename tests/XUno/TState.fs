@@ -427,3 +427,16 @@ module TState =
             |> State.eval ("env", 10)
             |> (=) "10-1"
             |> Assert.True
+
+        [<Fact>]
+        let ``State unfol`` () =
+            let iter = State <| fun stt ->
+                stt, stt + 1
+
+            0
+            |> State.unfold iter
+            |> Seq.take 3
+            |> List.ofSeq
+            |> (=) [0; 1; 2]
+            |> Assert.True
+

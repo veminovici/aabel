@@ -67,6 +67,14 @@ module State =
     let get = State (fun s -> s, s)
     let put s = State (fun _ -> (), s)
 
+    let unfold iter =
+        let gen stt = 
+            iter
+            |> run stt
+            |> Some
+
+        Seq.unfold gen
+
     module Operators = 
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
