@@ -25,7 +25,7 @@ module RS =
         | _                                      -> stt.Best, stt
 
     /// run this function each iteration.
-    let iteration = state {
+    let iteration = _state {
         let! sln = newSolution
         let! bst = cmpSolution sln
         return bst }
