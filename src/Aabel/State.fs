@@ -140,7 +140,7 @@ module State =
                 |> Result.ofChoice 
                 |> singleton
 
-        let state = StateBuilder ()
+        let _state = StateBuilder ()
 
     module Traversals = 
 
@@ -154,7 +154,7 @@ module State =
                 let rec loop (acc: State<'S, 'U list>) = function
                     | [] -> acc
                     | h::tail ->
-                        let stt = state {
+                        let stt = _state {
                             let! x  = f h
                             let! xs = acc
                             return xs @ [x] }

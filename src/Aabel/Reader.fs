@@ -129,7 +129,7 @@ module Reader =
                 |> Result.ofChoice 
                 |> retn
 
-        let reader = ReaderBuilder ()
+        let _reader = ReaderBuilder ()
 
     module Traversals = 
 
@@ -143,7 +143,7 @@ module Reader =
                 let rec loop (acc: Reader<'TEnv, 'U list>) = function
                     | [] -> acc
                     | h::tail ->
-                        let stt = reader {
+                        let stt = _reader {
                             let! x  = f h
                             let! xs = acc
                             return xs @ [x] }

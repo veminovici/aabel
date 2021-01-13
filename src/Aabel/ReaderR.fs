@@ -165,7 +165,7 @@ module ReaderR =
                 |> Result.ofChoice 
                 |> Reader.retn
 
-        let readerR = ReaderRBuilder ()
+        let _readerR = ReaderRBuilder ()
 
     module Traversals = 
 
@@ -185,7 +185,7 @@ module ReaderR =
                     | [] -> acc
                     | h::tail ->
                         let r = 
-                            reader {
+                            _reader {
                                 let! y = f h
                                 let! ys = acc
                                 let yys = Result._traverseA ys (fun _ -> y) [h]
@@ -207,7 +207,7 @@ module ReaderR =
                     match xs with
                     | [] -> acc
                     | h :: tail -> 
-                        readerR {
+                        _readerR {
                             let! ys = acc
                             let! y  = f h
                             return ys @ [y] }

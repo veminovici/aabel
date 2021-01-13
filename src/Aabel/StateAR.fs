@@ -187,7 +187,7 @@ module StateAR =
                 |> Result.ofChoice 
                 |> StateA.retn
 
-        let stateAR = StateARBuilder ()
+        let _stateAR = StateARBuilder ()
 
     module Traversals = 
 
@@ -207,7 +207,7 @@ module StateAR =
                     | [] -> acc
                     | h::tail ->
                         let r = 
-                            stateA {
+                            _stateA {
                                 let! y = f h
                                 let! ys = acc
                                 let yys = Result._traverseA ys (fun _ -> y) [h]
@@ -228,7 +228,7 @@ module StateAR =
                 let rec loop (acc: StateAR<'TEnv, 'U list, 'E>) = function
                     | [] -> acc
                     | h::tail ->
-                        let stt = stateAR {
+                        let stt = _stateAR {
                             let! x  = f h
                             let! xs = acc
                             return xs @ [x] }

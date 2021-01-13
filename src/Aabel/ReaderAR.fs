@@ -180,7 +180,7 @@ module ReaderAR =
                 |> Result.ofChoice 
                 |> ReaderA.retn
 
-        let readerAR = ReaderARBuilder ()
+        let _readerAR = ReaderARBuilder ()
 
     module Traversals = 
 
@@ -200,7 +200,7 @@ module ReaderAR =
                     | [] -> acc
                     | h::tail ->
                         let r = 
-                            readerA {
+                            _readerA {
                                 let! y = f h
                                 let! ys = acc
                                 let yys = Result._traverseA ys (fun _ -> y) [h]
@@ -221,7 +221,7 @@ module ReaderAR =
                 let rec loop (acc: ReaderAR<'TEnv, 'U list, 'E>) = function
                     | [] -> acc
                     | h::tail ->
-                        let stt = readerAR {
+                        let stt = _readerAR {
                             let! x  = f h
                             let! xs = acc
                             return xs @ [x] }

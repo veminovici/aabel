@@ -171,7 +171,7 @@ module StateR =
                 |> Result.ofChoice 
                 |> State.retn
 
-        let stateR = StateRBuilder ()
+        let _stateR = StateRBuilder ()
 
     module Traversals = 
 
@@ -191,7 +191,7 @@ module StateR =
                     | [] -> acc
                     | h::tail ->
                         let r = 
-                            state {
+                            _state {
                                 let! y = f h
                                 let! ys = acc
                                 let yys = Result._traverseA ys (fun _ -> y) [h]
@@ -213,7 +213,7 @@ module StateR =
                     match xs with
                     | [] -> acc
                     | h :: tail -> 
-                        stateR {
+                        _stateR {
                             let! ys = acc
                             let! y  = f h
                             return ys @ [y] }

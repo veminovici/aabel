@@ -389,7 +389,7 @@ module TReaderR =
         [<Fact>]
         let ``ReaderR CE return`` () =
 
-            readerR {
+            _readerR {
                 return 10
             }
             |> ReaderR.run "env"
@@ -399,7 +399,7 @@ module TReaderR =
         [<Fact>]
         let ``ReaderR CE returnFrom`` () =
 
-            readerR {
+            _readerR {
                 return! (ReaderR.retn 10)
             }
             |> Reader.run "env"
@@ -409,7 +409,7 @@ module TReaderR =
         [<Fact>]
         let ``Reader CE yield`` () =
 
-            readerR {
+            _readerR {
                 yield 10
             }
             |> ReaderR.run "env"
@@ -419,7 +419,7 @@ module TReaderR =
         [<Fact>]
         let ``ReaderR CE yieldFrom`` () =
 
-            readerR {
+            _readerR {
                 yield! (ReaderR.retn 10)
             }
             |> ReaderR.run "env"
@@ -428,7 +428,7 @@ module TReaderR =
 
         [<Fact>]
         let ``ReaderR CE zero`` () =
-            readerR {
+            _readerR {
                 let! x = ReaderR.retn 10
                 if x = 20 then return ()
             }
@@ -439,7 +439,7 @@ module TReaderR =
         [<Fact>]
         let ``ReaderR CE bind`` () =
 
-            readerR {
+            _readerR {
                 let! x = ReaderR.retn 1
                 let! y = ReaderR.retn 2
                 let! z = ReaderR.retn 3
@@ -455,7 +455,7 @@ module TReaderR =
             let test   () = i < 5
             let inc    () = i <- i + 1
 
-            readerR {
+            _readerR {
                 while test() do
                     inc()
             }
@@ -469,7 +469,7 @@ module TReaderR =
 
         [<Fact>]
         let ``ReaderR CE trywith`` () =
-            readerR {
+            _readerR {
                 try
                     failwith "error"
                     return 0
@@ -482,7 +482,7 @@ module TReaderR =
 
         [<Fact>]
         let ``ReaderR CE tryfinally`` () =
-            readerR {
+            _readerR {
                 let mutable x = 0
                 try
                     x <- x + 1
@@ -503,7 +503,7 @@ module TReaderR =
                 member _.Dispose() = () }
                 |> ReaderR.retn
 
-            readerR {
+            _readerR {
                 use! x = makeResource "hello"
                 return 10
             }
@@ -513,7 +513,7 @@ module TReaderR =
 
         [<Fact>]
         let ``ReaderR CE source result`` () =
-            readerR {
+            _readerR {
                 let! x = Ok 10
                 return x
             }
@@ -523,7 +523,7 @@ module TReaderR =
 
         [<Fact>]
         let ``ReaderR CE source choice`` () =
-            readerR {
+            _readerR {
                 let! x = Choice1Of2 10
                 return x
             }
@@ -533,7 +533,7 @@ module TReaderR =
 
         [<Fact>]
         let ``ReaderR CE MergeSources`` () =
-            readerR {
+            _readerR {
                 let! x = ReaderR.retn 10
                 and! y = ReaderR.retn 20
                 return x + y
@@ -546,7 +546,7 @@ module TReaderR =
         let ``ReaderR CE for loop`` () =
             let mutable x = 0
 
-            readerR {
+            _readerR {
                 for i in [1; 2; 3] do
                     x <- x + i
 

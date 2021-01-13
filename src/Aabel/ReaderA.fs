@@ -122,7 +122,7 @@ module ReaderA =
                 |> Async.AwaitTask
                 |> Reader.retn
 
-        let readerA = ReaderABuilder ()
+        let _readerA = ReaderABuilder ()
 
     module Traversals = 
 
@@ -136,7 +136,7 @@ module ReaderA =
                 let rec loop (acc: ReaderA<'TEnv, 'U list>) = function
                     | [] -> acc
                     | h::tail ->
-                        let stt = readerA {
+                        let stt = _readerA {
                             let! x  = f h
                             let! xs = acc
                             return xs @ [x] }

@@ -396,7 +396,7 @@ module TStateR =
         [<Fact>]
         let ``StateR CE return`` () =
 
-            stateR {
+            _stateR {
                 return 10
             }
             |> StateR.eval "env"
@@ -406,7 +406,7 @@ module TStateR =
         [<Fact>]
         let ``StateR CE returnFrom`` () =
 
-            stateR {
+            _stateR {
                 return! (StateR.retn 10)
             }
             |> State.eval "env"
@@ -416,7 +416,7 @@ module TStateR =
         [<Fact>]
         let ``StateR CE yield`` () =
 
-            stateR {
+            _stateR {
                 yield 10
             }
             |> StateR.eval "env"
@@ -426,7 +426,7 @@ module TStateR =
         [<Fact>]
         let ``StateR CE yieldFrom`` () =
 
-            stateR {
+            _stateR {
                 yield! (StateR.retn 10)
             }
             |> StateR.eval "env"
@@ -435,7 +435,7 @@ module TStateR =
 
         [<Fact>]
         let ``StateR CE zero`` () =
-            stateR {
+            _stateR {
                 let! x = StateR.retn 10
                 if x = 20 then return ()
             }
@@ -446,7 +446,7 @@ module TStateR =
         [<Fact>]
         let ``StateR CE bind`` () =
 
-            stateR {
+            _stateR {
                 let! x = StateR.retn 1
                 let! y = StateR.retn 2
                 let! z = StateR.retn 3
@@ -462,7 +462,7 @@ module TStateR =
             let test   () = i < 5
             let inc    () = i <- i + 1
 
-            stateR {
+            _stateR {
                 while test() do
                     inc()
             }
@@ -476,7 +476,7 @@ module TStateR =
 
         [<Fact>]
         let ``StateR CE trywith`` () =
-            stateR {
+            _stateR {
                 try
                     failwith "error"
                     return 0
@@ -489,7 +489,7 @@ module TStateR =
 
         [<Fact>]
         let ``StateR CE tryfinally`` () =
-            stateR {
+            _stateR {
                 let mutable x = 0
                 try
                     x <- x + 1
@@ -510,7 +510,7 @@ module TStateR =
                 member _.Dispose() = () }
                 |> StateR.retn
 
-            stateR {
+            _stateR {
                 use! x = makeResource "hello"
                 return 10
             }
@@ -520,7 +520,7 @@ module TStateR =
 
         [<Fact>]
         let ``StateR CE source result`` () =
-            stateR {
+            _stateR {
                 let! x = Ok 10
                 return x
             }
@@ -530,7 +530,7 @@ module TStateR =
 
         [<Fact>]
         let ``StateR CE source choice`` () =
-            stateR {
+            _stateR {
                 let! x = Choice1Of2 10
                 return x
             }
@@ -540,7 +540,7 @@ module TStateR =
 
         [<Fact>]
         let ``StateR CE MergeSources`` () =
-            stateR {
+            _stateR {
                 let! x = StateR.retn 10
                 and! y = StateR.retn 20
                 return x + y
@@ -553,7 +553,7 @@ module TStateR =
         let ``StateR CE for loop`` () =
             let mutable x = 0
 
-            stateR {
+            _stateR {
                 for i in [1; 2; 3] do
                     x <- x + i
 

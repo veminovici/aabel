@@ -129,7 +129,7 @@ module StateA =
                 |> Async.AwaitTask
                 |> State.retn
 
-        let stateA = StateABuilder ()
+        let _stateA = StateABuilder ()
 
     module Traversals = 
 
@@ -143,7 +143,7 @@ module StateA =
                 let rec loop (acc: StateA<'TEnv, 'U list>) = function
                     | [] -> acc
                     | h::tail ->
-                        let stt = stateA {
+                        let stt = _stateA {
                             let! x  = f h
                             let! xs = acc
                             return xs @ [x] }

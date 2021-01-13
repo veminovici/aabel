@@ -389,7 +389,7 @@ module TStateAR =
         [<Fact>]
         let ``StateAR CE return`` () =
 
-            stateAR {
+            _stateAR {
                 return 10
             }
             |> StateAR.eval "env"
@@ -399,7 +399,7 @@ module TStateAR =
         [<Fact>]
         let ``StateAR CE returnFrom`` () =
 
-            stateAR {
+            _stateAR {
                 return! (StateAR.retn 10)
             }
             |> StateA.eval "env"
@@ -409,7 +409,7 @@ module TStateAR =
         [<Fact>]
         let ``StateAR CE yield`` () =
 
-            stateAR {
+            _stateAR {
                 yield 10
             }
             |> StateAR.eval "env"
@@ -419,7 +419,7 @@ module TStateAR =
         [<Fact>]
         let ``StateAR CE yieldFrom`` () =
 
-            stateAR {
+            _stateAR {
                 yield! (StateAR.retn 10)
             }
             |> StateAR.eval "env"
@@ -428,7 +428,7 @@ module TStateAR =
 
         [<Fact>]
         let ``StateAR CE zero`` () =
-            stateAR {
+            _stateAR {
                 let! x = StateAR.retn 10
                 if x = 20 then return ()
             }
@@ -439,7 +439,7 @@ module TStateAR =
         [<Fact>]
         let ``StateAR CE bind`` () =
 
-            stateAR {
+            _stateAR {
                 let! x = StateAR.retn 1
                 let! y = StateAR.retn 2
                 let! z = StateAR.retn 3
@@ -455,7 +455,7 @@ module TStateAR =
             let test   () = i < 5
             let inc    () = i <- i + 1
 
-            stateAR {
+            _stateAR {
                 while test() do
                     inc()
             }
@@ -469,7 +469,7 @@ module TStateAR =
 
         [<Fact>]
         let ``StateAR CE trywith`` () =
-            stateAR {
+            _stateAR {
                 try
                     failwith "error"
                     return 0
@@ -482,7 +482,7 @@ module TStateAR =
 
         [<Fact>]
         let ``StateAR CE tryfinally`` () =
-            stateAR {
+            _stateAR {
                 let mutable x = 0
                 try
                     x <- x + 1
@@ -503,7 +503,7 @@ module TStateAR =
                 member _.Dispose() = () }
                 |> StateAR.retn
 
-            stateAR {
+            _stateAR {
                 use! x = makeResource "hello"
                 return 10
             }
@@ -513,7 +513,7 @@ module TStateAR =
 
         [<Fact>]
         let ``StateAR CE source result`` () =
-            stateAR {
+            _stateAR {
                 let! x = Ok 10
                 return x
             }
@@ -523,7 +523,7 @@ module TStateAR =
 
         [<Fact>]
         let ``StateAR CE source choice`` () =
-            stateAR {
+            _stateAR {
                 let! x = Choice1Of2 10
                 return x
             }
@@ -533,7 +533,7 @@ module TStateAR =
 
         [<Fact>]
         let ``StateAR CE MergeSources`` () =
-            stateAR {
+            _stateAR {
                 let! x = StateAR.retn 10
                 and! y = StateAR.retn 20
                 return x + y
@@ -546,7 +546,7 @@ module TStateAR =
         let ``StateAR CE for loop`` () =
             let mutable x = 0
 
-            stateAR {
+            _stateAR {
                 for i in [1; 2; 3] do
                     x <- x + i
 

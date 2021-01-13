@@ -380,7 +380,7 @@ module TReaderAR =
         [<Fact>]
         let ``ReaderAR CE return`` () =
 
-            readerAR {
+            _readerAR {
                 return 10
             }
             |> ReaderAR.run "env"
@@ -390,7 +390,7 @@ module TReaderAR =
         [<Fact>]
         let ``ReaderAR CE returnFrom`` () =
 
-            readerAR {
+            _readerAR {
                 return! (ReaderAR.retn 10)
             }
             |> ReaderA.run "env"
@@ -400,7 +400,7 @@ module TReaderAR =
         [<Fact>]
         let ``ReaderAR CE yield`` () =
 
-            readerAR {
+            _readerAR {
                 yield 10
             }
             |> ReaderAR.run "env"
@@ -410,7 +410,7 @@ module TReaderAR =
         [<Fact>]
         let ``ReaderAR CE yieldFrom`` () =
 
-            readerAR {
+            _readerAR {
                 yield! (ReaderAR.retn 10)
             }
             |> ReaderAR.run "env"
@@ -419,7 +419,7 @@ module TReaderAR =
 
         [<Fact>]
         let ``ReaderAR CE zero`` () =
-            readerAR {
+            _readerAR {
                 let! x = ReaderAR.retn 10
                 if x = 20 then return ()
             }
@@ -430,7 +430,7 @@ module TReaderAR =
         [<Fact>]
         let ``ReaderAR CE bind`` () =
 
-            readerAR {
+            _readerAR {
                 let! x = ReaderAR.retn 1
                 let! y = ReaderAR.retn 2
                 let! z = ReaderAR.retn 3
@@ -446,7 +446,7 @@ module TReaderAR =
             let test   () = i < 5
             let inc    () = i <- i + 1
 
-            readerAR {
+            _readerAR {
                 while test() do
                     inc()
             }
@@ -460,7 +460,7 @@ module TReaderAR =
 
         [<Fact>]
         let ``ReaderAR CE trywith`` () =
-            readerAR {
+            _readerAR {
                 try
                     failwith "error"
                     return 0
@@ -473,7 +473,7 @@ module TReaderAR =
 
         [<Fact>]
         let ``ReaderAR CE tryfinally`` () =
-            readerAR {
+            _readerAR {
                 let mutable x = 0
                 try
                     x <- x + 1
@@ -494,7 +494,7 @@ module TReaderAR =
                 member _.Dispose() = () }
                 |> ReaderAR.retn
 
-            readerAR {
+            _readerAR {
                 use! x = makeResource "hello"
                 return 10
             }
@@ -504,7 +504,7 @@ module TReaderAR =
 
         [<Fact>]
         let ``ReaderAR CE source result`` () =
-            readerAR {
+            _readerAR {
                 let! x = Ok 10
                 return x
             }
@@ -514,7 +514,7 @@ module TReaderAR =
 
         [<Fact>]
         let ``ReaderAR CE source choice`` () =
-            readerAR {
+            _readerAR {
                 let! x = Choice1Of2 10
                 return x
             }
@@ -524,7 +524,7 @@ module TReaderAR =
 
         [<Fact>]
         let ``ReaderAR CE MergeSources`` () =
-            readerAR {
+            _readerAR {
                 let! x = ReaderAR.retn 10
                 and! y = ReaderAR.retn 20
                 return x + y
@@ -537,7 +537,7 @@ module TReaderAR =
         let ``ReaderAR CE for loop`` () =
             let mutable x = 0
 
-            readerAR {
+            _readerAR {
                 for i in [1; 2; 3] do
                     x <- x + i
 

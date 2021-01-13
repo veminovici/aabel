@@ -163,7 +163,7 @@ module TState =
         [<Fact>]
         let ``State CE return`` () =
 
-            state {
+            _state {
                 return 10
             }
             |> State.eval "abc"
@@ -174,7 +174,7 @@ module TState =
         let ``State CE returnFrom`` () =
             let flow = State <| fun (env: string) -> env.Length, env
 
-            state {
+            _state {
                 return! flow
             }
 
@@ -185,7 +185,7 @@ module TState =
         [<Fact>]
         let ``State CE yield`` () =
 
-            state {
+            _state {
                 yield 10
             }
             |> State.eval "abc"
@@ -196,7 +196,7 @@ module TState =
         let ``State CE yieldFrom`` () =
             let flow = State <| fun (env: string) -> env.Length, env
 
-            state {
+            _state {
                 yield! flow
             }
             |> State.eval "abc"
@@ -205,7 +205,7 @@ module TState =
 
         [<Fact>]
         let ``State CE zero`` () =
-            state {
+            _state {
                 let! x = State.retn 10
                 if x = 20 then return ()
             }
@@ -217,7 +217,7 @@ module TState =
         let ``State CE bind`` () =
             let flow = State <| fun (env: string) -> env.Length, env
 
-            state {
+            _state {
                 let! x = flow
                 return x + 1
             }
@@ -231,7 +231,7 @@ module TState =
             let test() = i < 5
             let inc() = i <- i + 1
 
-            state {
+            _state {
                 while test() do
                     inc()
             }
@@ -245,7 +245,7 @@ module TState =
 
         [<Fact>]
         let ``State CE trywith`` () =
-            state {
+            _state {
                 try
                     failwith "error"
                     return 0
@@ -258,7 +258,7 @@ module TState =
 
         [<Fact>]
         let ``State CE tryfinally`` () =
-            state {
+            _state {
                 let mutable x = 0
                 try
                     x <- x + 1
@@ -278,7 +278,7 @@ module TState =
                 { new System.IDisposable with
                 member _.Dispose() = () }
 
-            state {
+            _state {
                 use x = makeResource "hello"
                 return 1
             }
@@ -288,7 +288,7 @@ module TState =
 
         [<Fact>]
         let ``State CE source result`` () =
-            state {
+            _state {
                 let! x = Ok 10
                 return x
             }
@@ -298,7 +298,7 @@ module TState =
 
         [<Fact>]
         let ``State CE source choice`` () =
-            state {
+            _state {
                 let! x = Choice1Of2 10
                 return x
             }
@@ -308,7 +308,7 @@ module TState =
 
         [<Fact>]
         let ``State CE MergeSources`` () =
-            state {
+            _state {
                 let! x = State.retn 10
                 and! y = State.retn 20
                 return x + y
@@ -320,7 +320,7 @@ module TState =
         [<Fact>]
         let ``State CE for`` () =
             let mutable x = 0
-            state {
+            _state {
                 for i in [1; 2; 3] do
                     x <- x + i
 
@@ -332,7 +332,7 @@ module TState =
 
         [<Fact>]
         let ``State sequenceAsync`` () =
-            state {
+            _state {
                 async {return 10 }
             }
             |> State.sequenceAsync
