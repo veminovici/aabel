@@ -156,6 +156,28 @@ module TReader =
             |> Assert.True
 
         [<Fact>]
+        let ``Reader .>>`` () =
+            let f i = i |> (+) 1 |> Reader.retn
+
+            1
+            |> Reader.retn
+            .>> f
+            |> Reader.run "env"
+            |> (=) 1
+            |> Assert.True
+
+        [<Fact>]
+        let ``Reader .>>.`` () =
+            let f i = i |> (+) 1 |> Reader.retn
+
+            1
+            |> Reader.retn
+            .>>. f
+            |> Reader.run "env"
+            |> (=) (1, 2)
+            |> Assert.True
+
+        [<Fact>]
         let ``Reader CE return`` () =
 
             _reader {

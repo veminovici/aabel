@@ -28,6 +28,15 @@ module Reader =
         |> f
         |> run env
 
+    let bindLR f r = Reader <| fun env ->
+        let a = run env r
+        a, a |> f |> run env
+
+    let bindL f r = Reader <| fun env ->
+        let a = run env r
+        a |> f |> run env |> ignore
+        a
+
     let map2 f x y = 
         apply (apply (retn f) x) y
 
@@ -68,6 +77,8 @@ module Reader =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
         let (>>=) m f = bind  f m
+        let (.>>.) m f = bindLR f m
+        let (.>>) m f = bindL f m
 
     module ComputationExpression =
         open System
