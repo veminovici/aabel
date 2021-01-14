@@ -102,7 +102,17 @@ readerAR {
 
 <br />
 
-## 3. Dependency Injection
+## 3. Operators
+
+### 3.1 Map <!>
+### 3.2 Apply <*>
+### 3.3 Bind  >>=
+### 3.4 Bind Left and Right .>>.
+### 3.5 Bind Left .>>
+
+<br />
+
+## 4. Dependency Injection
 Below you can find an example of how the **Reader** monad and its **lift** functions could be used to do *dependency injections*.
 
 We have two interfaces, *IResources* and *IOutput*, which expose functions. The functions are wrapped as *Reader* instances but calling *Reader.lift1* function. The next step is to use the lifted functions within a *reader* computation expression workflow. Since the environment will contain both *IResources* and *IOutput*, we use *Reader.liftE* function to move from a pair of values to the right value. Finally, we run the worflow passing the dependencies, as a pair of values.
