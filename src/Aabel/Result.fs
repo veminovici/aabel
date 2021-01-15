@@ -21,6 +21,14 @@ module Result =
 
     let fold = either
 
+    let mapFst f r =
+        let f' (a, b) = f a, b
+        Result.map f' r
+
+    let mapSnd f r =
+        let f' (a, b) = a, f b
+        Result.map f' r
+
     let mapEither okF errorF x =
         either (okF >> Ok) (errorF >> Error) x
 
@@ -123,7 +131,10 @@ module Result =
         map2 (@) x y
 
     module Operators =
-        let (<!>) m f = Result.map   f m
+        let (<!>)  m f = Result.map    f m
+        let (</!>) m f = mapFst f m
+        let (<!/>) m f = mapSnd f m
+
         let (<*>) f m = apply        m f
 
         let (++)  a b = zip a b

@@ -65,6 +65,24 @@ module TState =
             |> Assert.True
 
         [<Fact>]
+        let ``State mapFst`` () =
+            ("abcde", 10)
+            |> State.retn
+            |> State.mapFst (fun (s: string) -> s.Length)
+            |> State.eval "env"
+            |> (=) (5, 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``State mapSnd`` () =
+            (10, "abcde")
+            |> State.retn
+            |> State.mapSnd (fun (s: string) -> s.Length)
+            |> State.eval "env"
+            |> (=) (10, 5)
+            |> Assert.True
+
+        [<Fact>]
         let ``State map2`` () =
             let x = State.retn "abc"
             let y = State.retn "def"
@@ -191,6 +209,24 @@ module TState =
             <!> (fun x -> float x * 2.) 
             |> State.eval 10.
             |> (=) 8.
+            |> Assert.True
+
+        [<Fact>]
+        let ``State </!>`` () =
+            ("abcde", 10)
+            |> State.retn
+            </!> (fun (s: string) -> s.Length)
+            |> State.eval "env"
+            |> (=) (5, 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``State <!/>`` () =
+            (10, "abcde")
+            |> State.retn
+            <!/> (fun (s: string) -> s.Length)
+            |> State.eval "env"
+            |> (=) (10, 5)
             |> Assert.True
 
         [<Fact>]

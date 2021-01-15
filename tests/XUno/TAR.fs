@@ -66,6 +66,24 @@ module TAR =
             |> Assert.True
 
         [<Fact>]
+        let ``AR mapFst`` () =
+            ("abcde", 10)
+            |> AR.retn
+            |> AR.mapFst (fun (s: string) -> s.Length)
+            |> Async.RunSynchronously
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``AR mapSnd`` () =
+            (10, "abcde")
+            |> AR.retn
+            |> AR.mapSnd (fun (s: string) -> s.Length)
+            |> Async.RunSynchronously
+            |> (=) (Ok (10, 5))
+            |> Assert.True
+
+        [<Fact>]
         let ``AR bind`` () =
 
             let f (s: string) = AR.retn s.Length
@@ -425,6 +443,24 @@ module TAR =
             <!> f
             |> Async.RunSynchronously
             |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``AR </!>`` () =
+            ("abcde", 10)
+            |> AR.retn
+            </!> (fun (s: string) -> s.Length)
+            |> Async.RunSynchronously
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``AR <!/>`` () =
+            (10, "abcde")
+            |> AR.retn
+            <!/> (fun (s: string) -> s.Length)
+            |> Async.RunSynchronously
+            |> (=) (Ok (10, 5))
             |> Assert.True
 
         [<Fact>]

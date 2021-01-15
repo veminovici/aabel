@@ -14,6 +14,14 @@ module AR =
     let map      f ar = Async.map (Result.map f) ar
     let mapError f ar = Async.map (Result.mapError f) ar
 
+    let mapFst f r =
+        let f' (a, b) = f a, b
+        map f' r
+
+    let mapSnd f r =
+        let f' (a, b) = a, f b
+        map f' r
+
     let bind f ar = async {
         match! ar with
         | Ok    x -> return! f x
@@ -110,7 +118,10 @@ module AR =
         map2 (@) x y
 
     module Operators =
-        let (<!>) m f = map   f m
+        let (<!>)  m f = map    f m
+        let (</!>) m f = mapFst f m
+        let (<!/>) m f = mapSnd f m
+
         let (<*>) f m = apply f m
 
         let (++)  a b = zip a b

@@ -17,6 +17,14 @@ module Reader =
         |> run env 
         |> f
 
+    let mapFst f r =
+        let f' (a, b) = f a, b
+        map f' r
+
+    let mapSnd f r =
+        let f' (a, b) = a, f b
+        map f' r
+
     let apply f r = Reader <| fun env ->
         let f = run env f
         let r = run env r
@@ -80,7 +88,10 @@ module Reader =
         Seq.unfold gen
 
     module Operators =
-        let (<!>) m f = map   f m
+        let (<!>)  m f = map    f m
+        let (</!>) m f = mapFst f m
+        let (<!/>) m f = mapSnd f m
+
         let (<*>) f m = apply f m
 
         let (.>>.) m f = bindLR f m

@@ -110,6 +110,22 @@ module TResult =
             |> Assert.True
 
         [<Fact>]
+        let ``Result mapFst`` () =
+            ("abcde", 10)
+            |> Ok
+            |> Result.mapFst (fun (s: string) -> s.Length)
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result mapSnd`` () =
+            (10, "abcde")
+            |> Ok
+            |> Result.mapSnd (fun (s: string) -> s.Length)
+            |> (=) (Ok (10, 5))
+            |> Assert.True
+
+        [<Fact>]
         let ``Result mapEither ok`` () =
 
             let okF  (s: string) = s.Length
@@ -511,6 +527,22 @@ module TResult =
             |> Error
             <!> f
             |> Result.isError
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result </!>`` () =
+            ("abcde", 10)
+            |> Ok
+            </!> (fun (s: string) -> s.Length)
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result <!/>`` () =
+            (10, "abcde")
+            |> Ok
+            <!/> (fun (s: string) -> s.Length)
+            |> (=) (Ok (10, 5))
             |> Assert.True
 
         [<Fact>]

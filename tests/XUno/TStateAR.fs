@@ -49,6 +49,24 @@ module TStateAR =
             |> Assert.True
 
         [<Fact>]
+        let ``StateAR mapFst`` () =
+            ("abcde", 10)
+            |> StateAR.retn
+            |> StateAR.mapFst (fun (s: string) -> s.Length)
+            |> StateAR.eval "env"
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR mapSnd`` () =
+            (10, "abcde")
+            |> StateAR.retn
+            |> StateAR.mapSnd (fun (s: string) -> s.Length)
+            |> StateAR.eval "env"
+            |> (=) (Ok (10, 5))
+            |> Assert.True
+
+        [<Fact>]
         let ``StateAR mapError`` () =
             let fn (s: string) = sprintf "%s1" s
 
@@ -397,6 +415,24 @@ module TStateAR =
             <!> f
             |> StateAR.eval "env"
             |> (=) (Ok 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR </!>`` () =
+            ("abcde", 10)
+            |> StateAR.retn
+            </!> (fun (s: string) -> s.Length)
+            |> StateAR.eval "env"
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR <!/>`` () =
+            (10, "abcde")
+            |> StateAR.retn
+            <!/> (fun (s: string) -> s.Length)
+            |> StateAR.eval "env"
+            |> (=) (Ok (10, 5))
             |> Assert.True
 
         [<Fact>]

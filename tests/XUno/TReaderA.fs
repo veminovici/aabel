@@ -45,6 +45,24 @@ module TReaderA =
             |> Assert.True
 
         [<Fact>]
+        let ``ReaderA mapFst`` () =
+            ("abcde", 10)
+            |> ReaderA.retn
+            |> ReaderA.mapFst (fun (s: string) -> s.Length)
+            |> ReaderA.run "env"
+            |> (=) (5, 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA mapSnd`` () =
+            (10, "abcde")
+            |> ReaderA.retn
+            |> ReaderA.mapSnd (fun (s: string) -> s.Length)
+            |> ReaderA.run "env"
+            |> (=) (10, 5)
+            |> Assert.True
+
+        [<Fact>]
         let ``ReaderA bind`` () =
 
             let length (s: string) = s.Length |> ReaderA.retn
@@ -173,6 +191,24 @@ module TReaderA =
             |>  ReaderA.run "env"
             |>  (=) 5
             |>  Assert.True
+
+        [<Fact>]
+        let ``ReaderA </!>`` () =
+            ("abcde", 10)
+            |> ReaderA.retn
+            </!> (fun (s: string) -> s.Length)
+            |> ReaderA.run "env"
+            |> (=) (5, 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA <!/>`` () =
+            (10, "abcde")
+            |> ReaderA.retn
+            <!/> (fun (s: string) -> s.Length)
+            |> ReaderA.run "env"
+            |> (=) (10, 5)
+            |> Assert.True
 
         [<Fact>]
         let ``ReaderA <*>`` () =

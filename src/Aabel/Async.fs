@@ -14,6 +14,14 @@ module Async =
 
     let map f m = m |> bind (f >> singleton)
 
+    let mapFst f r =
+        let f' (a, b) = f a, b
+        map f' r
+
+    let mapSnd f r =
+        let f' (a, b) = a, f b
+        map f' r
+
     let map2 f x y =
         f
         |> singleton
@@ -46,7 +54,10 @@ module Async =
         map2 (@) x y
 
     module Operators =
-        let (<!>) m f = map   f m
+        let (<!>)  m f = map    f m
+        let (</!>) m f = mapFst f m
+        let (<!/>) m f = mapSnd f m
+
         let (<*>) f m = apply m f
 
         let (++)  a b = zip a b

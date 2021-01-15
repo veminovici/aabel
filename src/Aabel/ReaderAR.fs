@@ -21,6 +21,14 @@ module ReaderAR =
         m
         |> Reader.map (Async.map (Result.map f))
 
+    let mapFst f r =
+        let f' (a, b) = f a, b
+        map f' r
+
+    let mapSnd f r =
+        let f' (a, b) = a, f b
+        map f' r
+
     let mapError (f: 'E -> 'F) (m: ReaderAR<'TEnv, 'T, 'E>) : ReaderAR<'TEnv, 'T, 'F> =
         m
         |> Reader.map (Async.map (Result.mapError f))
@@ -131,7 +139,10 @@ module ReaderAR =
         Seq.unfold gen
 
     module Operators =
-        let (<!>) m f = map   f m
+        let (<!>)  m f = map    f m
+        let (</!>) m f = mapFst f m
+        let (<!/>) m f = mapSnd f m
+
         let (<*>) f m = apply f m
 
         let (.>>.) m f = bindLR f m

@@ -30,6 +30,24 @@ module TAsync =
             |> Assert.True
 
         [<Fact>]
+        let ``Async mapFst`` () =
+            ("abcde", 10)
+            |> Async.retn
+            |> Async.mapFst (fun (s: string) -> s.Length)
+            |> Async.RunSynchronously
+            |> (=) (5, 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async mapSnd`` () =
+            (10, "abcde")
+            |> Async.retn
+            |> Async.mapSnd (fun (s: string) -> s.Length)
+            |> Async.RunSynchronously
+            |> (=) (10, 5)
+            |> Assert.True
+
+        [<Fact>]
         let ``Async bind`` () =
 
             let f (s: string) = s.Length |> Async.retn
@@ -158,6 +176,24 @@ module TAsync =
             <!> f
             |> Async.RunSynchronously
             |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async </!>`` () =
+            ("abcde", 10)
+            |> Async.retn
+            </!> (fun (s: string) -> s.Length)
+            |> Async.RunSynchronously
+            |> (=) (5, 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async <!/>`` () =
+            (10, "abcde")
+            |> Async.retn
+            <!/> (fun (s: string) -> s.Length)
+            |> Async.RunSynchronously
+            |> (=) (10, 5)
             |> Assert.True
 
         [<Fact>]

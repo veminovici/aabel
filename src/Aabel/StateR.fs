@@ -19,6 +19,14 @@ module StateR =
         m 
         |> State.map (Result.map f)
 
+    let mapFst f r =
+        let f' (a, b) = f a, b
+        map f' r
+
+    let mapSnd f r =
+        let f' (a, b) = a, f b
+        map f' r
+
     let mapError f (m: StateR<'S, 'T, 'E>) : StateR<'S, 'T, 'F> = 
         m
         |> State.map (Result.mapError f)
@@ -121,7 +129,10 @@ module StateR =
         Seq.unfold gen
 
     module Operators =
-        let (<!>) m f = map   f m
+        let (<!>)  m f = map    f m
+        let (</!>) m f = mapFst f m
+        let (<!/>) m f = mapSnd f m
+
         let (<*>) f m = apply f m
 
         let (.>>.) m f = bindLR f m

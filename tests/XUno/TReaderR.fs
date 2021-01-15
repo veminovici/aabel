@@ -49,6 +49,24 @@ module TReaderR =
             |> Assert.True
 
         [<Fact>]
+        let ``ReaderR mapFst`` () =
+            ("abcde", 10)
+            |> ReaderR.retn
+            |> ReaderR.mapFst (fun (s: string) -> s.Length)
+            |> ReaderR.run "env"
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR mapSnd`` () =
+            (10, "abcde")
+            |> ReaderR.retn
+            |> ReaderR.mapSnd (fun (s: string) -> s.Length)
+            |> ReaderR.run "env"
+            |> (=) (Ok (10, 5))
+            |> Assert.True
+
+        [<Fact>]
         let ``ReaderR mapError`` () =
             let fn (s: string) = sprintf "%s1" s
 
@@ -397,6 +415,24 @@ module TReaderR =
             <!> f
             |> Reader.run "env"
             |> (=) (Ok 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR </!>`` () =
+            ("abcde", 10)
+            |> ReaderR.retn
+            </!> (fun (s: string) -> s.Length)
+            |> ReaderR.run "env"
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR <!/>`` () =
+            (10, "abcde")
+            |> ReaderR.retn
+            <!/> (fun (s: string) -> s.Length)
+            |> ReaderR.run "env"
+            |> (=) (Ok (10, 5))
             |> Assert.True
 
         [<Fact>]

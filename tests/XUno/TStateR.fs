@@ -56,6 +56,24 @@ module TStateR =
             |> Assert.True
 
         [<Fact>]
+        let ``StateR mapFst`` () =
+            ("abcde", 10)
+            |> StateR.retn
+            |> StateR.mapFst (fun (s: string) -> s.Length)
+            |> StateR.eval "env"
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR mapSnd`` () =
+            (10, "abcde")
+            |> StateR.retn
+            |> StateR.mapSnd (fun (s: string) -> s.Length)
+            |> StateR.eval "env"
+            |> (=) (Ok (10, 5))
+            |> Assert.True
+
+        [<Fact>]
         let ``StateR mapError`` () =
             let fn (s: string) = sprintf "%s1" s
 
@@ -404,6 +422,24 @@ module TStateR =
             <!> f
             |> State.eval "env"
             |> (=) (Ok 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR </!>`` () =
+            ("abcde", 10)
+            |> StateR.retn
+            </!> (fun (s: string) -> s.Length)
+            |> StateR.eval "env"
+            |> (=) (Ok (5, 10))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR <!/>`` () =
+            (10, "abcde")
+            |> StateR.retn
+            <!/> (fun (s: string) -> s.Length)
+            |> StateR.eval "env"
+            |> (=) (Ok (10, 5))
             |> Assert.True
 
         [<Fact>]

@@ -54,6 +54,24 @@ module TStateA =
             |> Assert.True
 
         [<Fact>]
+        let ``StateA mapFst`` () =
+            ("abcde", 10)
+            |> StateA.retn
+            |> StateA.mapFst (fun (s: string) -> s.Length)
+            |> StateA.eval "env"
+            |> (=) (5, 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateA mapSnd`` () =
+            (10, "abcde")
+            |> StateA.retn
+            |> StateA.mapSnd (fun (s: string) -> s.Length)
+            |> StateA.eval "env"
+            |> (=) (10, 5)
+            |> Assert.True
+
+        [<Fact>]
         let ``StateA bind`` () =
 
             let length (s: string) = s.Length |> StateA.retn
@@ -182,6 +200,24 @@ module TStateA =
             |>  StateA.eval "env"
             |>  (=) 5
             |>  Assert.True
+
+        [<Fact>]
+        let ``StateA </!>`` () =
+            ("abcde", 10)
+            |> StateA.retn
+            </!> (fun (s: string) -> s.Length)
+            |> StateA.eval "env"
+            |> (=) (5, 10)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateA <!/>`` () =
+            (10, "abcde")
+            |> StateA.retn
+            <!/> (fun (s: string) -> s.Length)
+            |> StateA.eval "env"
+            |> (=) (10, 5)
+            |> Assert.True
 
         [<Fact>]
         let ``StateA <*>`` () =
