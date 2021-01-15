@@ -156,25 +156,51 @@ module TReader =
             |> Assert.True
 
         [<Fact>]
-        let ``Reader .>>`` () =
+        let ``Reader >>.`` () =
             let f i = i |> (+) 1 |> Reader.retn
 
             1
             |> Reader.retn
-            .>> f
-            |> Reader.run "env"
-            |> (=) 1
-            |> Assert.True
+            >>. f
+            >>. f
+            >>. f
+            >>. f
+            |>  Reader.run "env"
+            |>  (=) 5
+            |>  Assert.True
 
         [<Fact>]
         let ``Reader .>>.`` () =
             let f i = i |> (+) 1 |> Reader.retn
 
             1
-            |> Reader.retn
+            |>   Reader.retn
             .>>. f
+            |>   Reader.run "env"
+            |>   (=) (1, 2)
+            |>   Assert.True
+
+        [<Fact>]
+        let ``Reader .>>`` () =
+            let f i = i |> (+) 1 |> Reader.retn
+
+            1
+            |>  Reader.retn
+            .>> f
+            |>  Reader.run "env"
+            |>  (=) 1
+            |>  Assert.True
+
+        [<Fact>]
+        let ``Reader ++`` () =
+
+            let a = Reader.retn 1
+            let b = Reader.retn "abc"
+
+            a
+            ++ b
             |> Reader.run "env"
-            |> (=) (1, 2)
+            |> (=) (1, "abc")
             |> Assert.True
 
         [<Fact>]

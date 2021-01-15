@@ -76,9 +76,15 @@ module Reader =
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
-        let (>>=) m f = bind  f m
+
         let (.>>.) m f = bindLR f m
-        let (.>>) m f = bindL f m
+        let (>>.)  m f = bindLR f m |> map snd
+        let (.>>)  m f = bindLR f m |> map fst
+
+        //let (>>=) m f  = bindLR f m |> map snd
+        let (>>=) = (>>.)
+
+        let (++) a b  = zip a b
 
     module ComputationExpression =
         open System
