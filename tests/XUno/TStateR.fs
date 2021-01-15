@@ -177,6 +177,28 @@ module TStateR =
             |> Assert.True
 
         [<Fact>]
+        let ``StateR bindFst`` () =
+            let f = fun (s: string) -> s.Length |> StateR.retn
+            let a = ("abcd", 10.) |> StateR.retn
+
+            a
+            |> StateR.bindFst f
+            |> StateR.eval "env"
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> StateR.retn
+            let a = (10., "abcd") |> StateR.retn
+
+            a
+            |> StateR.bindSnd f
+            |> StateR.eval "env"
+            |> (=) (Ok (10., 4))
+            |> Assert.True
+
+        [<Fact>]
         let ``StateR map2`` () =
             let f (a: string) (b: string) = a + b
             let x = "ab" |> StateR.retn
@@ -457,6 +479,28 @@ module TStateR =
             >>. fn
             |> StateR.eval 10.
             |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR />>`` () =
+            let f = fun (s: string) -> s.Length |> StateR.retn
+            let a = ("abcd", 10.) |> StateR.retn
+
+            a
+            />> f
+            |> StateR.eval "env"
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR >>/`` () =
+            let f = fun (s: string) -> s.Length |> StateR.retn
+            let a = (10., "abcd") |> StateR.retn
+
+            a
+            >>/ f
+            |> StateR.eval "env"
+            |> (=) (Ok (10., 4))
             |> Assert.True
 
         [<Fact>]

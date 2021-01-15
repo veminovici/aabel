@@ -121,7 +121,7 @@ module TAR =
             |> Assert.True
 
         [<Fact>]
-        let ``Async bindL`` () =
+        let ``AR bindL`` () =
             let f (s: string) = s.Length |> AR.retn
 
             "abc"
@@ -132,7 +132,7 @@ module TAR =
             |> Assert.True
 
         [<Fact>]
-        let ``Async bindR`` () =
+        let ``AR bindR`` () =
             let f (s: string) = s.Length |> AR.retn
 
             "abc"
@@ -140,6 +140,28 @@ module TAR =
             |> AR.bindR f
             |> Async.RunSynchronously
             |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``AR bindFst`` () =
+            let f = fun (s: string) -> s.Length |> AR.retn
+            let a = ("abcd", 10.) |> AR.retn
+
+            a
+            |> AR.bindFst f
+            |> Async.RunSynchronously
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``AR bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> AR.retn
+            let a = (10., "abcd") |> AR.retn
+
+            a
+            |> AR.bindSnd f
+            |> Async.RunSynchronously
+            |> (=) (Ok (10., 4))
             |> Assert.True
 
         [<Fact>]
@@ -492,6 +514,28 @@ module TAR =
             >>. f
             |> Async.RunSynchronously
             |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``AR />>`` () =
+            let f = fun (s: string) -> s.Length |> AR.retn
+            let a = ("abcd", 10.) |> AR.retn
+
+            a
+            />> f
+            |> Async.RunSynchronously
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``AR >>/`` () =
+            let f = fun (s: string) -> s.Length |> AR.retn
+            let a = (10., "abcd") |> AR.retn
+
+            a
+            >>/ f
+            |> Async.RunSynchronously
+            |> (=) (Ok (10., 4))
             |> Assert.True
 
         [<Fact>]

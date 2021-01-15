@@ -170,6 +170,28 @@ module TReaderR =
             |> Assert.True
 
         [<Fact>]
+        let ``ReaderR bindFst`` () =
+            let f = fun (s: string) -> s.Length |> ReaderR.retn
+            let a = ("abcd", 10.) |> ReaderR.retn
+
+            a
+            |> ReaderR.bindFst f
+            |> ReaderR.run "env"
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> ReaderR.retn
+            let a = (10., "abcd") |> ReaderR.retn
+
+            a
+            |> ReaderR.bindSnd f
+            |> ReaderR.run "env"
+            |> (=) (Ok (10., 4))
+            |> Assert.True
+
+        [<Fact>]
         let ``ReaderR map2`` () =
             let f (a: string) (b: string) = a + b
             let x = "ab" |> ReaderR.retn
@@ -389,7 +411,7 @@ module TReaderR =
             |> Assert.True
 
         [<Fact>]
-        let ``Reader >>=`` () =
+        let ``ReaderR >>=`` () =
             let f i = i |> (+) 1 |> ReaderR.retn
 
             1
@@ -403,7 +425,7 @@ module TReaderR =
             |> Assert.True
 
         [<Fact>]
-        let ``Reader >>= err`` () =
+        let ``ReaderR >>= err`` () =
             let f i = 
                 if i < 3
                 then i |> (+) 1 |> ReaderR.retn
@@ -450,6 +472,28 @@ module TReaderR =
             >>. f
             |> ReaderR.run "env"
             |> (=) (Ok 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR />>`` () =
+            let f = fun (s: string) -> s.Length |> ReaderR.retn
+            let a = ("abcd", 10.) |> ReaderR.retn
+
+            a
+            />> f
+            |> ReaderR.run "env"
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderR >>/`` () =
+            let f = fun (s: string) -> s.Length |> ReaderR.retn
+            let a = (10., "abcd") |> ReaderR.retn
+
+            a
+            >>/ f
+            |> ReaderR.run "env"
+            |> (=) (Ok (10., 4))
             |> Assert.True
 
         [<Fact>]

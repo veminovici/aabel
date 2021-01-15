@@ -159,7 +159,7 @@ module TStateAR =
             |> Assert.True
 
         [<Fact>]
-        let ``StateR bindAR`` () =
+        let ``StateAR bindR`` () =
             let x =  StateAR.retn "abc"
             let fn = fun (s: string) -> StateAR.retn (s.Length)
 
@@ -167,6 +167,28 @@ module TStateAR =
             |> StateAR.bindR fn
             |> StateAR.eval 10.
             |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR bindFst`` () =
+            let f = fun (s: string) -> s.Length |> StateAR.retn
+            let a = ("abcd", 10.) |> StateAR.retn
+
+            a
+            |> StateAR.bindFst f
+            |> StateAR.eval "env"
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> StateAR.retn
+            let a = (10., "abcd") |> StateAR.retn
+
+            a
+            |> StateAR.bindSnd f
+            |> StateAR.eval "env"
+            |> (=) (Ok (10., 4))
             |> Assert.True
 
         [<Fact>]
@@ -450,6 +472,28 @@ module TStateAR =
             >>. fn
             |> StateAR.eval 10.
             |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR />>`` () =
+            let f = fun (s: string) -> s.Length |> StateAR.retn
+            let a = ("abcd", 10.) |> StateAR.retn
+
+            a
+            />> f
+            |> StateAR.eval "env"
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateAR >>/`` () =
+            let f = fun (s: string) -> s.Length |> StateAR.retn
+            let a = (10., "abcd") |> StateAR.retn
+
+            a
+            >>/ f
+            |> StateAR.eval "env"
+            |> (=) (Ok (10., 4))
             |> Assert.True
 
         [<Fact>]

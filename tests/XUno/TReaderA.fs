@@ -90,6 +90,28 @@ module TReaderA =
             |> Assert.True
 
         [<Fact>]
+        let ``ReaderA bindFst`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+            let a = ("abcd", 10.) |> ReaderA.retn
+
+            a
+            |> ReaderA.bindFst f
+            |> ReaderA.run "env"
+            |> (=) (4, 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+            let a = (10., "abcd") |> ReaderA.retn
+
+            a
+            |> ReaderA.bindSnd f
+            |> ReaderA.run "env"
+            |> (=) (10., 4)
+            |> Assert.True
+
+        [<Fact>]
         let ``ReaderA apply`` () =
 
             let fn = (fun (s: string) -> s.Length) |> ReaderA.retn
@@ -209,6 +231,28 @@ module TReaderA =
             >>. f
             |> ReaderA.run "env"
             |> (=) 5
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA />>`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+            let a = ("abcd", 10.) |> ReaderA.retn
+
+            a
+            />> f
+            |> ReaderA.run "env"
+            |> (=) (4, 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA >>/`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+            let a = (10., "abcd") |> ReaderA.retn
+
+            a
+            >>/ f
+            |> ReaderA.run "env"
+            |> (=) (10., 4)
             |> Assert.True
 
         [<Fact>]

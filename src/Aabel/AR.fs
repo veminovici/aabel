@@ -26,6 +26,14 @@ module AR =
     let bindL f r = bindLR f r |> map fst
     let bindR f r = bindLR f r |> map snd
 
+    let bindFst f r =
+        let f' (a, b) = a |> f |> map (fun a -> a, b)
+        bind f' r
+
+    let bindSnd f r =
+        let f' (a, b) = b |> f |> map (fun b -> a, b)
+        bind f' r
+
     let apply f x =
         bind (fun f -> 
             bind (f >> retn) x) f
@@ -113,6 +121,9 @@ module AR =
 
         // let (>>=) m f = bind  f m
         let (>>=) = (>>.)
+
+        let (/>>) m f = bindFst f m
+        let (>>/) m f = bindSnd f m
 
     module ComputationExpression =
         type ARBuilder () =

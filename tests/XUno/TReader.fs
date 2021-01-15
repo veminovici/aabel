@@ -103,6 +103,28 @@ module TReader =
             |> Assert.True
 
         [<Fact>]
+        let ``Reader bindFst`` () =
+            let f = fun (s: string) -> s.Length |> Reader.retn
+            let a = ("abcd", 10.) |> Reader.retn
+
+            a
+            |> Reader.bindFst f
+            |> Reader.run "env"
+            |> (=) (4, 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Reader bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> Reader.retn
+            let a = (10., "abcd") |> Reader.retn
+
+            a
+            |> Reader.bindSnd f
+            |> Reader.run "env"
+            |> (=) (10., 4)
+            |> Assert.True
+
+        [<Fact>]
         let ``Reader bind chain`` () =
             let f i = i |> (+) 1 |> Reader.retn
 
@@ -223,6 +245,28 @@ module TReader =
             |>  Reader.run "env"
             |>  (=) 1
             |>  Assert.True
+
+        [<Fact>]
+        let ``Reader />>`` () =
+            let f = fun (s: string) -> s.Length |> Reader.retn
+            let a = ("abcd", 10.) |> Reader.retn
+
+            a
+            />> f
+            |> Reader.run "env"
+            |> (=) (4, 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Reader >>/`` () =
+            let f = fun (s: string) -> s.Length |> Reader.retn
+            let a = (10., "abcd") |> Reader.retn
+
+            a
+            >>/ f
+            |> Reader.run "env"
+            |> (=) (10., 4)
+            |> Assert.True
 
         [<Fact>]
         let ``Reader ++`` () =

@@ -45,6 +45,14 @@ module Result =
     let bindL f r = bindLR f r |> Result.map fst
     let bindR f r = bindLR f r |> Result.map snd
 
+    let bindFst f r =
+        let f' (a, b) = a |> f |> Result.map (fun a -> a, b)
+        Result.bind f' r
+
+    let bindSnd f r =
+        let f' (a, b) = b |> f |> Result.map (fun b -> a, b)
+        Result.bind f' r
+
     let map3 f x y z =
         apply (map2 f x y) z
 
@@ -126,6 +134,9 @@ module Result =
 
         //let (>>=) m f = Result.bind  f m
         let (>>=) = (>>.)
+
+        let (/>>) m f = bindFst f m
+        let (>>/) m f = bindSnd f m
 
     module ComputationExpression =
 

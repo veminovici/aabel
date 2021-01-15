@@ -35,6 +35,14 @@ module Reader =
     let bindL f r = bindLR f r |> map fst
     let bindR f r = bindLR f r |> map snd
 
+    let bindFst f r =
+        let f' (a, b) = a |> f |> map (fun a -> a, b)
+        bind f' r
+
+    let bindSnd f r =
+        let f' (a, b) = b |> f |> map (fun b -> a, b)
+        bind f' r
+
     let map2 f x y = 
         apply (apply (retn f) x) y
 
@@ -82,7 +90,10 @@ module Reader =
         //let (>>=) m f  = bindLR f m |> map snd
         let (>>=) = (>>.)
 
-        let (++) a b  = zip a b
+        let (++)  a b = zip a b
+
+        let (/>>) m f = bindFst f m
+        let (>>/) m f = bindSnd f m
 
     module ComputationExpression =
         open System

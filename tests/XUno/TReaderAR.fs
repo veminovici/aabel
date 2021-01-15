@@ -161,6 +161,28 @@ module TReaderAR =
             |> Assert.True
 
         [<Fact>]
+        let ``ReaderAR bindFst`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+            let a = ("abcd", 10.) |> ReaderAR.retn
+
+            a
+            |> ReaderAR.bindFst f
+            |> ReaderAR.run "env"
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+            let a = (10., "abcd") |> ReaderAR.retn
+
+            a
+            |> ReaderAR.bindSnd f
+            |> ReaderAR.run "env"
+            |> (=) (Ok (10., 4))
+            |> Assert.True
+
+        [<Fact>]
         let ``ReaderAR map2`` () =
             let f (a: string) (b: string) = a + b
             let x = "ab" |> ReaderAR.retn
@@ -754,6 +776,28 @@ module TReaderAR =
             >>. f
             |> ReaderAR.run "env"
             |> (=) (Ok 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR />.`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+            let a = ("abcd", 10.) |> ReaderAR.retn
+
+            a
+            />> f
+            |> ReaderAR.run "env"
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR >>/`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+            let a = (10., "abcd") |> ReaderAR.retn
+
+            a
+            >>/ f
+            |> ReaderAR.run "env"
+            |> (=) (Ok (10., 4))
             |> Assert.True
 
         [<Fact>]

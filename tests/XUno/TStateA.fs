@@ -99,6 +99,28 @@ module TStateA =
             |> Assert.True
 
         [<Fact>]
+        let ``StateA bindFst`` () =
+            let f = fun (s: string) -> s.Length |> StateA.retn
+            let a = ("abcd", 10.) |> StateA.retn
+
+            a
+            |> StateA.bindFst f
+            |> StateA.eval "env"
+            |> (=) (4, 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateA bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> StateA.retn
+            let a = (10., "abcd") |> StateA.retn
+
+            a
+            |> StateA.bindSnd f
+            |> StateA.eval "env"
+            |> (=) (10., 4)
+            |> Assert.True
+
+        [<Fact>]
         let ``StateA apply`` () =
 
             let fn = (fun (s: string) -> s.Length) |> StateA.retn
@@ -218,6 +240,28 @@ module TStateA =
             >>. fn
             |> StateA.eval 10.
             |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateA />>`` () =
+            let f = fun (s: string) -> s.Length |> StateA.retn
+            let a = ("abcd", 10.) |> StateA.retn
+
+            a
+            />> f
+            |> StateA.eval "env"
+            |> (=) (4, 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateA >>/`` () =
+            let f = fun (s: string) -> s.Length |> StateA.retn
+            let a = (10., "abcd") |> StateA.retn
+
+            a
+            >>/ f
+            |> StateA.eval "env"
+            |> (=) (10., 4)
             |> Assert.True
 
         [<Fact>]

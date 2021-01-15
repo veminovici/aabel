@@ -141,6 +141,28 @@ module TState =
             |> Assert.True
 
         [<Fact>]
+        let ``State bindFst`` () =
+            let f = fun (s: string) -> s.Length |> State.retn
+            let a = ("abcd", 10.) |> State.retn
+
+            a
+            |> State.bindFst f
+            |> State.eval "env"
+            |> (=) (4, 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``State bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> State.retn
+            let a = (10., "abcd") |> State.retn
+
+            a
+            |> State.bindSnd f
+            |> State.eval "env"
+            |> (=) (10., 4)
+            |> Assert.True
+
+        [<Fact>]
         let ``State combine`` () =
             let x = State.retn "abc"
             let y = State.retn 100
@@ -224,6 +246,28 @@ module TState =
             >>. fn
             |> State.eval 10.
             |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``State />>`` () =
+            let f = fun (s: string) -> s.Length |> State.retn
+            let a = ("abcd", 10.) |> State.retn
+
+            a
+            />> f
+            |> State.eval "env"
+            |> (=) (4, 10.)
+            |> Assert.True
+
+        [<Fact>]
+        let ``State >>/`` () =
+            let f = fun (s: string) -> s.Length |> State.retn
+            let a = (10., "abcd") |> State.retn
+
+            a
+            >>/ f
+            |> State.eval "env"
+            |> (=) (10., 4)
             |> Assert.True
 
         [<Fact>]

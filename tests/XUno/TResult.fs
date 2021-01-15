@@ -235,6 +235,26 @@ module TResult =
             |> Assert.True
 
         [<Fact>]
+        let ``Result bindFst`` () =
+            let f = fun (s: string) -> s.Length |> Ok
+            let a = ("abcd", 10.) |> Ok
+
+            a
+            |> Result.bindFst f
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result bindSnd`` () =
+            let f = fun (s: string) -> s.Length |> Ok
+            let a = (10., "abcd") |> Ok
+
+            a
+            |> Result.bindSnd f
+            |> (=) (Ok (10., 4))
+            |> Assert.True
+
+        [<Fact>]
         let ``Result ofChoice`` () =
 
             "ab"
@@ -571,6 +591,26 @@ module TResult =
             |> Error
             >>. f
             |> Result.isError
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result />>`` () =
+            let f = fun (s: string) -> s.Length |> Ok
+            let a = ("abcd", 10.) |> Ok
+
+            a
+            />> f
+            |> (=) (Ok (4, 10.))
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result >>/`` () =
+            let f = fun (s: string) -> s.Length |> Ok
+            let a = (10., "abcd") |> Ok
+
+            a
+            >>/ f
+            |> (=) (Ok (10., 4))
             |> Assert.True
 
         [<Fact>]
