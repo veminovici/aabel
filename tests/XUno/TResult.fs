@@ -574,6 +574,15 @@ module TResult =
             |> Assert.True
 
         [<Fact>]
+        let ``Result ++`` () =
+            let a = Ok "abc"
+            let b = Ok 1
+
+            a ++ b
+            |> (=) (Ok ("abc", 1))
+            |> Assert.True
+
+        [<Fact>]
         let ``Result CE return`` () =
             _result { return "abc" }
             |> (=) (Ok "abc")
