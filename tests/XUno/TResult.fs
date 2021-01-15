@@ -205,6 +205,36 @@ module TResult =
             |> Assert.True
 
         [<Fact>]
+        let ``Result bindLR`` () =
+            let f n = n |> (+) 1 |> Ok
+
+            1
+            |> Ok
+            |> Result.bindLR f
+            |> (=) (Ok (1, 2))
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result bindL`` () =
+            let f n = n |> (+) 1 |> Ok
+
+            1
+            |> Ok
+            |> Result.bindL f
+            |> (=) (Ok 1)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result bindR`` () =
+            let f n = n |> (+) 1 |> Ok
+
+            1
+            |> Ok
+            |> Result.bindR f
+            |> (=) (Ok 2)
+            |> Assert.True
+
+        [<Fact>]
         let ``Result ofChoice`` () =
 
             "ab"
@@ -492,6 +522,54 @@ module TResult =
             "e"
             |> Error
             >>= f
+            |> Result.isError
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result .>>.`` () =
+            let f (s: string) = Ok s.Length
+
+            "abc"
+            |> Ok
+            .>>. f
+            |> (=) (Ok ("abc", 3))
+            |> Assert.True
+
+            "e"
+            |> Error
+            .>>. f
+            |> Result.isError
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result .>>`` () =
+            let f (s: string) = Ok s.Length
+
+            "abc"
+            |> Ok
+            .>> f
+            |> (=) (Ok "abc")
+            |> Assert.True
+
+            "e"
+            |> Error
+            .>> f
+            |> Result.isError
+            |> Assert.True
+
+        [<Fact>]
+        let ``Result >>.`` () =
+            let f (s: string) = Ok s.Length
+
+            "abc"
+            |> Ok
+            >>. f
+            |> (=) (Ok 3)
+            |> Assert.True
+
+            "e"
+            |> Error
+            >>. f
             |> Result.isError
             |> Assert.True
 

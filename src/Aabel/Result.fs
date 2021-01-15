@@ -34,6 +34,17 @@ module Result =
     let zip x y = 
         map2 (fun x y -> x, y) x y
 
+    let bindLR (f:'a -> Result<'b, 'E>) (r: Result<'a, 'E>) : Result<'a * 'b, 'E> = 
+        let f' a = 
+            a 
+            |> f 
+            |> Result.map (fun b -> a, b)
+
+        Result.bind f' r
+
+    let bindL f r = bindLR f r |> Result.map fst
+    let bindR f r = bindLR f r |> Result.map snd
+
     let map3 f x y z =
         apply (map2 f x y) z
 
@@ -106,7 +117,15 @@ module Result =
     module Operators =
         let (<!>) m f = Result.map   f m
         let (<*>) f m = apply        m f
-        let (>>=) m f = Result.bind  f m
+
+        let (++)  a b = zip a b
+
+        let (.>>.) m f = bindLR f m
+        let (>>.)  m f = bindLR f m |> Result.map snd
+        let (.>>)  m f = bindLR f m |> Result.map fst
+
+        //let (>>=) m f = Result.bind  f m
+        let (>>=) = (>>.)
 
     module ComputationExpression =
 
