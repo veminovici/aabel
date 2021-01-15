@@ -70,6 +70,39 @@ module TReader =
             |> Assert.True
 
         [<Fact>]
+        let ``Reader bindLR`` () =
+            let f = fun (s: string) -> s.Length |> Reader.retn
+
+            "abcde"
+            |> Reader.retn
+            |> Reader.bindLR f
+            |> Reader.run "env"
+            |> (=) ("abcde", 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Reader bindL`` () =
+            let f = fun (s: string) -> s.Length |> Reader.retn
+
+            "abcde"
+            |> Reader.retn
+            |> Reader.bindL f
+            |> Reader.run "env"
+            |> (=) "abcde"
+            |> Assert.True
+
+        [<Fact>]
+        let ``Reader bindR`` () =
+            let f = fun (s: string) -> s.Length |> Reader.retn
+
+            "abcde"
+            |> Reader.retn
+            |> Reader.bindR f
+            |> Reader.run "env"
+            |> (=) 5
+            |> Assert.True
+
+        [<Fact>]
         let ``Reader bind chain`` () =
             let f i = i |> (+) 1 |> Reader.retn
 

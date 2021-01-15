@@ -128,6 +128,39 @@ module TReaderAR =
             |> Assert.True
 
         [<Fact>]
+        let ``ReaderAR bindLR`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+
+            "abcde"
+            |> ReaderAR.retn
+            |> ReaderAR.bindLR f
+            |> ReaderAR.run "env"
+            |> (=) (Ok ("abcde", 5))
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR bindL`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+
+            "abcde"
+            |> ReaderAR.retn
+            |> ReaderAR.bindL f
+            |> ReaderAR.run "env"
+            |> (=) (Ok "abcde")
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR bindR`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+
+            "abcde"
+            |> ReaderAR.retn
+            |> ReaderAR.bindR f
+            |> ReaderAR.run "env"
+            |> (=) (Ok 5)
+            |> Assert.True
+
+        [<Fact>]
         let ``ReaderAR map2`` () =
             let f (a: string) (b: string) = a + b
             let x = "ab" |> ReaderAR.retn
@@ -690,3 +723,45 @@ module TReaderAR =
             |> (=) [1; 1]
             |> Assert.True
 
+        [<Fact>]
+        let ``ReaderAR .>>.`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+
+            "abcde"
+            |> ReaderAR.retn
+            .>>. f
+            |> ReaderAR.run "env"
+            |> (=) (Ok ("abcde", 5))
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR .>>`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+
+            "abcde"
+            |> ReaderAR.retn
+            .>> f
+            |> ReaderAR.run "env"
+            |> (=) (Ok "abcde")
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR >>.`` () =
+            let f = fun (s: string) -> s.Length |> ReaderAR.retn
+
+            "abcde"
+            |> ReaderAR.retn
+            >>. f
+            |> ReaderAR.run "env"
+            |> (=) (Ok 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderAR ++`` () =
+            let a = "abc" |> ReaderAR.retn
+            let b = 3     |> ReaderAR.retn
+
+            a ++ b
+            |> ReaderAR.run "env"
+            |> (=) (Ok ("abc", 3))
+            |> Assert.True

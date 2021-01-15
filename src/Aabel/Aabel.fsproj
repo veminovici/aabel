@@ -29,7 +29,7 @@
     <PackageTags>fsharp;result;async;monad;error</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Description>Simple library for F#</Description>
-    <Version>0.0.5</Version>
+    <Version>0.0.6</Version>
   </PropertyGroup>
 
   <!-- Create a symbol package -->

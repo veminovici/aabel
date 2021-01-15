@@ -11,7 +11,6 @@ module StateR =
     let eval s stt = run s stt |> fst
     let exec s stt = run s stt |> snd
 
-
     let retn     x : StateR<_,_,_> = x |> Result.ok  |> State.retn
     let singleton                   = retn
     let err      e : StateR<_,_,_> = e |> Result.err |> State.retn
@@ -31,6 +30,13 @@ module StateR =
     let bind (f: 'T -> StateR<'S, 'U, 'E>) (m: StateR<'S, 'T, 'E>) : StateR<'S, 'U, 'E> =
         m 
         |> State.bind (Result.fold f (Error >> State.retn))
+
+    let bindLR f r = 
+        let f' a = a |> f |> map (fun b -> a, b)
+        bind f' r
+
+    let bindL f r = bindLR f r |> map fst
+    let bindR f r = bindLR f r |> map snd
 
     let apply f (m: StateR<'S, 'T, 'E>) : StateR<'S, 'U, 'E> = 
         bind (fun f -> 
@@ -109,7 +115,15 @@ module StateR =
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
-        let (>>=) m f = bind  f m
+
+        let (.>>.) m f = bindLR f m
+        let (>>.)  m f = bindLR f m |> map snd
+        let (.>>)  m f = bindLR f m |> map fst
+
+        //let (>>=) m f  = bindLR f m |> map snd
+        let (>>=) = (>>.)
+
+        let (++) a b  = zip a b
 
     module ComputationExpression =
         open System

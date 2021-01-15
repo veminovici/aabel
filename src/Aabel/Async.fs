@@ -22,6 +22,13 @@ module Async =
 
     let zip x y = map2 (fun x y -> x, y) x y
 
+    let bindLR (f:'a -> Async<'b>) (r: Async<'a>) : Async<'a * 'b> = 
+        let f' a = a |> f |> map (fun b -> a, b)
+        bind f' r
+
+    let bindL f r = bindLR f r |> map fst
+    let bindR f r = bindLR f r |> map snd
+
     let map3 f x y z =
         y
         |> map2 f x
@@ -33,7 +40,15 @@ module Async =
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply m f
-        let (>>=) m f = bind  f m
+
+        let (++)  a b = zip a b
+
+        let (.>>.) m f = bindLR f m
+        let (>>.)  m f = bindLR f m |> map snd
+        let (.>>)  m f = bindLR f m |> map fst
+
+        // let (>>=) m f = bind  f m
+        let (>>=) = (>>.)
 
     module Traversals = 
 

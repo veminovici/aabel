@@ -66,6 +66,39 @@ module TAsync =
             |> Assert.True
 
         [<Fact>]
+        let ``Async bindLR`` () =
+            let f (s: string) = s.Length |> Async.retn
+
+            "abc"
+            |> Async.retn
+            |> Async.bindLR f
+            |> Async.RunSynchronously
+            |> (=) ("abc", 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async bindL`` () =
+            let f (s: string) = s.Length |> Async.retn
+
+            "abc"
+            |> Async.retn
+            |> Async.bindL f
+            |> Async.RunSynchronously
+            |> (=) "abc"
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async bindR`` () =
+            let f (s: string) = s.Length |> Async.retn
+
+            "abc"
+            |> Async.retn
+            |> Async.bindR f
+            |> Async.RunSynchronously
+            |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
         let ``Async map2`` () =
 
             let f (x: string) (y: string) = x + y
@@ -127,6 +160,49 @@ module TAsync =
             >>= f
             |> Async.RunSynchronously
             |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async .>>.`` () =
+            let f (s: string) = s.Length |> Async.retn
+
+            "abc"
+            |> Async.retn
+            .>>. f
+            |> Async.RunSynchronously
+            |> (=) ("abc", 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async .>>`` () =
+            let f (s: string) = s.Length |> Async.retn
+
+            "abc"
+            |> Async.retn
+            .>> f
+            |> Async.RunSynchronously
+            |> (=) "abc"
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async >>.`` () =
+            let f (s: string) = s.Length |> Async.retn
+
+            "abc"
+            |> Async.retn
+            >>. f
+            |> Async.RunSynchronously
+            |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async ++`` () =
+            let a = "abc" |> Async.retn
+            let b = 3     |> Async.retn
+
+            a ++ b
+            |> Async.RunSynchronously
+            |> (=) ("abc", 3)
             |> Assert.True
 
         [<Fact>]

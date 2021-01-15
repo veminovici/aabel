@@ -19,6 +19,13 @@ module AR =
         | Ok    x -> return! f x
         | Error e -> return! async.Return (Error e) }
 
+    let bindLR (f:'a -> AR<'b, 'E>) (r: AR<'a, 'E>) : AR<'a * 'b, 'E> = 
+        let f' a = a |> f |> map (fun b -> a, b)
+        bind f' r
+
+    let bindL f r = bindLR f r |> map fst
+    let bindR f r = bindLR f r |> map snd
+
     let apply f x =
         bind (fun f -> 
             bind (f >> retn) x) f
@@ -97,7 +104,15 @@ module AR =
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
-        let (>>=) m f = bind  f m
+
+        let (++)  a b = zip a b
+
+        let (.>>.) m f = bindLR f m
+        let (>>.)  m f = bindLR f m |> map snd
+        let (.>>)  m f = bindLR f m |> map fst
+
+        // let (>>=) m f = bind  f m
+        let (>>=) = (>>.)
 
     module ComputationExpression =
         type ARBuilder () =

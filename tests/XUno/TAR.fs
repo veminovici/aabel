@@ -110,6 +110,39 @@ module TAR =
             |> Assert.True
 
         [<Fact>]
+        let ``AR bindLR`` () =
+            let f (s: string) = s.Length |> AR.retn
+
+            "abc"
+            |> AR.retn
+            |> AR.bindLR f
+            |> Async.RunSynchronously
+            |> (=) (Ok ("abc", 3))
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async bindL`` () =
+            let f (s: string) = s.Length |> AR.retn
+
+            "abc"
+            |> AR.retn
+            |> AR.bindL f
+            |> Async.RunSynchronously
+            |> (=) (Ok "abc")
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async bindR`` () =
+            let f (s: string) = s.Length |> AR.retn
+
+            "abc"
+            |> AR.retn
+            |> AR.bindR f
+            |> Async.RunSynchronously
+            |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
         let ``AR apply`` () =
 
             let f (s: string) = s.Length
@@ -426,6 +459,49 @@ module TAR =
             |> AR.bind f
             |> Async.RunSynchronously
             |> (=) (Error "e3")
+            |> Assert.True
+
+        [<Fact>]
+        let ``AR .>>.`` () =
+            let f (s: string) = s.Length |> AR.retn
+
+            "abc"
+            |> AR.retn
+            .>>. f
+            |> Async.RunSynchronously
+            |> (=) (Ok ("abc", 3))
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async .>>`` () =
+            let f (s: string) = s.Length |> AR.retn
+
+            "abc"
+            |> AR.retn
+            .>> f
+            |> Async.RunSynchronously
+            |> (=) (Ok "abc")
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async >>.`` () =
+            let f (s: string) = s.Length |> AR.retn
+
+            "abc"
+            |> AR.retn
+            >>. f
+            |> Async.RunSynchronously
+            |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``Async ++`` () =
+            let a = "abc" |> AR.retn
+            let b = 3     |> AR.retn
+
+            a ++ b
+            |> Async.RunSynchronously
+            |> (=) (Ok ("abc", 3))
             |> Assert.True
 
         [<Fact>]

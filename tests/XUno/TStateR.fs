@@ -144,6 +144,39 @@ module TStateR =
             |> Assert.True
 
         [<Fact>]
+        let ``StateR bindLR`` () =
+            let x =  StateR.retn "abc"
+            let fn = fun (s: string) -> StateR.retn (s.Length)
+
+            x
+            |> StateR.bindLR fn
+            |> StateR.eval 10.
+            |> (=) (Ok ("abc", 3))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR bindL`` () =
+            let x =  StateR.retn "abc"
+            let fn = fun (s: string) -> StateR.retn (s.Length)
+
+            x
+            |> StateR.bindL fn
+            |> StateR.eval 10.
+            |> (=) (Ok "abc")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR bindR`` () =
+            let x =  StateR.retn "abc"
+            let fn = fun (s: string) -> StateR.retn (s.Length)
+
+            x
+            |> StateR.bindR fn
+            |> StateR.eval 10.
+            |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
         let ``StateR map2`` () =
             let f (a: string) (b: string) = a + b
             let x = "ab" |> StateR.retn
@@ -391,6 +424,50 @@ module TStateR =
             >>= f
             |> State.eval "env"
             |> (=) (Error "e3")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR .>>.`` () =
+            let x =  StateR.retn "abc"
+            let fn = fun (s: string) -> StateR.retn (s.Length)
+
+            x
+            .>>. fn
+            |> StateR.eval 10.
+            |> (=) (Ok ("abc", 3))
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR .>>`` () =
+            let x =  StateR.retn "abc"
+            let fn = fun (s: string) -> StateR.retn (s.Length)
+
+            x
+            .>> fn
+            |> StateR.eval 10.
+            |> (=) (Ok "abc")
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR >>.`` () =
+            let x =  StateR.retn "abc"
+            let fn = fun (s: string) -> StateR.retn (s.Length)
+
+            x
+            >>. fn
+            |> StateR.eval 10.
+            |> (=) (Ok 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``StateR ++`` () =
+
+            let a = "abc" |> StateR.retn
+            let b = 3     |> StateR.retn
+
+            a ++ b
+            |> StateR.eval 10.
+            |> (=) (Ok ("abc", 3))
             |> Assert.True
 
         [<Fact>]

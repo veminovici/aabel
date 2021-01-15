@@ -28,9 +28,12 @@ module Reader =
         |> f
         |> run env
 
-    let bindLR f r = Reader <| fun env ->
-        let a = run env r
-        a, a |> f |> run env
+    let bindLR f r = 
+        let f' a = a |> f |> map (fun b -> a, b)
+        bind f' r
+
+    let bindL f r = bindLR f r |> map fst
+    let bindR f r = bindLR f r |> map snd
 
     let map2 f x y = 
         apply (apply (retn f) x) y

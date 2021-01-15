@@ -26,6 +26,13 @@ module StateA =
         m
         |> State.bind (Async.RunSynchronously >> f)
 
+    let bindLR f r = 
+        let f' a = a |> f |> map (fun b -> a, b)
+        bind f' r
+
+    let bindL f r = bindLR f r |> map fst
+    let bindR f r = bindLR f r |> map snd
+
     let apply f m = 
         bind (fun f -> 
             bind (f >> retn) m) f
@@ -66,7 +73,15 @@ module StateA =
     module Operators =
         let (<!>) m f = map   f m
         let (<*>) f m = apply f m
-        let (>>=) m f = bind  f m
+
+        let (.>>.) m f = bindLR f m
+        let (>>.)  m f = bindLR f m |> map snd
+        let (.>>)  m f = bindLR f m |> map fst
+
+        //let (>>=) m f  = bindLR f m |> map snd
+        let (>>=) = (>>.)
+
+        let (++) a b  = zip a b
 
     module ComputationExpression =
 

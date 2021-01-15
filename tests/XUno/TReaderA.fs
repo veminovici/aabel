@@ -57,6 +57,39 @@ module TReaderA =
             |> Assert.True
 
         [<Fact>]
+        let ``ReaderA bindLR`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+
+            "abcde"
+            |> ReaderA.retn
+            |> ReaderA.bindLR f
+            |> ReaderA.run "env"
+            |> (=) ("abcde", 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA bindL`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+
+            "abcde"
+            |> ReaderA.retn
+            |> ReaderA.bindL f
+            |> ReaderA.run "env"
+            |> (=) "abcde"
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA bindR`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+
+            "abcde"
+            |> ReaderA.retn
+            |> ReaderA.bindR f
+            |> ReaderA.run "env"
+            |> (=) 5
+            |> Assert.True
+
+        [<Fact>]
         let ``ReaderA apply`` () =
 
             let fn = (fun (s: string) -> s.Length) |> ReaderA.retn
@@ -143,6 +176,49 @@ module TReaderA =
             >>= fn
             |> ReaderA.run "env"
             |> (=) 5
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA .>>.`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+
+            "abcde"
+            |> ReaderA.retn
+            .>>. f
+            |> ReaderA.run "env"
+            |> (=) ("abcde", 5)
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA .>>`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+
+            "abcde"
+            |> ReaderA.retn
+            .>> f
+            |> ReaderA.run "env"
+            |> (=) "abcde"
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA >>.`` () =
+            let f = fun (s: string) -> s.Length |> ReaderA.retn
+
+            "abcde"
+            |> ReaderA.retn
+            >>. f
+            |> ReaderA.run "env"
+            |> (=) 5
+            |> Assert.True
+
+        [<Fact>]
+        let ``ReaderA ++`` () =
+            let a = "abc" |> ReaderA.retn
+            let b = 3     |> ReaderA.retn
+
+            a ++ b
+            |> ReaderA.run "env"
+            |> (=) ("abc", 3)
             |> Assert.True
 
         [<Fact>]

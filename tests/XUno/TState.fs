@@ -108,6 +108,39 @@ module TState =
             |> Assert.True
 
         [<Fact>]
+        let ``State bindLR`` () =
+            let x =  State.retn "abc"
+            let fn = fun (s: string) -> State.retn (s.Length)
+
+            x
+            |> State.bindLR fn
+            |> State.eval 10.
+            |> (=) ("abc", 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``State bindL`` () =
+            let x =  State.retn "abc"
+            let fn = fun (s: string) -> State.retn (s.Length)
+
+            x
+            |> State.bindL fn
+            |> State.eval 10.
+            |> (=) "abc"
+            |> Assert.True
+
+        [<Fact>]
+        let ``State bindR`` () =
+            let x =  State.retn "abc"
+            let fn = fun (s: string) -> State.retn (s.Length)
+
+            x
+            |> State.bindR fn
+            |> State.eval 10.
+            |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
         let ``State combine`` () =
             let x = State.retn "abc"
             let y = State.retn 100
@@ -158,6 +191,49 @@ module TState =
             >>= fn
             |> State.eval 10.
             |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``State .>>.`` () =
+            let x =  State.retn "abc"
+            let fn = fun (s: string) -> State.retn (s.Length)
+
+            x
+            .>>. fn
+            |> State.eval 10.
+            |> (=) ("abc", 3)
+            |> Assert.True
+
+        [<Fact>]
+        let ``State .>>`` () =
+            let x =  State.retn "abc"
+            let fn = fun (s: string) -> State.retn (s.Length)
+
+            x
+            .>> fn
+            |> State.eval 10.
+            |> (=) "abc"
+            |> Assert.True
+
+        [<Fact>]
+        let ``State >>.`` () =
+            let x =  State.retn "abc"
+            let fn = fun (s: string) -> State.retn (s.Length)
+
+            x
+            >>. fn
+            |> State.eval 10.
+            |> (=) 3
+            |> Assert.True
+
+        [<Fact>]
+        let ``State ++`` () =
+            let a = "abc" |> State.retn
+            let b = 3     |> State.retn
+
+            a ++ b
+            |> State.eval 10.
+            |> (=) ("abc", 3)
             |> Assert.True
 
         [<Fact>]
