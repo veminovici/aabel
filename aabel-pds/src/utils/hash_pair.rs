@@ -2,20 +2,20 @@ use log::debug;
 use siphasher::sip128::Hasher128;
 use std::hash::{Hash, Hasher};
 
-pub trait IntoHashPair<H, T>
+pub trait HashPair<H, T>
 where
     H: Hasher + Hasher128,
     T: Hash,
 {
-    fn to_hash_pair(&self, hasher: H) -> (u64, u64);
+    fn hash_pair(&self, hasher: H) -> (u64, u64);
 }
 
-impl<H, T> IntoHashPair<H, T> for T
+impl<H, T> HashPair<H, T> for T
 where
     H: Hasher + Hasher128,
     T: Hash,
 {
-    fn to_hash_pair(&self, mut hasher: H) -> (u64, u64) {
+    fn hash_pair(&self, mut hasher: H) -> (u64, u64) {
         self.hash(&mut hasher);
         let h = hasher.finish128().as_u128();
         debug!("ITEM || hash={:?}", h);

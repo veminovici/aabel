@@ -1,11 +1,7 @@
-mod buildhasher;
-mod to_hashpair;
+mod rand_seed;
+mod hash_pair;
+mod with_seed;
 
-pub use buildhasher::*;
-pub use to_hashpair::*;
-
-pub(crate) fn generate_random_seed() -> [u8; 16] {
-    let mut seed = [0u8; 32];
-    getrandom::getrandom(&mut seed).unwrap();
-    seed[0..16].try_into().unwrap()
-}
+pub use rand_seed::*;
+pub use hash_pair::*;
+pub use with_seed::*;

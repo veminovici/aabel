@@ -1,4 +1,4 @@
-use crate::{generate_random_seed, BuildHasher, IntoIndexes};
+use crate::{ComputeOptimal, IntoIndexes, RandSeed, WithSeed};
 use bit_vec::BitVec;
 use siphasher::sip128::Hasher128;
 use std::{
@@ -16,19 +16,24 @@ pub struct BloomFilter<H, T> {
 
 impl<H, T> BloomFilter<H, T>
 where
-    H: Copy + Hasher + Hasher128 + BuildHasher,
+    H: Copy + Hasher + Hasher128 + WithSeed,
     T: Hash,
 {
     /// Creates a new Bloom filter.
     pub fn new(m: usize, k: usize) -> Self {
-        let seed = generate_random_seed();
+        let seed = RandSeed::new();
         Self {
             m,
             k,
             bits: BitVec::from_elem(m, false),
-            hasher: <H as BuildHasher>::with_key(seed),
+            hasher: <H as WithSeed>::with_seed(&seed),
             _p: PhantomData,
         }
+    }
+
+    pub fn with_optimal(num_items: usize, false_positive_rate: f64) -> Self {
+        let (m, k) = Self::compute_optimal(num_items, false_positive_rate);
+        Self::new(m, k)
     }
 
     /// Returns the Bloom indeces for a given item.

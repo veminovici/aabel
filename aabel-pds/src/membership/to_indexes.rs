@@ -1,4 +1,4 @@
-use crate::IntoHashPair;
+use crate::HashPair;
 use std::hash::{Hash, Hasher};
 
 use log::debug;
@@ -18,7 +18,7 @@ where
     T: Hash,
 {
     fn to_indexes(&self, m: usize, k: usize, hasher: H) -> Vec<usize> {
-        let (hash1, hash2) = self.to_hash_pair(hasher);
+        let (hash1, hash2) = self.hash_pair(hasher);
 
         let mut bs = Vec::with_capacity(k);
         if k == 1 {
@@ -34,7 +34,7 @@ where
         }
 
         assert!(bs.len() == k);
-        debug!("indexes: {:?}", bs);
+        debug!("INDX || {:?}", bs);
         bs
     }
 }
