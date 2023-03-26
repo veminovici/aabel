@@ -21,11 +21,6 @@ where
         let (hash1, hash2) = self.hash_pair(hasher);
 
         let mut bs = Vec::with_capacity(k);
-        if k == 1 {
-            let b = hash1 % m as u64;
-            bs.push(b as usize);
-            return bs;
-        }
 
         for i in 0..k as u64 {
             let h = hash1.wrapping_add(i.wrapping_mul(hash2));
