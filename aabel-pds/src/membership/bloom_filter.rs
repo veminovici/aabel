@@ -1,4 +1,4 @@
-use crate::into_hash_pair::IntoHashPair;
+use crate::IntoHashPair;
 use siphasher::sip128::Hasher128;
 use std::hash::{Hash, Hasher};
 
