@@ -43,15 +43,8 @@ where
 
     /// Returns the Bloom indeces for a given item.
     #[inline]
-    pub fn indexes(&self, item: &T) -> Vec<usize> {
+    fn indexes(&self, item: &T) -> Vec<usize> {
         item.to_indexes(self.m, self.k, self.hasher)
-    }
-
-    /// Determines if an item belongs to the filter.
-    pub fn contains(&self, item: &T) -> bool {
-        self.indexes(item)
-            .iter()
-            .all(|&idx| self.bits.get(idx).unwrap())
     }
 
     /// Returns the bytes.
@@ -74,6 +67,13 @@ where
         self.indexes(item)
             .iter()
             .for_each(|&b| self.bits.set(b, true))
+    }
+
+    /// Determines if an item belongs to the filter.
+    pub fn contains(&self, item: &T) -> bool {
+        self.indexes(item)
+            .iter()
+            .all(|&idx| self.bits.get(idx).unwrap())
     }
 }
 
