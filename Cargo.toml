@@ -1,0 +1,7 @@
+[workspace]
+members = ["aabel"]
+
+[workspace.dev-dependencies]
+quickcheck = { workspace = true }
+quickcheck_macros = { workspace = true }
+rand = { workspace = true }
