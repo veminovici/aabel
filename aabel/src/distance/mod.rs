@@ -1,9 +1,9 @@
-pub struct Distance;
+pub struct Distances;
 
-impl Distance {
-    /// Returns the [manhattan][m] distance between two points, a and b.
-    /// The points are represented as collections of coordinates which can
-    /// be converted into `f64` values.
+impl Distances {
+    /// Returns the [Manhattan][m] distance between two points, a and b.
+    /// The points are represented as collections of coordinates.
+    /// The coordinate values must be convertable into `f64` values.
     ///
     /// [m]: https://en.wikipedia.org/wiki/Taxicab_geometry
     pub fn manhattan<A, B>(a: impl Iterator<Item = A>, b: impl Iterator<Item = B>) -> f64
@@ -12,6 +12,25 @@ impl Distance {
         B: Into<f64>,
     {
         a.zip(b).map(|(ka, kb)| (ka.into() - kb.into()).abs()).sum()
+    }
+
+    /// Returns the square of the [Euclidean][e] distance between two points, a and b.
+    /// The points are represented as collection of coordinates.
+    /// The coordinate values must be convertable into `f64` values.
+    /// 
+    /// [e]: https://en.wikipedia.org/wiki/Euclidean_distance
+    pub fn euclidean2<A, B>(a: impl Iterator<Item = A>, b: impl Iterator<Item = B>) -> f64
+    where
+        A: Into<f64>,
+        B: Into<f64>,
+    {
+        a.zip(b)
+            .map(|(ka, kb)| {
+                let ka = ka.into();
+                let kb = kb.into();
+                (ka - kb) * (ka - kb)
+            })
+            .sum()
     }
 }
 
