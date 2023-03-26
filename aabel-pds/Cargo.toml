@@ -11,3 +11,7 @@ getrandom = "0.2"
 siphasher = "0.3"
 env_logger = { workspace = true }
 log = { workspace = true }
+
+[dev-dependencies]
+quickcheck = "1.0"
+quickcheck_macros = "1.0"

@@ -1,12 +1,12 @@
 use crate::{ComputeOptimal, IntoIndexes, RandSeed, WithSeed};
 use bit_vec::BitVec;
-use siphasher::sip128::Hasher128;
+use siphasher::sip128::{Hasher128, SipHasher24};
 use std::{
     hash::{Hash, Hasher},
     marker::PhantomData,
 };
 
-pub struct BloomFilter<H, T> {
+pub struct BloomFilter<T, H = SipHasher24> {
     bits: BitVec,
     m: usize,
     k: usize,
@@ -14,7 +14,7 @@ pub struct BloomFilter<H, T> {
     _p: PhantomData<T>,
 }
 
-impl<H, T> BloomFilter<H, T>
+impl<T, H> BloomFilter<T, H>
 where
     H: Copy + Hasher + Hasher128 + WithSeed,
     T: Hash,
@@ -80,13 +80,26 @@ where
 #[cfg(test)]
 mod utests {
     use super::*;
-    use siphasher::sip128::SipHasher24;
+    use quickcheck_macros::quickcheck;
 
     #[test]
     fn simple_() {
-        let mut filter = BloomFilter::<SipHasher24, usize>::new(100, 10);
+        let mut filter = BloomFilter::<usize>::new(100, 10);
         filter.insert(&10);
         let res = filter.contains(&10);
         assert!(res)
+    }
+
+    #[quickcheck]
+    fn prop_bloom_filter(xs: Vec<usize>) -> bool {
+        let mut filter = BloomFilter::<usize>::new(100000, 10);
+
+        let _: Vec<_> = xs.iter().inspect(|x| filter.insert(x)).collect();
+
+        let mut ys = Vec::new();
+        ys.extend(xs);
+
+        ys.iter_mut().all(|x| filter.contains(x));
+        true
     }
 }
