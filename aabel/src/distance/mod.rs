@@ -17,7 +17,7 @@ impl Distances {
     /// Returns the square of the [Euclidean][e] distance between two points, a and b.
     /// The points are represented as collection of coordinates.
     /// The coordinate values must be convertable into `f64` values.
-    /// 
+    ///
     /// [e]: https://en.wikipedia.org/wiki/Euclidean_distance
     pub fn euclidean2<A, B>(a: impl Iterator<Item = A>, b: impl Iterator<Item = B>) -> f64
     where
@@ -73,7 +73,7 @@ mod utests {
     fn prop_manhattan(arg: XYArgument) -> bool {
         let xs = arg.xs.iter().map(|x| f64::from(*x));
         let ys = arg.ys.iter().map(|y| f64::from(*y));
-        let res = Distance::manhattan(xs, ys);
+        let res = Distances::manhattan(xs, ys);
 
         res >= 0.
     }

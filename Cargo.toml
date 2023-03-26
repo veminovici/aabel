@@ -1,5 +1,5 @@
 [workspace]
-members = ["aabel"]
+members = ["aabel", "aabel-pds"]
 
 [workspace.dev-dependencies]
 quickcheck = { workspace = true }
