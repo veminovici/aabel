@@ -22,16 +22,21 @@ where
     /// Creates a new Bloom filter.
     pub fn new(m: usize, k: usize) -> Self {
         let seed = RandSeed::new();
+        let bits = BitVec::from_elem(m, false);
+        let hasher = <H as WithSeed>::with_seed(&seed);
+
         Self {
             m,
             k,
-            bits: BitVec::from_elem(m, false),
-            hasher: <H as WithSeed>::with_seed(&seed),
+            bits,
+            hasher,
             _p: PhantomData,
         }
     }
 
-    pub fn with_optimal(num_items: usize, false_positive_rate: f64) -> Self {
+    /// Creates a new Bloom filter which is expected to store a given number of
+    /// elements and with an expected false positive rate.
+    pub fn with_capacity_fpr(num_items: usize, false_positive_rate: f64) -> Self {
         let (m, k) = Self::compute_optimal(num_items, false_positive_rate);
         Self::new(m, k)
     }

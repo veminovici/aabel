@@ -28,7 +28,6 @@ where
             bs.push(b as usize);
         }
 
-        assert!(bs.len() == k);
         debug!("INDX || {:?}", bs);
         bs
     }

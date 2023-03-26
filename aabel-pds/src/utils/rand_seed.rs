@@ -12,3 +12,9 @@ impl RandSeed {
         &self.0
     }
 }
+
+impl Default for RandSeed {
+    fn default() -> Self {
+        Self::new()
+    }
+}
