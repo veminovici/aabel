@@ -1,6 +1,7 @@
 use std::hash::{BuildHasherDefault, Hasher};
 
 use const_fnv1a_hash::fnv1a_hash_128;
+use siphasher::sip128::{Hash128, Hasher128};
 
 pub struct Fnv128Hasher(u128);
 
@@ -30,6 +31,12 @@ impl Hasher for Fnv128Hasher {
         hash = hash.wrapping_mul(0x100000001b3);
 
         *self = Self(hash);
+    }
+}
+
+impl Hasher128 for Fnv128Hasher {
+    fn finish128(&self) -> Hash128 {
+        self.0.into()
     }
 }
 
