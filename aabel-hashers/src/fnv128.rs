@@ -3,17 +3,9 @@ use std::hash::{BuildHasherDefault, Hasher};
 use const_fnv1a_hash::fnv1a_hash_128;
 use siphasher::sip128::{Hash128, Hasher128};
 
-pub struct Fnv128Hasher{
+#[derive(Default)]
+pub struct Fnv128Hasher {
     bytes: Vec<u8>,
-}
-
-impl Default for Fnv128Hasher {
-    #[inline]
-    fn default() -> Self {
-        Self {
-            bytes: vec![],
-        }
-    }
 }
 
 impl Hasher for Fnv128Hasher {

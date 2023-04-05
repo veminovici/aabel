@@ -2,17 +2,9 @@ use std::hash::{BuildHasherDefault, Hasher};
 
 use const_fnv1a_hash::fnv1a_hash_64;
 
+#[derive(Default)]
 pub struct Fnv64Hasher {
     bytes: Vec<u8>,
-}
-
-impl Default for Fnv64Hasher {
-    #[inline]
-    fn default() -> Self {
-        Self {
-            bytes: vec![],
-        }
-    }
 }
 
 impl Hasher for Fnv64Hasher {
