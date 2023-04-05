@@ -2,6 +2,7 @@ use std::hash::Hasher;
 
 use cityhash::cityhash_1::city_hash_64;
 
+#[derive(Default)]
 pub struct City64Hasher {
     bytes: Vec<u8>,
 }

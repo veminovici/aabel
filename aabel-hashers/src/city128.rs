@@ -3,6 +3,7 @@ use std::hash::Hasher;
 use cityhash::cityhash_1::city_hash_128;
 use siphasher::sip128::{Hash128, Hasher128};
 
+#[derive(Default)]
 pub struct City128Hasher {
     bytes: Vec<u8>,
 }
