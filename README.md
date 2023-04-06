@@ -51,6 +51,9 @@ assert!(r);
 ### Bloom Filter
 The [crate](./membership/bloom-filter/) implements the [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter).
 
+### Bloom Counter
+The [crate](./membership/bloom-filter/) implements the [bloom counter](https://en.wikipedia.org/wiki/Counting_Bloom_filter).
+
 ---
 
 ## About
