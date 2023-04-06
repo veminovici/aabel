@@ -15,19 +15,7 @@ A collection of crates which implement different hashes and hashing extenstions.
 
 ### AABEL-HASH
 It is a [create](./hashing/aabel-hash/) which defines the *Hashable* trait. The crate also does the default implementation for all types which implement the *Hash* trait.
-
-```rust
-pub trait HashExt: Hash {
-    /// Returns the hash value for the instance.
-    fn get_hash<H: Default + Hasher>(&self) -> u64
-
-    /// Returns the pair of hash values for the instance.
-    fn get_hash_deconstructed<H: Default + Hasher>(&self) -> (u32, u32)
-
-    /// Retursn the hash value for the collection of items.
-    fn get_hash_slice<H: Default + Hasher>(data: &[Self]) -> u64 where Self: Hash + Sized;
-}
-```
+The crate also implements or re-exports several common hash functions. For more details please check the crate's [readme](./aabel-hashers/README.md) file.
 
 ---
 

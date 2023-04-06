@@ -1,4 +1,4 @@
-# SIMPLE / AABEL-HASH
+# Simplee / Aabel-hash
 A crate whihc implements or exposes different extensions and hashes.
 
 ## HashExt Trait
