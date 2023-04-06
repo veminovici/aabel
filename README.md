@@ -30,29 +30,8 @@ For more details please check the crate's [readme](./hashing/aabel-hash/README.m
 ## MEMBERSHIP
 A collection of crates which implemement different algorithms that can check if a given item is a member of a collection.
 
-### CUCKOO FILTER
-The [crate](./membership/cuckoo-filter/) implements the [cuckoo filter](https://en.wikipedia.org/wiki/Cuckoo_filter). To see how you can use the create, please check the [example](./membership/cuckoo-filter/examples/cuckoo.rs).
-
-```rust
-// Create the cuckoo filter with 12 buckets, each buckets has 1 slot.
-const BUCKETS: usize = 12;
-const SLOTS: usize = 1;
-let mut filter = cuckoo_filter::CuckooFilter::<BUCKETS, SLOTS>::new();
-
-// Insert an element
-let r = filter.insert(&"AAAA");
-assert!(r);
-
-// Check if the elements is in the collection.
-let r = filter.contains(&"AAAA");
-assert!(r);
-```
-
-### Bloom Filter
-The [crate](./membership/bloom-filter/) implements the [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter).
-
-### Bloom Counter
-The [crate](./membership/bloom-filter/) implements the [bloom counter](https://en.wikipedia.org/wiki/Counting_Bloom_filter).
+- [Bloom Filter and Counter](./membership/bloom-filter/)
+- [Cuckoo Filter](./membership/cuckoo-filter/)
 
 ---
 
