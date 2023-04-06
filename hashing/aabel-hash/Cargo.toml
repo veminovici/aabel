@@ -6,7 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+const-fnv1a-hash = "1.1.0"
 farmhash = "1.1.5"
 
 [features]
 farm = []
+fnv = []

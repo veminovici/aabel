@@ -1,6 +1,7 @@
 use std::hash::Hasher;
 use farmhash::hash64;
 
+/// A hasher that uses the Google's [farm](https://github.com/google/farmhash) algorithm.
 #[derive(Default)]
 pub struct Farm64Hasher {
     bytes: Vec<u8>,
@@ -15,3 +16,15 @@ impl Hasher for Farm64Hasher {
         self.bytes.extend_from_slice(bytes)
     }
 }
+
+/// A builder for default FNV-64 hashers.
+pub type Farm64BuildHasher = BuildHasherDefault<Farm64Hasher>;
+
+use std::collections::{HashMap, HashSet};
+
+/// A `HashMap` using a default FNV-64 hasher.
+pub type Farm64HashMap<K, V> = HashMap<K, V, Farm64BuildHasher>;
+
+/// A `HashSet` using a default FNV-64 hasher.
+pub type Farm64HashSet<T> = HashSet<T, Farm64BuildHasher>;
+
