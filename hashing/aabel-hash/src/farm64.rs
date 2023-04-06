@@ -1,5 +1,5 @@
-use std::hash::Hasher;
 use farmhash::hash64;
+use std::hash::Hasher;
 
 /// A hasher that uses the Google's [farm](https://github.com/google/farmhash) algorithm.
 #[derive(Default)]
@@ -27,4 +27,3 @@ pub type Farm64HashMap<K, V> = HashMap<K, V, Farm64BuildHasher>;
 
 /// A `HashSet` using a default FARMHASH-64 hasher.
 pub type Farm64HashSet<T> = HashSet<T, Farm64BuildHasher>;
-

@@ -27,4 +27,3 @@ pub type City64HashMap<K, V> = HashMap<K, V, City64BuildHasher>;
 
 /// A `HashSet` using a default CITYHASH-64 hasher.
 pub type City64HashSet<T> = HashSet<T, City64BuildHasher>;
-

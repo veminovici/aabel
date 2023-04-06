@@ -1,5 +1,5 @@
-use std::hash::{Hash, Hasher};
 use siphasher::sip128::Hasher128;
+use std::hash::{Hash, Hasher};
 
 pub trait Hash128Ext: Hash {
     /// Returns the deconstructed hash for the instance.
@@ -10,7 +10,7 @@ pub trait Hash128Ext: Hash {
     /// Returns the deconstructed hash for the instance using the default hasher value.
     fn get_hash128_deconstructed_default<H>(&self) -> (u64, u64)
     where
-        H: Default + Hasher + Hasher128
+        H: Default + Hasher + Hasher128,
     {
         let hasher = <H as Default>::default();
         self.get_hash128_deconstructed(hasher)
@@ -18,7 +18,7 @@ pub trait Hash128Ext: Hash {
 
     fn get_hashes<H>(&self, k: usize, hasher: H) -> Vec<u64>
     where
-        H: Hasher + Hasher128
+        H: Hasher + Hasher128,
     {
         let (hash1, hash2) = self.get_hash128_deconstructed(hasher);
         let mut bs = Vec::with_capacity(k);
@@ -30,7 +30,6 @@ pub trait Hash128Ext: Hash {
 
         bs
     }
-
 }
 
 impl<T> Hash128Ext for T
@@ -39,7 +38,7 @@ where
 {
     fn get_hash128_deconstructed<H>(&self, mut hasher: H) -> (u64, u64)
     where
-        H: Hasher + Hasher128
+        H: Hasher + Hasher128,
     {
         self.hash(&mut hasher);
         let h = hasher.finish128().as_u128();
