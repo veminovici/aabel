@@ -13,9 +13,9 @@ A project for probabilistic data structures and large data sets.
 ## Hash Functions
 The [aabel-hash](./aabel-hash/) crate defines several traits.
 
-- [HashExt](./aabel-hash/src/hash_ext.rs) trait. The trait exposes functionality that extends the *std::hash::Hash* functionality.
+- [HashExt](./aabel-hash/src/hash_ext.rs) trait. The trait exposes functionality that extends the *std::Hash* functionality.
 - [Hash128Ext](./aabel-hash/src/hash128_ext.rs) trait. The trait exposes functionality available when the hasher is 128bits one.
-- [HasherExt](./aabel-hash/src/hasher_ext.rs) trait. The trait exposes *std::hash::Hasher* functionality.
+- [HasherExt](./aabel-hash/src/hasher_ext.rs) trait. The trait exposes *std::Hasher* functionality.
 
 The [aabel-hash](./aabel-hash/) crate also implements or re-exports several common hash functions:
 - [CityHash](https://github.com/google/cityhash) (source [city64.rs](./aabel-hash/src/city64.rs))
