@@ -1,3 +1,6 @@
+#[cfg(feature = "city")]
+mod city64;
+
 #[cfg(feature = "farm")]
 mod farm64;
 
@@ -10,6 +13,9 @@ mod hash_ext;
 mod murmur32;
 
 pub mod hash {
+    #[cfg(feature = "city")]
+    pub use crate::city64;
+
     #[cfg(feature = "farm")]
     pub use crate::farm64::*;
     

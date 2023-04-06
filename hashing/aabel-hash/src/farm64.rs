@@ -17,14 +17,14 @@ impl Hasher for Farm64Hasher {
     }
 }
 
-/// A builder for default FNV-64 hashers.
+/// A builder for default FARMHASH-64 hashers.
 pub type Farm64BuildHasher = BuildHasherDefault<Farm64Hasher>;
 
 use std::collections::{HashMap, HashSet};
 
-/// A `HashMap` using a default FNV-64 hasher.
+/// A `HashMap` using a default FARMHASH-64 hasher.
 pub type Farm64HashMap<K, V> = HashMap<K, V, Farm64BuildHasher>;
 
-/// A `HashSet` using a default FNV-64 hasher.
+/// A `HashSet` using a default FARMHASH-64 hasher.
 pub type Farm64HashSet<T> = HashSet<T, Farm64BuildHasher>;
 

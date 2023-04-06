@@ -33,6 +33,19 @@ impl Hasher for Murmur32Hasher {
     }
 }
 
+/// A builder for default MURMUR3-32 hashers.
+pub type Murmur32BuildHasher = BuildHasherDefault<Murmur32Hasher>;
+
+use std::collections::{HashMap, HashSet};
+
+/// A `HashMap` using a default MURMUR3-32 hasher.
+pub type Murmur32HashMap<K, V> = HashMap<K, V, Murmur32BuildHasher>;
+
+/// A `HashSet` using a default MURMUR3-32 hasher.
+pub type Murmur32HashSet<T> = HashSet<T, Murmur32BuildHasher>;
+
+
+
 #[cfg(test)]
 mod utests {
     use super::*;

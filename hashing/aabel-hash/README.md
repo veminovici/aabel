@@ -20,8 +20,11 @@ pub trait HashExt: Hash {
 ## Hashers
 The create implements or re-exports different hashers. Each of these hashers is its own feature so they can be imported separately in any project.
 
+### City32 Hasher
+The **City32** exposes as a hasher the Google's **CityHash** hashing [algorithm](https://github.com/google/cityhash) implemented by [cityhash](https://docs.rs/cityhash/latest/cityhash/) crate. The hasher is under **city** feature flag.
+
 ### Farm64 Hasher
-The **Farm64** exposes as a hasher the Google's **Farm** hashing [algorithm](https://github.com/google/farmhash) implemented by [farmhash](https://docs.rs/farmhash/latest/farmhash/) crate. The hasher is under **farm** feature flag.
+The **Farm64** exposes as a hasher the Google's **FarmHash** hashing [algorithm](https://github.com/google/farmhash) implemented by [farmhash](https://docs.rs/farmhash/latest/farmhash/) crate. The hasher is under **farm** feature flag.
 
 ### Fowler-Noll-Vo (FNV) Hasher
 The **FNV** exposes as a hasher the **FNV** hashing [algorithm](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) implemented by [const-fnv1a-hash](https://docs.rs/const-fnv1a-hash/latest/const_fnv1a_hash/) crate. Teh hasher is under **fnv** feature flag.

@@ -6,12 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+cityhash = "0.1.1"
 const-fnv1a-hash = "1.1.0"
 farmhash = "1.1.5"
 const-murmur3 = "0.2.1"
 
-
 [features]
+city = []
 farm = []
 fnv = []
 murmur3 = []
