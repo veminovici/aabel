@@ -4,7 +4,7 @@ fn main() {
     env_logger::init();
     info!("Starting the example CUCKOO");
 
-    // Create the cuckoo filter.
+    // Create the cuckoo filter with 12 buckets, each buckets has 1 slot.
     const BUCKETS: usize = 12;
     const SLOTS: usize = 1;
     let mut filter = cuckoo_filter::CuckooFilter::<BUCKETS, SLOTS>::new();
