@@ -1,4 +1,4 @@
-use std::hash::Hasher;
+use std::hash::{Hasher, BuildHasherDefault};
 
 use cityhash::cityhash_1::city_hash_64;
 

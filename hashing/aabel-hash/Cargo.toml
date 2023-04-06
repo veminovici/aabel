@@ -14,6 +14,8 @@ getrandom = "0.2"
 siphasher = "0.3"
 
 [features]
+default = ["full"]
+full = ["city", "farm", "fnv", "murmur3", "sip"]
 city = []
 farm = []
 fnv = []

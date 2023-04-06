@@ -23,7 +23,7 @@ pub mod hash {
     pub use crate::hasher_ext::*;
 
     #[cfg(feature = "city")]
-    pub use crate::city64;
+    pub use crate::city64::*;
 
     #[cfg(feature = "farm")]
     pub use crate::farm64::*;
