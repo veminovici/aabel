@@ -1,4 +1,4 @@
-# SIMPLEE / AABEL / PROBABILISTIC DATA STRUCTURES
+# Simplee / Aabel
 
 [![Rust](https://github.com/veminovici/aabel/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/veminovici/aabel/actions/workflows/ci.yml)
 ![GitHub top language](https://img.shields.io/github/languages/top/veminovici/aabel)
