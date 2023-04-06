@@ -1,4 +1,4 @@
-# SIMPLEE / AABEL / MEMBERSHIP
+# Simplee / Aabel-Membership
 A crate that implements several probabilistic data structures that can determine if a given item is part of a set or collection.
 
 ## Bloom Filter
