@@ -1,4 +1,4 @@
-# Simplee / Aabel
+# SIMPLEE / AABEL / PROBABILISTIC DATA STRUCTURES
 
 [![Rust](https://github.com/veminovici/aabel/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/veminovici/aabel/actions/workflows/ci.yml)
 ![GitHub top language](https://img.shields.io/github/languages/top/veminovici/aabel)
@@ -10,10 +10,7 @@ A project for probabilistic data structures and large data sets.
 
 ---
 
-## HASHING
-A collection of crates which implement different hashes and hashing extenstions.
-
-### AABEL-HASH
+## AABEL-HASHING
 The [aabel-hash](./hashing/aabel-hash/) crate defines the **HashExt** trait. The crate also does the default implementation for all types which implement the **Hash** trait.
 
 The crate also implements or re-exports several common hash functions:
@@ -27,11 +24,13 @@ For more details please check the crate's [readme](./hashing/aabel-hash/README.m
 
 ---
 
-## MEMBERSHIP
-A collection of crates which implemement different algorithms that can check if a given item is a member of a collection.
+## AABEL-MEMBERSHIP
+The [aabel-membership](./aabel-membership/) crate implements several probabilistic data structures which determine if a given elements is present in a collection.
 
 - [Bloom Filter and Counter](./membership/bloom-filter/)
 - [Cuckoo Filter](./membership/cuckoo-filter/)
+
+For more details please check the crate's [readme](./aabel-membership//README.md) file.
 
 ---
 
