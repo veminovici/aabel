@@ -8,7 +8,10 @@ edition = "2021"
 [dependencies]
 const-fnv1a-hash = "1.1.0"
 farmhash = "1.1.5"
+const-murmur3 = "0.2.1"
+
 
 [features]
 farm = []
 fnv = []
+murmur3 = []

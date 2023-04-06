@@ -6,6 +6,9 @@ mod fnv64;
 
 mod hash_ext;
 
+#[cfg(feature = "murmur")]
+mod murmur32;
+
 pub mod hash {
     #[cfg(feature = "farm")]
     pub use crate::farm64::*;
@@ -14,4 +17,7 @@ pub mod hash {
     pub use crate::fnv64::*;
     
     pub use crate::hash_ext::*;
+
+    #[cfg(feature = "murmur")]
+    pub use crate::murmur32::*;
 }
