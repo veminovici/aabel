@@ -1,5 +1,5 @@
 [workspace]
-members = ["aabel-membership", "hashing/*", "membership/*"]
+members = ["aabel-membership",  "aabel-hash", "membership/*"]
 
 [workspace.dependencies]
 rand = "0.8.5"
