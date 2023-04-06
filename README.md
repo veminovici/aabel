@@ -10,25 +10,30 @@ A project for probabilistic data structures and large data sets.
 
 ---
 
-## AABEL-HASHING
-The [aabel-hash](./hashing/aabel-hash/) crate defines the **HashExt** trait. The crate also does the default implementation for all types which implement the **Hash** trait.
+## Hash Functions
+The [aabel-hash](./aabel-hash/) crate defines several traits.
 
-The crate also implements or re-exports several common hash functions:
-- [CityHash](https://github.com/google/cityhash)
-- [FarmHash](https://github.com/google/farmhash)
-- [Fowler-Noll-Vo](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function)
-- [Murmur3](https://en.wikipedia.org/wiki/MurmurHash)
-- [SipHash](https://en.wikipedia.org/wiki/SipHash)
+- [HashExt](./aabel-hash/src/hash_ext.rs) trait. The trait exposes functionality that extends the *std::hash::Hash* functionality.
+- [Hash128Ext](./aabel-hash/src/hash128_ext.rs) trait. The trait exposes functionality available when the hasher is 128bits one.
+- [HasherExt](./aabel-hash/src/hasher_ext.rs) trait. The trait exposes *std::hash::Hasher* functionality.
+
+The [aabel-hash](./aabel-hash/) crate also implements or re-exports several common hash functions:
+- [CityHash](https://github.com/google/cityhash) (source [city64.rs](./aabel-hash/src/city64.rs))
+- [FarmHash](https://github.com/google/farmhash) (source [farm64.rs](./aabel-hash/src/farm64.rs))
+- [Fowler-Noll-Vo](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) (source [fnv64.rs](./aabel-hash/src/fnv64.rs))
+- [Murmur3](https://en.wikipedia.org/wiki/MurmurHash) (source [murmur3.rs](./aabel-hash/src/murmur32.rs))
+- [SipHash](https://en.wikipedia.org/wiki/SipHash) (source [sip24.rs](./aabel-hash/src/sip24.rs))
 
 For more details please check the crate's [readme](./hashing/aabel-hash/README.md) file.
 
 ---
 
-## AABEL-MEMBERSHIP
+## Membership Data Structures
 The [aabel-membership](./aabel-membership/) crate implements several probabilistic data structures which determine if a given elements is present in a collection.
 
-- [Bloom Filter and Counter](./membership/bloom-filter/)
-- [Cuckoo Filter](./membership/cuckoo-filter/)
+- [Bloom Filter](https://en.wikipedia.org/wiki/Bloom_filter) (source [filter.rs](./aabel-membership/src/bloom/filter.rs))
+- [Bloom Counter](https://en.wikipedia.org/wiki/Counting_Bloom_filter) (source [counter.rs](./aabel-membership/src/bloom/counter.rs)) 
+- [Cuckoo Filter](https://en.wikipedia.org/wiki/Cuckoo_filter) (source [filter.rs](./aabel-membership/src/cuckoo/filter.rs))
 
 For more details please check the crate's [readme](./aabel-membership//README.md) file.
 
