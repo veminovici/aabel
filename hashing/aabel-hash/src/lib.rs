@@ -1,5 +1,5 @@
-mod hashable;
+mod hash_ext;
 
 pub mod hash {
-    pub use crate::hashable::*;
+    pub use crate::hash_ext::*;
 }

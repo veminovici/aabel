@@ -17,7 +17,7 @@ A collection of crates which implement different hashes and hashing extenstions.
 It is a [create](./hashing/aabel-hash/) which defines the *Hashable* trait. The crate also does the default implementation for all types which implement the *Hash* trait.
 
 ```rust
-pub trait Hashable {
+pub trait HashExt: Hash {
     /// Returns the hash value for the instance.
     fn get_hash<H: Default + Hasher>(&self) -> u64
 

@@ -1,4 +1,4 @@
-use aabel_hash::hash::Hashable;
+use aabel_hash::hash::HashExt;
 use std::{fmt::Debug, hash::Hasher, marker::PhantomData};
 
 use crate::{fingerprint::Fingerprint, index::Index};
@@ -36,7 +36,7 @@ where
 
     pub fn from_data<T>(data: &T) -> Self
     where
-        T: Hashable,
+        T: HashExt,
     {
         let (fp, idx) = data.get_hash_deconstructed::<H>();
         let fp = Fingerprint::from(fp);

@@ -1,6 +1,6 @@
 use std::{fmt::Debug, hash::Hasher, marker::PhantomData};
 
-use aabel_hash::hash::Hashable;
+use aabel_hash::hash::HashExt;
 use bucket::Bucket;
 use fi_pair::FIPair;
 use log::debug;
@@ -61,7 +61,7 @@ where
 
     pub fn insert<T>(&mut self, data: &T) -> bool
     where
-        T: Hashable,
+        T: HashExt,
     {
         // Try to add it to the first index.
         let fi = FIPair::<H>::from_data(data);
@@ -85,7 +85,7 @@ where
 
     pub fn contains<T>(&self, data: &T) -> bool
     where
-        T: Hashable,
+        T: HashExt,
     {
         let fi = FIPair::<H>::from_data(data);
         let fp = fi.fp;

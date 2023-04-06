@@ -1,6 +1,6 @@
 use std::hash::{Hash, Hasher};
 
-pub trait Hashable {
+pub trait HashExt: Hash {
     /// Returns the hash value for the instance.
     fn get_hash<H>(&self) -> u64
     where
@@ -23,7 +23,7 @@ pub trait Hashable {
     }
 }
 
-impl<T> Hashable for T
+impl<T> HashExt for T
 where
     T: Hash,
 {
@@ -40,7 +40,7 @@ where
     where
         H: Default + Hasher,
     {
-        let h = <Self as Hashable>::get_hash::<H>(self);
+        let h = <Self as HashExt>::get_hash::<H>(self);
         let h1 = (h & 0xfff_ffff) as u32;
         let h2 = (h >> 32) as u32;
         (h1, h2)
@@ -62,4 +62,3 @@ mod utests {
         assert_ne!(h2, 0);
     }
 }
-
