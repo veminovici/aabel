@@ -21,6 +21,7 @@ The crate also implements or re-exports several common hash functions:
 - [FarmHash](https://github.com/google/farmhash)
 - [Fowler-Noll-Vo](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function)
 - [Murmur3](https://en.wikipedia.org/wiki/MurmurHash)
+- [SipHash](https://en.wikipedia.org/wiki/SipHash)
 
 For more details please check the crate's [readme](./hashing/aabel-hash/README.md) file.
 

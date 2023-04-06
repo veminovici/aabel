@@ -31,3 +31,6 @@ The **FNV** exposes as a hasher the **FNV** hashing [algorithm](https://en.wikip
 
 ### Murmur3 Hasher
 The **Murmur3** exposes as a hasher the **Murmu3** hashing [algorith](https://en.wikipedia.org/wiki/MurmurHash) implemented by [const-murmur3](https://docs.rs/const-murmur3/latest/const_murmur3/) crate. The hasher is under **murmur** feature flag.
+
+### Sip Hasher
+The create re-exports the *SipHasher* from the [siphasher](https://docs.rs/siphasher/latest/siphasher/) crate. The hasher implements the [SipHash](https://en.wikipedia.org/wiki/SipHash) algorithm.

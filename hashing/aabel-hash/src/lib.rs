@@ -26,4 +26,7 @@ pub mod hash {
 
     #[cfg(feature = "murmur")]
     pub use crate::murmur32::*;
+
+    #[cfg(feature = "sip")]
+    pub use siphasher::sip128::*;
 }
