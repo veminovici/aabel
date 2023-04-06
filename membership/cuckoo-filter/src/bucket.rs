@@ -17,7 +17,7 @@ impl<const N: usize> Debug for Bucket<N> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         fn tostr(fp: Option<Fingerprint>) -> String {
             match fp {
-                Some(fp) => format!("{:?}", fp),
+                Some(fp) => format!("{fp:?}"),
                 None => "_".to_owned(),
             }
         }
@@ -40,6 +40,10 @@ impl<const N: usize> Bucket<N> {
         }
 
         false
+    }
+
+    pub fn contains(self, fp: Fingerprint) -> Option<usize> {
+        self.slots.iter().position(|s| *s == Some(fp))
     }
 
     pub fn swap(&mut self, idx: usize, other: Fingerprint) -> Fingerprint {
