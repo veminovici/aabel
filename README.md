@@ -48,6 +48,9 @@ let r = filter.contains(&"AAAA");
 assert!(r);
 ```
 
+### Bloom Filter
+The [crate](./membership/bloom-filter/) implements the [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter).
+
 ---
 
 ## About
