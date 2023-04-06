@@ -14,8 +14,8 @@ A project for large data sets.
 A collection of crates which implement different hashes and hashing extenstions.
 
 ### AABEL-HASH
-It is a [create](./hashing/aabel-hash/) which defines the *Hashable* trait. The crate also does the default implementation for all types which implement the *Hash* trait.
-The crate also implements or re-exports several common hash functions. For more details please check the crate's [readme](./aabel-hashers/README.md) file.
+The [aabel-hash](./hashing/aabel-hash/) crate defines the *HashExt* trait. The crate also does the default implementation for all types which implement the *Hash* trait.
+The crate also implements or re-exports several common hash functions. For more details please check the crate's [readme](./hashing/aabel-hash/README.md) file.
 
 ---
 
