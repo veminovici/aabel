@@ -35,6 +35,6 @@ A collection of crates which implemement different algorithms that can check if 
 
 ---
 
-## About
+## ABOUT
 
 > Code designed and written on the beautiful island of [**Saaremaa**](https://goo.gl/maps/DmB9ewY2R3sPGFnTA), Estonia.
