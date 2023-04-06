@@ -6,7 +6,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/veminovici/aabel)
 ![GitHub last commit](https://img.shields.io/github/last-commit/veminovici/aabel)
 
-A project for large data sets.
+A project for probabilistic data structures and large data sets.
 
 ---
 
