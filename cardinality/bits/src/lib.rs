@@ -36,7 +36,7 @@ impl LastBit for u8 {
     }
 }
 
-pub trait MyBits<const N: usize> {
+pub trait Bits<const N: usize> {
     type Inner: 'static
         + Copy
         + Clone
@@ -122,11 +122,11 @@ pub trait MyBits<const N: usize> {
     }
 }
 
-pub struct MyBits8<const N: usize> {
+pub struct Bits8<const N: usize> {
     bits: [u8; N],
 }
 
-impl<const N: usize> MyBits<N> for MyBits8<N> {
+impl<const N: usize> Bits<N> for Bits8<N> {
     type Inner = u8;
 
     const SET_MASKS: &'static [u8] = [
@@ -166,7 +166,7 @@ impl<const N: usize> MyBits<N> for MyBits8<N> {
     }
 }
 
-impl<const N: usize> MyBits8<N> {
+impl<const N: usize> Bits8<N> {
     pub fn new() -> Self {
         Self { bits: [0; N] }
     }
@@ -197,7 +197,7 @@ impl<const N: usize> MyBits8<N> {
     }
 }
 
-impl<const N: usize> Default for MyBits8<N> {
+impl<const N: usize> Default for Bits8<N> {
     fn default() -> Self {
         Self::new()
     }
@@ -211,7 +211,7 @@ mod utests {
     fn simple_() {
         let x: u16 = 10 << 8;
 
-        let mut ltl = MyBits8::<2>::new();
+        let mut ltl = Bits8::<2>::new();
         ltl.merge_u16(0, x);
 
         println!("{x:04X}: ltl={:?}", ltl.pretty());
