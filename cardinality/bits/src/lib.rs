@@ -167,39 +167,17 @@ impl<const N: usize> Bits<N> for Bits8<N> {
 }
 
 impl<const N: usize> Bits8<N> {
-    pub fn new() -> Self {
-        Self { bits: [0; N] }
-    }
-
     pub fn merge_u16(&mut self, start_slot: usize, value: u16) {
         let mut buf = [0u8; 2];
         LittleEndian::write_u16(&mut buf, value);
 
         self.merge_value(start_slot, buf.as_slice());
     }
-
-    pub fn lsb(&self) -> usize {
-        for i in 0..N {
-            if self.bits[i] == 0 {
-                continue;
-            }
-
-            let mut x = self.bits[i];
-            for j in 0..8 {
-                x >>= j;
-                if (x & 1) == 1 {
-                    return i * 8 + j;
-                }
-            }
-        }
-
-        N * 8
-    }
 }
 
 impl<const N: usize> Default for Bits8<N> {
     fn default() -> Self {
-        Self::new()
+        Self { bits: [0; N] }
     }
 }
 
@@ -211,7 +189,7 @@ mod utests {
     fn simple_() {
         let x: u16 = 10 << 8;
 
-        let mut ltl = Bits8::<2>::new();
+        let mut ltl = Bits8::<2>::default();
         ltl.merge_u16(0, x);
 
         println!("{x:04X}: ltl={:?}", ltl.pretty());
