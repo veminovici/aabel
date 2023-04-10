@@ -61,7 +61,11 @@ impl<const N: usize> Bits<N> for Bits8<N> {
 }
 
 impl<const N: usize> Bits8<N> {
-    pub fn merge_u16(&mut self, start_slot: usize, value: u16) {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn merge_u16_as_position(&mut self, start_slot: usize, value: u16) {
         debug_assert!(2 <= N);
 
         let mut buf = [0u8; 2];
@@ -70,7 +74,11 @@ impl<const N: usize> Bits8<N> {
         self.merge_value(start_slot, buf.as_slice());
     }
 
-    pub fn merge_u32(&mut self, start_slot: usize, value: u32) {
+    pub fn merge_u16(&mut self, value: u16) {
+        self.merge_u16_as_position(0, value)
+    }
+
+    pub fn merge_u32_as_position(&mut self, start_slot: usize, value: u32) {
         debug_assert!(4 <= N);
 
         let mut buf = [0u8; 4];
@@ -79,7 +87,11 @@ impl<const N: usize> Bits8<N> {
         self.merge_value(start_slot, buf.as_slice());
     }
 
-    pub fn merge_u64(&mut self, start_slot: usize, value: u64) {
+    pub fn merge_u32(&mut self, value: u32) {
+        self.merge_u32_as_position(0, value)
+    }
+
+    pub fn merge_u64_at_position(&mut self, start_slot: usize, value: u64) {
         debug_assert!(8 <= N);
 
         let mut buf = [0u8; 8];
@@ -88,7 +100,11 @@ impl<const N: usize> Bits8<N> {
         self.merge_value(start_slot, buf.as_slice());
     }
 
-    pub fn merge_u128(&mut self, start_slot: usize, value: u128) {
+    pub fn merge_u64(&mut self, value: u64) {
+        self.merge_u64_at_position(0, value)
+    }
+
+    pub fn merge_u128_at_position(&mut self, start_slot: usize, value: u128) {
         debug_assert!(16 <= N);
 
         let mut buf = [0u8; 8];
@@ -96,43 +112,15 @@ impl<const N: usize> Bits8<N> {
 
         self.merge_value(start_slot, buf.as_slice());
     }
+
+    pub fn merge_u128(&mut self, value: u128) {
+        self.merge_u128_at_position(0, value)
+    }
 }
 
 impl<const N: usize> Default for Bits8<N> {
     fn default() -> Self {
         Self { bits: [0; N] }
-    }
-}
-
-impl<const N: usize> From<u16> for Bits8<N> {
-    fn from(value: u16) -> Self {
-        let mut bits = Self::default();
-        bits.merge_u16(0, value);
-        bits
-    }
-}
-
-impl<const N: usize> From<u32> for Bits8<N> {
-    fn from(value: u32) -> Self {
-        let mut bits = Self::default();
-        bits.merge_u32(0, value);
-        bits
-    }
-}
-
-impl<const N: usize> From<u64> for Bits8<N> {
-    fn from(value: u64) -> Self {
-        let mut bits = Self::default();
-        bits.merge_u64(0, value);
-        bits
-    }
-}
-
-impl<const N: usize> From<u128> for Bits8<N> {
-    fn from(value: u128) -> Self {
-        let mut bits = Self::default();
-        bits.merge_u128(0, value);
-        bits
     }
 }
 
@@ -145,7 +133,7 @@ mod utests {
         let x: u16 = 10 << 8;
 
         let mut ltl = Bits8::<2>::default();
-        ltl.merge_u16(0, x);
+        ltl.merge_u16(x);
 
         println!("{x:04X}: ltl={:?}", ltl.pretty());
 

@@ -88,11 +88,11 @@ pub trait Bits<const N: usize> {
 
             let mut x = self.get_slot(i);
             for j in 0..8 {
-                x >>= j;
-
                 if x.is_last_bit_one() {
                     return i * 8 + j;
                 }
+
+                x >>= 1;
             }
         }
 
