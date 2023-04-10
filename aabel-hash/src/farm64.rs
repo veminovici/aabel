@@ -1,5 +1,5 @@
 use farmhash::hash64;
-use std::hash::{Hasher, BuildHasherDefault};
+use std::hash::{BuildHasherDefault, Hasher};
 
 /// A hasher that uses the Google's [farm](https://github.com/google/farmhash) algorithm.
 #[derive(Default)]
