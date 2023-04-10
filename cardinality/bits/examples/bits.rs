@@ -1,8 +1,9 @@
-use bits::{Bits, BitsU8};
-
 fn main() {
-    let mut bits = BitsU8::with_capacity(15);
-    bits.set(1);
-    bits.set(2);
-    bits.reset(3);
+    //let mut bits = BitsU8::with_capacity(16);
+    //bits.set(7);
+    //bits.set(2);
+    //bits.reset(3);
+
+    //println!("{:?}", bits);
+    //println!("{}", bits.pretty());
 }

@@ -31,9 +31,24 @@ impl Hasher for MyHasher {
     }
 }
 
+
+fn lsb(n: u64) -> usize {
+    let mut n = n;
+    for i in 0..64 {
+        if n & 1 == 1 {
+            return i as usize;
+        }
+
+        n = n >> 1;
+    }
+
+    64
+}
+
+
 #[cfg(test)]
 mod utests {
-    use std::{hash::Hash, mem::size_of};
+    use std::hash::Hash;
 
     use super::*;
 
@@ -66,27 +81,14 @@ mod utests {
         value.hash(&mut hasher);
         hasher.finish()
     }
-
+    
     fn test_city(city: &str) {
         
         let h = hash_str(city);
         let m = 3;
-        let r = h % 3;
-        let q = h / 3;
+        let r = h % m;
+        let q = h / m;
         println!("{city}: {} | {h:b} | {h} | {r} | {q} | {q:b} | {}", lsb(h), lsb(q));
-    }
-
-    fn lsb(n: u64) -> usize {
-        let mut n = n;
-        for i in 0..64 {
-            if n & 1 == 1 {
-                return i as usize;
-            }
-
-            n = n >> 1;
-        }
-
-        64
     }
 
     #[test]
