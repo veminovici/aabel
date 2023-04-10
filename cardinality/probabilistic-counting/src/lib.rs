@@ -33,7 +33,7 @@ impl Hasher for MyHasher {
 
 #[cfg(test)]
 mod utests {
-    use std::hash::Hash;
+    use std::{hash::Hash, mem::size_of};
 
     use super::*;
 
@@ -68,9 +68,12 @@ mod utests {
     }
 
     fn test_city(city: &str) {
-        // let xs = city.as_bytes();
+        
         let h = hash_str(city);
-        println!("{}: {} | {:b} | {}", city, lsb(h), h, h);
+        let m = 3;
+        let r = h % 3;
+        let q = h / 3;
+        println!("{city}: {} | {h:b} | {h} | {r} | {q} | {q:b} | {}", lsb(h), lsb(q));
     }
 
     fn lsb(n: u64) -> usize {
@@ -99,4 +102,13 @@ mod utests {
         test_city("Vienna");
         test_city("Washington");
     }
+
+    // #[test]
+    // fn sizes() {
+    //     println!("u8: {}", size_of::<u8>() * 8);
+    //     println!("u16: {}", size_of::<u16>() * 8);
+    //     println!("u32: {}", size_of::<u32>() * 8);
+    //     println!("u64: {}", size_of::<u64>() * 8);
+    //     println!("u128: {}", size_of::<u128>() * 8);
+    // }
 }
