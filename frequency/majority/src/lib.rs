@@ -1,5 +1,5 @@
 mod frequent;
 mod majority;
 
-pub use frequent::*;
-pub use majority::*;
+pub use crate::frequent::*;
+pub use crate::majority::*;
