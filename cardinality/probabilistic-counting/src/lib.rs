@@ -1,12 +1,12 @@
 use std::hash::Hasher;
 
 pub struct MyHasher {
-    cities: &'static [(&'static [u8], u64)],
+    cities: &'static [(&'static str, u64)],
     bytes: Vec<u8>,
 }
 
 impl MyHasher {
-    pub fn new(cities: &'static [(&'static [u8], u64)]) -> Self {
+    pub fn new(cities: &'static [(&'static str, u64)]) -> Self {
         Self {
             cities,
             bytes: vec![],
@@ -17,8 +17,7 @@ impl MyHasher {
 impl Hasher for MyHasher {
     fn finish(&self) -> u64 {
         for city in self.cities {
-            // println!("bytes: {:?} city={:?}", self.bytes, city.0);
-            if self.bytes.starts_with(city.0) {
+            if self.bytes.starts_with(city.0.as_bytes()) {
                 return city.1;
             }
         }
@@ -31,86 +30,101 @@ impl Hasher for MyHasher {
     }
 }
 
-
-fn lsb(n: u64) -> usize {
-    let mut n = n;
-    for i in 0..64 {
-        if n & 1 == 1 {
-            return i as usize;
-        }
-
-        n = n >> 1;
-    }
-
-    64
-}
-
-
 #[cfg(test)]
 mod utests {
     use std::hash::Hash;
 
+    use bits::{Bits, Bits8};
+
     use super::*;
 
-    const ATHENS: &[u8] = "Athens".as_bytes();
-    const BERLIN: &[u8] = "Berlin".as_bytes();
-    const KIEV: &[u8] = "Kiev".as_bytes();
-    const LISBON: &[u8] = "Lisbon".as_bytes();
-    const LONDON: &[u8] = "London".as_bytes();
-    const MADRID: &[u8] = "Madrid".as_bytes();
-    const PARIS: &[u8] = "Paris".as_bytes();
-    const ROME: &[u8] = "Rome".as_bytes();
-    const VIENNA: &[u8] = "Vienna".as_bytes();
-    const WASHINGTON: &[u8] = "Washington".as_bytes();
-
-    const CITIES: [(&[u8], u64); 10] = [
-        (ATHENS, 4161497820),
-        (BERLIN, 3680793991),
-        (KIEV, 3491299693),
-        (LISBON, 629555247),
-        (LONDON, 3450927422),
-        (MADRID, 2970154142),
-        (PARIS, 2673248856),
-        (ROME, 50122705),
-        (VIENNA, 3271070806),
-        (WASHINGTON, 4039747979),
+    const CITIES: [(&str, u64); 10] = [
+        ("Athens", 4161497820),
+        ("Berlin", 3680793991),
+        ("Kiev", 3491299693),
+        ("Lisbon", 629555247),
+        ("London", 3450927422),
+        ("Madrid", 2970154142),
+        ("Paris", 2673248856),
+        ("Rome", 50122705),
+        ("Vienna", 3271070806),
+        ("Washington", 4039747979),
     ];
 
+    fn lsb(n: u64) -> usize {
+        let mut n = n;
+        for i in 0..64 {
+            if n & 1 == 1 {
+                return i as usize;
+            }
+    
+            n >>= 1;
+        }
+    
+        64
+    }
+    
     fn hash_str(value: &str) -> u64 {
         let mut hasher = MyHasher::new(CITIES.as_slice());
         value.hash(&mut hasher);
         hasher.finish()
     }
-    
-    fn test_city(city: &str) {
-        
-        let h = hash_str(city);
-        let m = 3;
-        let r = h % m;
-        let q = h / m;
-        println!("{city}: {} | {h:b} | {h} | {r} | {q} | {q:b} | {}", lsb(h), lsb(q));
-    }
 
     #[test]
     fn simple_() {
-        test_city("Athens");
-        test_city("Berlin");
-        test_city("Kiev");
-        test_city("Lisbon");
-        test_city("London");
-        test_city("Madrid");
-        test_city("Paris");
-        test_city("Rome");
-        test_city("Vienna");
-        test_city("Washington");
+        let mut bits = Bits8::<8>::default();
+
+        let _: Vec<_> = CITIES.iter().inspect(|city| {
+            let h = hash_str(city.0);
+            let r = lsb(h);
+            bits.set(r);
+
+            println!("{}: {h} | {h:b} | {r}", city.0);
+        }).collect();
+
+        let lzb = bits.lzb();
+        println!("Bits: {} - LZB={lzb}", bits.pretty());
+
+        let n = 2u64.pow(lzb as u32) as f64 / 0.77351;
+        println!("n={n}");
     }
 
-    // #[test]
-    // fn sizes() {
-    //     println!("u8: {}", size_of::<u8>() * 8);
-    //     println!("u16: {}", size_of::<u16>() * 8);
-    //     println!("u32: {}", size_of::<u32>() * 8);
-    //     println!("u64: {}", size_of::<u64>() * 8);
-    //     println!("u128: {}", size_of::<u128>() * 8);
-    // }
+    #[test]
+    fn fm() {
+        let m = 3;
+        let mut bits = vec![
+            Bits8::<8>::default(),
+            Bits8::<8>::default(),
+            Bits8::<8>::default(),
+        ];
+
+        let _: Vec<_> = CITIES
+            .iter()
+            .inspect(|city| {
+                let h = hash_str(city.0);
+                let r = h % m;
+                let q = h / m;
+                let j = lsb(q);
+
+                println!("{}: {h} | {r} | {q} | {j}", city.0);
+
+                let bs = &mut bits[r as usize];
+                bs.set(j);
+            })
+            .collect();
+
+        let rs: Vec<usize> = bits
+            .iter()
+            .enumerate()
+            .map(|(i, bs)| {
+                let lzb = bs.lzb();
+                println!("BITS{i}: {} | {lzb}", bs.pretty());
+                lzb
+            })
+            .collect();
+
+        let r: usize = rs.iter().sum();
+        let n = 3f64 * 2f64.powf(r as f64 / 3f64) / 0.77351;
+        println!("n={n}");
+    }
 }

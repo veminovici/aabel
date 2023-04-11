@@ -14,6 +14,7 @@ pub trait Zero {
 
 pub trait LastBit {
     fn is_last_bit_one(&self) -> bool;
+    fn is_last_bit_zero(&self) -> bool;
 }
 
 pub trait Bits<const N: usize> {
@@ -36,6 +37,14 @@ pub trait Bits<const N: usize> {
 
     fn get_slot_mut(&mut self, slot: usize) -> &mut Self::Inner;
 
+    fn get_position(index: usize) -> (usize, u8) {
+        let sz = size_of::<Self::Inner>() * 8;
+
+        let slot = index / sz;
+        let offset = (index % sz) as u8;
+        (slot, offset)
+    }
+
     fn pretty(&self) -> String {
         (0..N).fold("".to_owned(), |acc, i| {
             if i == 0 {
@@ -55,19 +64,22 @@ pub trait Bits<const N: usize> {
         N
     }
 
-    fn get(&self, slot: usize, offset: u8) -> bool {
+    fn get(&self, index: usize) -> bool {
+        let (slot, offset) = Self::get_position(index);
         let mask = Self::SET_MASKS[offset as usize];
         let v = self.get_slot(slot) & mask;
         v.to_bool()
     }
 
-    fn set(&mut self, slot: usize, offset: u8) {
+    fn set(&mut self, index: usize) {
+        let (slot, offset) = Self::get_position(index);
         let mask = &Self::SET_MASKS[offset as usize];
         let slot = self.get_slot_mut(slot);
         *slot |= *mask;
     }
 
-    fn reset(&mut self, slot: usize, offset: u8) {
+    fn reset(&mut self, index: usize) {
+        let (slot, offset) = Self::get_position(index);
         let mask = &Self::RESET_MASKS[offset as usize];
         let slot = self.get_slot_mut(slot);
         *slot &= *mask;
@@ -80,6 +92,7 @@ pub trait Bits<const N: usize> {
         }
     }
 
+    /// Left-most set bit
     fn lsb(&self) -> usize {
         for i in 0..N {
             if self.get_slot(i).is_zero() {
@@ -96,6 +109,25 @@ pub trait Bits<const N: usize> {
             }
         }
 
-        N * 8
+        N * size_of::<Self::Inner>() * 8
+    }
+
+    fn lzb(&self) -> usize {
+        for i in 0..N {
+            if self.get_slot(i).is_zero() {
+                continue;
+            }
+
+            let mut x = self.get_slot(i);
+            for j in 0..8 {
+                if x.is_last_bit_zero() {
+                    return i * 8 + j;
+                }
+
+                x >>= 1;
+            }
+        }
+
+        N * size_of::<Self::Inner>() * 8
     }
 }

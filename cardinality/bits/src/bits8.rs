@@ -18,6 +18,10 @@ impl LastBit for u8 {
     fn is_last_bit_one(&self) -> bool {
         *self & 1 == 1
     }
+
+    fn is_last_bit_zero(&self) -> bool {
+        *self & 1 == 0
+    }
 }
 
 pub struct Bits8<const N: usize> {
@@ -132,29 +136,29 @@ mod utests {
     fn simple_() {
         let x: u16 = 10 << 8;
 
-        let mut ltl = Bits8::<2>::default();
-        ltl.merge_u16(x);
+        let mut bits = Bits8::<2>::default();
+        bits.merge_u16(x);
 
-        println!("{x:04X}: ltl={:?}", ltl.pretty());
+        println!("{x:04X}: bits={:?}", bits.pretty());
 
-        assert!(!ltl.get(0, 0));
-        assert!(!ltl.get(0, 1));
-        assert!(!ltl.get(0, 2));
-        assert!(!ltl.get(0, 3));
+        assert!(!bits.get(0));
+        assert!(!bits.get(1));
+        assert!(!bits.get(2));
+        assert!(!bits.get(3));
 
-        assert!(!ltl.get(1, 0));
-        assert!(ltl.get(1, 1));
-        assert!(!ltl.get(1, 2));
-        assert!(ltl.get(1, 3));
+        assert!(!bits.get(8));
+        assert!(bits.get(9));
+        assert!(!bits.get(10));
+        assert!(bits.get(11));
 
-        ltl.reset(1, 1);
-        println!("After reset: ltl={:?}", ltl.pretty());
+        bits.reset(9);
+        println!("After reset: bits={:?}", bits.pretty());
 
-        ltl.set(1, 1);
-        println!("After set: ltl={:?}", ltl.pretty());
+        bits.set(9);
+        println!("After set: bits={:?}", bits.pretty());
 
-        assert_eq!(16, ltl.bits());
-        assert_eq!(2, ltl.slots());
-        assert_eq!(9, ltl.lsb());
+        assert_eq!(16, bits.bits());
+        assert_eq!(2, bits.slots());
+        assert_eq!(9, bits.lsb());
     }
 }
