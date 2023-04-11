@@ -4,26 +4,25 @@ use std::{
     marker::PhantomData,
 };
 
-pub struct FlajoletMartin<T: Hash, H: Hasher + Default, const M: usize, const N: usize> {
+pub struct FlajoletMartin<H, const M: usize, const N: usize> {
     bits: [Bits8<N>; M],
     _ph: PhantomData<H>,
-    _pt: PhantomData<T>,
 }
 
-impl<T: Hash, H: Hasher + Default, const M: usize, const N: usize> Default
-    for FlajoletMartin<T, H, M, N>
-{
+impl<H, const M: usize, const N: usize> Default for FlajoletMartin<H, M, N> {
     fn default() -> Self {
         Self {
             bits: [Bits8::<N>::default(); M],
             _ph: Default::default(),
-            _pt: Default::default(),
         }
     }
 }
 
-impl<T: Hash, H: Hasher + Default, const M: usize, const N: usize> FlajoletMartin<T, H, M, N> {
-    pub fn add_item(&mut self, item: T) {
+impl<H, const M: usize, const N: usize> FlajoletMartin<H, M, N>
+where
+    H: Default + Hasher,
+{
+    pub fn add_item<T: Hash>(&mut self, item: T) {
         let h = Self::get_hash(item);
         let m = M as u64;
         let r = h % m;
@@ -39,7 +38,7 @@ impl<T: Hash, H: Hasher + Default, const M: usize, const N: usize> FlajoletMarti
         3f64 * 2f64.powf(r as f64 / 3f64) / 0.77351
     }
 
-    fn get_hash(item: T) -> u64 {
+    fn get_hash<T: Hash>(item: T) -> u64 {
         let mut hasher = H::default();
         item.hash(&mut hasher);
         hasher.finish()
@@ -114,7 +113,7 @@ mod utests {
 
     #[test]
     fn fm_() {
-        let mut fm = FlajoletMartin::<&str, MyHasher, 3, 8>::default();
+        let mut fm = FlajoletMartin::<MyHasher, 3, 8>::default();
 
         let _: Vec<_> = CITIES
             .iter()
