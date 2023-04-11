@@ -1,8 +1,9 @@
-use bits::{Bits, Bits8};
 use std::{
     hash::{Hash, Hasher},
     marker::PhantomData,
 };
+
+use aabel_bits::{Bits, Bits8};
 
 pub struct FlajoletMartin<H, const M: usize, const N: usize> {
     bits: [Bits8<N>; M],
@@ -62,7 +63,7 @@ where
 mod utests {
     use std::hash::Hash;
 
-    use bits::{Bits, Bits8};
+    use aabel_bits::{Bits, Bits8};
 
     use crate::myhasher::{MyHasher, CITIES};
 

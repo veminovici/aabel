@@ -10,6 +10,34 @@ A project for probabilistic data structures and large data sets.
 
 ---
 
+## Bits
+The [aabe-bits](./aabel-bits/) crate implements a bit-vector. You are able to set and get a specific bit from the store.
+It is used in the counting algorithms.
+
+```rust
+// Create a stored based on u8 slots, the store has 2 slots.
+let mut bits = Bits8::<2>::default();
+bits.merge_u16(10 << 8);
+
+assert!(!bits.get(0));
+assert!(!bits.get(8));
+assert!(bits.get(9));
+assert!(!bits.get(10));
+assert!(bits.get(11));
+
+bits.reset(9);
+println!("After reset: bits={:?}", bits.pretty());
+
+bits.set(9);
+println!("After set: bits={:?}", bits.pretty());
+
+assert_eq!(16, bits.bits());
+assert_eq!(2, bits.slots());
+assert_eq!(9, bits.lsb());
+```
+
+---
+
 ## Hash Functions
 The [aabel-hash](./aabel-hash/) crate defines several traits.
 
