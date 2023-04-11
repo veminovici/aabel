@@ -8,6 +8,11 @@
 
 A project for probabilistic data structures and large data sets.
 
+- [Hash functions](https://github.com/veminovici/aabel#hash-functions)
+- [Membership Algorithms](https://github.com/veminovici/aabel#membership-data-structures-and-algorithms)
+- [Cardinality Algorithms](https://github.com/veminovici/aabel#cardinality-data-structures-and-algorithms)
+- [Frequency Algorithms](https://github.com/veminovici/aabel#frequency-algorithms)
+
 ---
 
 ## Hash Functions
