@@ -54,9 +54,9 @@ The [aabel-cardinality](./aabel-cardinality/) crate implements several probabili
 ## Frequency Algorithms
 The [aabel-frequency](./aabel-frequency/) crate implements several probabilistic algorithms which determine the majority, heavy-hitters:
 
-- [Boyer-Moore majority voting](https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_majority_vote_algorithm)
-- [Misra-Gries heavy hitters](https://en.wikipedia.org/wiki/Misra%E2%80%93Gries_heavy_hitters_algorithm)
-- [Count-Min Sketch](https://en.wikipedia.org/wiki/Count%E2%80%93min_sketch)
+- [Boyer-Moore majority voting](https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_majority_vote_algorithm) (source [majority.rs](./aabel-frequency/src/majority.rs))
+- [Misra-Gries heavy hitters](https://en.wikipedia.org/wiki/Misra%E2%80%93Gries_heavy_hitters_algorithm) (source [frequent.rs](./aabel-frequency/src/frequent.rs))
+- [Count-Min Sketch](https://en.wikipedia.org/wiki/Count%E2%80%93min_sketch) (source [cms.rs](./aabel-frequency/src/cms.rs))
 
 ---
 
