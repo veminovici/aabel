@@ -24,6 +24,7 @@ impl LastBit for u8 {
     }
 }
 
+#[derive(Clone, Copy)]
 pub struct Bits8<const N: usize> {
     bits: [u8; N],
 }
