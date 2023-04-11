@@ -46,6 +46,14 @@ The [aabel-cardinality](./aabel-cardinality/) crate implements several probabili
 
 ---
 
+## Frequency Algorithms
+The crate implements several probabilistic algorithms which determine the majority, heavy-hitters:
+
+- [Boyer-Moore majority voting](https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_majority_vote_algorithm)
+- [Misra-Gries heavy hitters](https://en.wikipedia.org/wiki/Misra%E2%80%93Gries_heavy_hitters_algorithm)
+
+---
+
 ## Bits
 The [aabe-bits](./aabel-bits/) crate implements a bit-vector. You are able to set and get a specific bit from the store.
 It is used in the counting algorithms.
