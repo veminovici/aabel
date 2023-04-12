@@ -1,4 +1,4 @@
-pub fn jaccard_similarity<F>(
+pub fn jaccard_similarity_sorted<F>(
     xs: &mut impl Iterator<Item = F>,
     ys: &mut impl Iterator<Item = F>,
 ) -> (u64, u64)
@@ -7,7 +7,6 @@ where
 {
     let mut ttl = 0u64;
     let mut cmn = 0u64;
-    // we expect that the collections are sorted.
 
     fn get_other<F>(head: Option<F>, other: &mut impl Iterator<Item = F>) -> Option<F> {
         match head {
@@ -57,6 +56,42 @@ where
     (cmn, ttl)
 }
 
+pub fn jaccard_similarity_bits<'a> (
+    xs: &mut impl Iterator<Item = &'a bool>,
+    ys: &mut impl Iterator<Item = &'a bool>,
+) -> (u64, u64) {
+    let mut ttl = 0u64;
+    let mut cmn = 0u64;
+
+    fn inspect<'a>(xs: &mut impl Iterator<Item = &'a bool>, ys: &mut impl Iterator<Item = &'a bool>, ttl: &mut u64, cmn: &mut u64) {
+        let x = xs.next();
+        let y = ys.next();
+
+        match (x, y) {
+            (None, None) => (),
+            (Some(x), Some(y)) if x | y => {
+                *ttl += 1;
+                if x & y {
+                    *cmn += 1;
+                }
+
+                inspect(xs, ys, ttl, cmn);
+            }
+            (Some(x), Some(y)) => {
+                *ttl += 1;
+                debug_assert!(x | y == false);
+                inspect(xs, ys, ttl, cmn);
+            },
+            _ => panic!("We should not be here")
+        }
+    }
+
+    inspect(xs, ys, &mut ttl, &mut cmn);
+
+    (cmn, ttl)
+}
+
+
 pub fn get_f64(ct: (u64, u64)) -> f64 {
     if ct.1 == 0 {
         0f64
@@ -70,14 +105,29 @@ mod utests {
     use super::*;
 
     #[test]
-    fn jaccard_similarity_() {
-        let mut xs = vec![1, 2, 3, 4, 5, 6];
-        let mut ys = vec![3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-        let j1 = jaccard_similarity(&mut xs.iter_mut(), &mut ys.iter_mut());
-        println!("j1={:04}", get_f64(j1));
+    fn jaccard_similarity_sorted_() {
+        let xs = vec![1, 2, 3, 4, 5, 6];
+        let ys = vec![3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
-        let j2 = jaccard_similarity(&mut ys.iter_mut(), &mut xs.iter_mut());
-        println!("j2={:04}", get_f64(j2));
+        let j1 = jaccard_similarity_sorted(&mut xs.iter(), &mut ys.iter());
+        println!("SORTED j1: {:?} => {}", j1, get_f64(j1));
+
+        let j2 = jaccard_similarity_sorted(&mut ys.iter(), &mut xs.iter());
+        println!("SORTED j2: {:?} => {}", j2, get_f64(j2));
+
+        assert_eq!(j1, j2);
+    }
+
+    #[test]
+    fn jaccard_similarity_bits_() {
+        let xs = vec![true, false, true, false, true, false, true, true, false, false, true, false, true, false];
+        let ys = vec![true, false, true, false, false, false, false, true, false, false, true, false, false, false];
+
+        let j1 = jaccard_similarity_bits(&mut xs.iter(), &mut ys.iter());
+        println!("BITS j1: {:?} => {}", j1, get_f64(j1));
+
+        let j2 = jaccard_similarity_bits(&mut ys.iter(), &mut xs.iter());
+        println!("BITS j2: {:?} => {}", j2, get_f64(j2));
 
         assert_eq!(j1, j2);
     }
