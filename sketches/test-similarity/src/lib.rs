@@ -63,30 +63,15 @@ pub fn jaccard_similarity_bits<'a> (
     let mut ttl = 0u64;
     let mut cmn = 0u64;
 
-    fn inspect<'a>(xs: &mut impl Iterator<Item = &'a bool>, ys: &mut impl Iterator<Item = &'a bool>, ttl: &mut u64, cmn: &mut u64) {
-        let x = xs.next();
-        let y = ys.next();
+    xs.zip(ys).for_each(|(x, y)| {
+        if x | y {
+            ttl += 1;
 
-        match (x, y) {
-            (None, None) => (),
-            (Some(x), Some(y)) if x | y => {
-                *ttl += 1;
-                if x & y {
-                    *cmn += 1;
-                }
-
-                inspect(xs, ys, ttl, cmn);
+            if x & y {
+                cmn += 1;
             }
-            (Some(x), Some(y)) => {
-                *ttl += 1;
-                debug_assert!(x | y == false);
-                inspect(xs, ys, ttl, cmn);
-            },
-            _ => panic!("We should not be here")
         }
-    }
-
-    inspect(xs, ys, &mut ttl, &mut cmn);
+    });
 
     (cmn, ttl)
 }
