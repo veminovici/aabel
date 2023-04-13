@@ -1,17 +1,36 @@
 use std::num::NonZeroUsize;
 
+/// A k-shingle generator
+/// The k should be picked large enough that the probability of any
+/// given shingle appearing in any given document is low.
+///
+/// ## Values for k
+/// Consider the alphabet to have 20 characters,
+///  therefore there will be 20^k possible shingles.
+/// Common values for k are 5 and 9.
 pub struct Shingles<'a, T, P> {
     k: NonZeroUsize,
     slice: &'a [T],
     predicate: P,
 }
 
-pub fn shingles<T, P>(slice: &[T], k: usize, predicate: P) -> Shingles<'_, T, P> {
+#[inline]
+pub fn shingles<T, P>(slice: &[T], predicate: P, k: usize) -> Shingles<'_, T, P> {
     Shingles {
         k: NonZeroUsize::new(k).expect("The k must be a positive number"),
         slice,
         predicate,
     }
+}
+
+#[inline]
+pub fn shingles5<T, P>(slice: &[T], predicate: P) -> Shingles<'_, T, P> {
+    shingles(slice, predicate, 5)
+}
+
+#[inline]
+pub fn shingles9<T, P>(slice: &[T], predicate: P) -> Shingles<'_, T, P> {
+    shingles(slice, predicate, 9)
 }
 
 impl<'a, T, P> Iterator for Shingles<'a, T, P>
@@ -49,7 +68,7 @@ mod utests {
         const K: usize = 2;
         let is_start = |_: &i32| true;
 
-        let mut ss = shingles(xs.as_slice(), K, is_start);
+        let mut ss = shingles(xs.as_slice(), is_start, K);
 
         assert_eq!(Some([1, 2].as_slice()), ss.next());
         assert_eq!(Some([2, 3].as_slice()), ss.next());
@@ -67,7 +86,7 @@ mod utests {
         let stop_words = ["A", "for", "the", "to", "that"].as_slice();
         let is_stop_word = |w: &&str| stop_words.contains(w);
 
-        let mut ss = shingles(text.as_slice(), K, is_stop_word);
+        let mut ss = shingles(text.as_slice(), is_stop_word, K);
 
         assert_eq!(Some(["A", "spokeperson", "for"].as_slice()), ss.next());
         assert_eq!(Some(["for", "the", "Sudzo"].as_slice()), ss.next());
