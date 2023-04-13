@@ -24,13 +24,28 @@ pub fn shingles<T, P>(slice: &[T], predicate: P, k: usize) -> Shingles<'_, T, P>
 }
 
 #[inline]
+pub fn shingles_all<T>(slice: &[T], k: usize) -> Shingles<'_, T, impl Fn(&T) -> bool> {
+    shingles(slice, |_: &T| true, k)
+}
+
+#[inline]
 pub fn shingles5<T, P>(slice: &[T], predicate: P) -> Shingles<'_, T, P> {
     shingles(slice, predicate, 5)
 }
 
 #[inline]
+pub fn shingles5_all<T>(slice: &[T]) -> Shingles<'_, T, impl Fn(&T) -> bool> {
+    shingles5(slice, |_: &T| true)
+}
+
+#[inline]
 pub fn shingles9<T, P>(slice: &[T], predicate: P) -> Shingles<'_, T, P> {
     shingles(slice, predicate, 9)
+}
+
+#[inline]
+pub fn shingles9_all<T>(slice: &[T]) -> Shingles<'_, T, impl Fn(&T) -> bool> {
+    shingles9(slice, |_: &T| true)
 }
 
 impl<'a, T, P> Iterator for Shingles<'a, T, P>
@@ -63,12 +78,24 @@ mod utests {
     use super::*;
 
     #[test]
-    fn every_elelemt() {
+    fn every_element() {
         let xs = [1, 2, 3];
         const K: usize = 2;
         let is_start = |_: &i32| true;
 
         let mut ss = shingles(xs.as_slice(), is_start, K);
+
+        assert_eq!(Some([1, 2].as_slice()), ss.next());
+        assert_eq!(Some([2, 3].as_slice()), ss.next());
+        assert!(ss.next().is_none());
+    }
+
+    #[test]
+    fn all() {
+        let xs = [1, 2, 3];
+        const K: usize = 2;
+
+        let mut ss = shingles_all(xs.as_slice(), K);
 
         assert_eq!(Some([1, 2].as_slice()), ss.next());
         assert_eq!(Some([2, 3].as_slice()), ss.next());
