@@ -29,6 +29,19 @@ pub fn shingles_all<T>(slice: &[T], k: usize) -> Shingles<'_, T, impl Fn(&T) -> 
 }
 
 #[inline]
+pub fn shingles_with_stop_words<'a, T>(
+    slice: &'a [T],
+    k: usize,
+    stop_words: &'a [T],
+) -> Shingles<'a, T, impl Fn(&'a T) -> bool>
+where
+    T: PartialEq,
+{
+    let is_stop_word = |w: &T| stop_words.contains(w);
+    shingles(slice, is_stop_word, k)
+}
+
+#[inline]
 pub fn shingles5<T, P>(slice: &[T], predicate: P) -> Shingles<'_, T, P> {
     shingles(slice, predicate, 5)
 }
@@ -50,7 +63,7 @@ pub fn shingles9_all<T>(slice: &[T]) -> Shingles<'_, T, impl Fn(&T) -> bool> {
 
 impl<'a, T, P> Iterator for Shingles<'a, T, P>
 where
-    P: Fn(&T) -> bool,
+    P: Fn(&'a T) -> bool,
 {
     type Item = &'a [T];
 
@@ -114,6 +127,23 @@ mod utests {
         let is_stop_word = |w: &&str| stop_words.contains(w);
 
         let mut ss = shingles(text.as_slice(), is_stop_word, K);
+
+        assert_eq!(Some(["A", "spokeperson", "for"].as_slice()), ss.next());
+        assert_eq!(Some(["for", "the", "Sudzo"].as_slice()), ss.next());
+        assert_eq!(Some(["the", "Sudzo", "Corporation"].as_slice()), ss.next());
+    }
+
+    #[test]
+    fn with_stop_words() {
+        const K: usize = 3;
+        let text: Vec<_> = "A spokeperson for the Sudzo Corporation \
+        revealed today that studies have shown it is good for people \
+        to buy Sudzo products"
+            .split_whitespace()
+            .collect();
+        let stop_words = ["A", "for", "the", "to", "that"].as_slice();
+
+        let mut ss = shingles_with_stop_words(text.as_slice(), K, stop_words);
 
         assert_eq!(Some(["A", "spokeperson", "for"].as_slice()), ss.next());
         assert_eq!(Some(["for", "the", "Sudzo"].as_slice()), ss.next());
