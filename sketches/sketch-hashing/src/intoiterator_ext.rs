@@ -46,9 +46,6 @@ mod utests {
             16, 13, 12, 4, 17, 10, 1, 2, 9, 14, 8, 5, 15, 3, 6, 18, 11, 7, 0,
         ];
 
-        // let permuted = ys.map(|i| xs[i]);
-        // println!("permuted: {permuted:?}");
-
         let res = ys.first_by(&mut |x| {
             println!("x={x}");
             xs[x] == 1
