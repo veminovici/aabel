@@ -14,9 +14,9 @@ impl<H: Hasher> HasherExt for H {
 
 #[cfg(test)]
 mod utests {
-    use std::{hash::Hash, cmp::min};
+    use std::{cmp::min, hash::Hash};
 
-    use crate::{random, UniversalHasher, IntoIteratorExt};
+    use crate::{random, UniversalHasher};
 
     use super::*;
 
@@ -80,13 +80,21 @@ mod utests {
     }
 
     fn prett_mhs_row(cols: &[usize; 5]) -> String {
-        format!("{} {} {} {} {}", pretty_usize(cols[0]), pretty_usize(cols[1]), pretty_usize(cols[2]),pretty_usize(cols[3]),pretty_usize(cols[4]))
+        format!(
+            "{} {} {} {} {}",
+            pretty_usize(cols[0]),
+            pretty_usize(cols[1]),
+            pretty_usize(cols[2]),
+            pretty_usize(cols[3]),
+            pretty_usize(cols[4])
+        )
     }
 
     fn pretty_mhs(mhsig: &[[usize; 5]; 4]) {
-        mhsig.iter().enumerate().for_each(|(i, row)| {
-            println!("H{i}: {}", prett_mhs_row(row))
-        })
+        mhsig
+            .iter()
+            .enumerate()
+            .for_each(|(i, row)| println!("H{i}: {}", prett_mhs_row(row)))
     }
 
     fn sim(mhsig: &[[usize; 5]; 4], d1: usize, d2: usize) -> (usize, usize) {
@@ -96,7 +104,7 @@ mod utests {
         mhsig.iter().for_each(|row| {
             ttl += 1;
 
-            if row[d1] == row[2] {
+            if row[d1] == row[d2] {
                 cmn += 1;
             }
         });
@@ -112,30 +120,29 @@ mod utests {
             [0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0],
             [1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
             [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-            [0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1]
+            [0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1],
         ];
 
         // Have 4 hash functions, generate 4 permutations for our (0..19) indexes.
-        let indexes: [Vec<usize>; 4] = [
-            (22, 5, 31),
-            (30, 2, 31),
-            (21, 23, 31),
-            (15, 6, 31),
-        ].map(|(k, q, p)| {
-            (0..19)
-            .map(|i| MyHasher::get_hash(k, q, p, i) % 19)
-            .map(|x| x as usize)
-            .collect()
-        });
+        let indexes: [Vec<usize>; 4] =
+            [(22, 5, 31), (30, 2, 31), (21, 23, 31), (15, 6, 31)].map(|(k, q, p)| {
+                (0..19)
+                    .map(|i| MyHasher::get_hash(k, q, p, i) % 19)
+                    .map(|x| x as usize)
+                    .collect()
+            });
 
-        indexes.iter().enumerate().for_each(|(i, idx)| println!("INDEXES {i}: {idx:?}"));
+        indexes
+            .iter()
+            .enumerate()
+            .for_each(|(i, idx)| println!("INDEXES {i}: {idx:?}"));
 
         // We have a matrix with 4 rows (one row for each hash function) and 5 columns (one column for each document)
         let mut mhs = [
             [usize::MAX; 5],
             [usize::MAX; 5],
             [usize::MAX; 5],
-            [usize::MAX; 5]
+            [usize::MAX; 5],
         ];
 
         pretty_mhs(&mhs);
@@ -158,12 +165,27 @@ mod utests {
         });
 
         let sim12 = sim(&mhs, 1, 2);
-        println!("SIM 1-2: {:?}={:02}", sim12, sim12.0 as f64 / sim12.1 as f64);
+        println!(
+            "SIM 1-2: {:?}={:02}",
+            sim12,
+            sim12.0 as f64 / sim12.1 as f64
+        );
+        assert_eq!(sim12, (1, 4));
 
         let sim34 = sim(&mhs, 3, 4);
-        println!("SIM 3-4: {:?}={:02}", sim34, sim34.0 as f64 / sim34.1 as f64);
+        println!(
+            "SIM 3-4: {:?}={:02}",
+            sim34,
+            sim34.0 as f64 / sim34.1 as f64
+        );
+        assert_eq!(sim34, (3, 4));
 
         let sim02 = sim(&mhs, 0, 2);
-        println!("SIM 0-2: {:?}={:02}", sim02, sim02.0 as f64 / sim02.1 as f64);
+        println!(
+            "SIM 0-2: {:?}={:02}",
+            sim02,
+            sim02.0 as f64 / sim02.1 as f64
+        );
+        assert_eq!(sim02, (0, 4));
     }
 }
