@@ -14,7 +14,11 @@ pub use marsenne_consts::*;
 pub use random::*;
 pub use univ_hasher::*;
 
-fn first_index_by<T, Source, H, F>(source: Source, hasher: &mut H, f: &mut F) -> Option<usize>
+fn first_index_by<T, Source, H, F>(
+    source: Source,
+    hasher: &mut H,
+    f: &mut F,
+) -> Option<(usize, usize)>
 where
     Source: Deref<Target = [T]>,
     F: FnMut(&T) -> bool,
