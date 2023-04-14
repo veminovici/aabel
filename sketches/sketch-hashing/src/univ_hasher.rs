@@ -38,6 +38,46 @@ impl<H> UniversalHasher<H> {
 
         Self { hasher, k, q, p }
     }
+
+    #[inline]
+    pub fn with_hasher_m2(hasher: H, k: u64, q: u64) -> Self {
+        UniversalHasher::new(hasher, k, q, MARSENNE2)
+    }
+
+    #[inline]
+    pub fn with_hasher_m3(hasher: H, k: u64, q: u64) -> Self {
+        UniversalHasher::new(hasher, k, q, MARSENNE3)
+    }
+
+    #[inline]
+    pub fn with_hasher_m5(hasher: H, k: u64, q: u64) -> Self {
+        UniversalHasher::new(hasher, k, q, MARSENNE5)
+    }
+
+    #[inline]
+    pub fn with_hasher_m7(hasher: H, k: u64, q: u64) -> Self {
+        UniversalHasher::new(hasher, k, q, MARSENNE7)
+    }
+
+    #[inline]
+    pub fn with_hasher_m13(hasher: H, k: u64, q: u64) -> Self {
+        UniversalHasher::new(hasher, k, q, MARSENNE13)
+    }
+
+    #[inline]
+    pub fn with_hasher_m17(hasher: H, k: u64, q: u64) -> Self {
+        UniversalHasher::new(hasher, k, q, MARSENNE17)
+    }
+
+    #[inline]
+    pub fn with_hasher_m19(hasher: H, k: u64, q: u64) -> Self {
+        UniversalHasher::new(hasher, k, q, MARSENNE19)
+    }
+
+    #[inline]
+    pub fn with_hasher_m31(hasher: H, k: u64, q: u64) -> Self {
+        UniversalHasher::new(hasher, k, q, MARSENNE31)
+    }
 }
 
 impl<H: Hasher> Hasher for UniversalHasher<H> {
@@ -55,46 +95,6 @@ impl<H: Hasher> Hasher for UniversalHasher<H> {
     }
 }
 
-#[inline]
-fn universal_hasher_m2<H>(hasher: H, k: u64, q: u64) -> UniversalHasher<H> {
-    UniversalHasher::new(hasher, k, q, MARSENNE2)
-}
-
-#[inline]
-fn universal_hasher_m3<H>(hasher: H, k: u64, q: u64) -> UniversalHasher<H> {
-    UniversalHasher::new(hasher, k, q, MARSENNE3)
-}
-
-#[inline]
-fn universal_hasher_m5<H>(hasher: H, k: u64, q: u64) -> UniversalHasher<H> {
-    UniversalHasher::new(hasher, k, q, MARSENNE5)
-}
-
-#[inline]
-fn universal_hasher_m7<H>(hasher: H, k: u64, q: u64) -> UniversalHasher<H> {
-    UniversalHasher::new(hasher, k, q, MARSENNE7)
-}
-
-#[inline]
-fn universal_hasher_m13<H>(hasher: H, k: u64, q: u64) -> UniversalHasher<H> {
-    UniversalHasher::new(hasher, k, q, MARSENNE13)
-}
-
-#[inline]
-fn universal_hasher_m17<H>(hasher: H, k: u64, q: u64) -> UniversalHasher<H> {
-    UniversalHasher::new(hasher, k, q, MARSENNE17)
-}
-
-#[inline]
-fn universal_hasher_m19<H>(hasher: H, k: u64, q: u64) -> UniversalHasher<H> {
-    UniversalHasher::new(hasher, k, q, MARSENNE19)
-}
-
-#[inline]
-fn universal_hasher_m31<H>(hasher: H, k: u64, q: u64) -> UniversalHasher<H> {
-    UniversalHasher::new(hasher, k, q, MARSENNE31)
-}
-
 pub trait UniversalHashExt: Hash {
     fn universal_hash<H: Hasher>(&self, hasher: H, k: u64, q: u64, p: u64) -> u64 {
         let mut hasher = UniversalHasher::new(hasher, k, q, p);
@@ -105,49 +105,49 @@ pub trait UniversalHashExt: Hash {
 
     #[inline]
     fn universal_hash_m2<H: Hasher>(&self, hasher: H, k: u64, q: u64) -> u64 {
-        let mut hasher = universal_hasher_m2(hasher, k, q);
+        let mut hasher = UniversalHasher::with_hasher_m2(hasher, k, q);
         self.hash64(&mut hasher)
     }
 
     #[inline]
     fn universal_hash_m3<H: Hasher>(&self, hasher: H, k: u64, q: u64) -> u64 {
-        let mut hasher = universal_hasher_m3(hasher, k, q);
+        let mut hasher = UniversalHasher::with_hasher_m3(hasher, k, q);
         self.hash64(&mut hasher)
     }
 
     #[inline]
     fn universal_hash_m5<H: Hasher>(&self, hasher: H, k: u64, q: u64) -> u64 {
-        let mut hasher = universal_hasher_m5(hasher, k, q);
+        let mut hasher = UniversalHasher::with_hasher_m5(hasher, k, q);
         self.hash64(&mut hasher)
     }
 
     #[inline]
     fn universal_hash_m7<H: Hasher>(&self, hasher: H, k: u64, q: u64) -> u64 {
-        let mut hasher = universal_hasher_m7(hasher, k, q);
+        let mut hasher = UniversalHasher::with_hasher_m7(hasher, k, q);
         self.hash64(&mut hasher)
     }
 
     #[inline]
     fn universal_hash_m13<H: Hasher>(&self, hasher: H, k: u64, q: u64) -> u64 {
-        let mut hasher = universal_hasher_m13(hasher, k, q);
+        let mut hasher = UniversalHasher::with_hasher_m13(hasher, k, q);
         self.hash64(&mut hasher)
     }
 
     #[inline]
     fn universal_hash_m17<H: Hasher>(&self, hasher: H, k: u64, q: u64) -> u64 {
-        let mut hasher = universal_hasher_m17(hasher, k, q);
+        let mut hasher = UniversalHasher::with_hasher_m17(hasher, k, q);
         self.hash64(&mut hasher)
     }
 
     #[inline]
     fn universal_hash_m19<H: Hasher>(&self, hasher: H, k: u64, q: u64) -> u64 {
-        let mut hasher = universal_hasher_m19(hasher, k, q);
+        let mut hasher = UniversalHasher::with_hasher_m19(hasher, k, q);
         self.hash64(&mut hasher)
     }
 
     #[inline]
     fn universal_hash_m31<H: Hasher>(&self, hasher: H, k: u64, q: u64) -> u64 {
-        let mut hasher = universal_hasher_m31(hasher, k, q);
+        let mut hasher = UniversalHasher::with_hasher_m31(hasher, k, q);
         self.hash64(&mut hasher)
     }
 
@@ -240,13 +240,15 @@ mod utests {
             UniversalHasher::<std::collections::hash_map::DefaultHasher>::create_hashes_m31(10);
         assert_eq!(10, hashers.len());
 
-        let hs1: Vec<_> = hashers.iter_mut().map(|hasher| {
-            "text to be hashed 1".hash64(hasher)
-        }).collect();
+        let hs1: Vec<_> = hashers
+            .iter_mut()
+            .map(|hasher| "text to be hashed 1".hash64(hasher))
+            .collect();
 
-        let hs2: Vec<_> = hashers.iter_mut().map(|hasher| {
-            "text to be hashed 2".hash64(hasher)
-        }).collect();
+        let hs2: Vec<_> = hashers
+            .iter_mut()
+            .map(|hasher| "text to be hashed 2".hash64(hasher))
+            .collect();
 
         assert_ne!(hs1, hs2)
     }
