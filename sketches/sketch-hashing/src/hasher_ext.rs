@@ -112,6 +112,100 @@ mod utests {
         (cmn, ttl)
     }
 
+    fn sim1(mhsig: &Vec<Vec<usize>>, d1: usize, d2: usize) -> (usize, usize) {
+        let mut cmn = 0usize;
+        let mut ttl = 0usize;
+
+        mhsig.iter().for_each(|row| {
+            ttl += 1;
+
+            if row[d1] == row[d2] {
+                cmn += 1;
+            }
+        });
+
+        (cmn, ttl)
+    }
+
+    fn min_hash_sig(
+        documents: &Vec<Vec<i32>>,
+        indexes: &Vec<Vec<usize>>,
+        f: usize,
+    ) -> Vec<Vec<usize>> {
+        let h = indexes.len();
+        let d = documents.len();
+
+        let mut mhs: Vec<Vec<usize>> = (0..h)
+            .map(|_| (0..d).map(|_| usize::MAX).collect::<Vec<_>>())
+            .collect();
+
+        (0..f).for_each(|fidx| {
+            let idx: Vec<_> = indexes.iter().map(|ys: &Vec<usize>| ys[fidx]).collect();
+
+            documents.iter().enumerate().for_each(|(col, doc)| {
+                if doc[fidx] == 0 {
+                    return;
+                }
+
+                idx.iter().enumerate().for_each(|(row, value)| {
+                    mhs[row][col] = min(mhs[row][col], *value);
+                })
+            });
+        });
+
+        mhs
+    }
+
+    #[test]
+    fn mhs() {
+        // We have 5 documents, each of them with or without 19 features
+        let documents = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0].to_vec(),
+            [0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0].to_vec(),
+            [1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0].to_vec(),
+            [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0].to_vec(),
+            [0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1].to_vec(),
+        ]
+        .to_vec();
+
+        // Have 4 hash functions, generate 4 permutations for our (0..19) indexes.
+        let indexes: Vec<Vec<usize>> = [(22, 5, 31), (30, 2, 31), (21, 23, 31), (15, 6, 31)]
+            .map(|(k, q, p)| {
+                (0..19)
+                    .map(|i| MyHasher::get_hash(k, q, p, i) % 19)
+                    .map(|x| x as usize)
+                    .collect()
+            })
+            .to_vec();
+
+        // Minhash-Sig
+        let mhs = min_hash_sig(&documents, &indexes, 19);
+
+        let sim12 = sim1(&mhs, 1, 2);
+        println!(
+            "SIM 1-2: {:?}={:02}",
+            sim12,
+            sim12.0 as f64 / sim12.1 as f64
+        );
+        assert_eq!(sim12, (1, 4));
+
+        let sim34 = sim1(&mhs, 3, 4);
+        println!(
+            "SIM 3-4: {:?}={:02}",
+            sim34,
+            sim34.0 as f64 / sim34.1 as f64
+        );
+        assert_eq!(sim34, (3, 4));
+
+        let sim02 = sim1(&mhs, 0, 2);
+        println!(
+            "SIM 0-2: {:?}={:02}",
+            sim02,
+            sim02.0 as f64 / sim02.1 as f64
+        );
+        assert_eq!(sim02, (0, 4));
+    }
+
     #[test]
     fn myhasher_() {
         // We have 5 documents, each of them with or without 19 features
@@ -131,6 +225,8 @@ mod utests {
                     .map(|x| x as usize)
                     .collect()
             });
+
+        //min_hash_sig(5, 4, 19, &documents, &indexes);
 
         indexes
             .iter()
