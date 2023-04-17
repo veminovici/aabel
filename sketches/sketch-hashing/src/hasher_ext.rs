@@ -14,49 +14,11 @@ impl<H: Hasher> HasherExt for H {
 
 #[cfg(test)]
 mod utests {
-    use std::{cmp::min, hash::Hash};
+    use std::cmp::min;
 
-    use crate::{random, UniversalHasher};
+    use crate::{random, UniversalHasher, MyHasher, min_hash_sig, sim1};
 
     use super::*;
-
-    struct MyHasher {
-        bytes: Vec<u8>,
-        k: u64,
-        q: u64,
-        p: u64,
-    }
-
-    impl MyHasher {
-        fn new(k: u64, q: u64, p: u64) -> Self {
-            Self {
-                bytes: vec![],
-                k,
-                q,
-                p,
-            }
-        }
-
-        pub fn get_hash<T: Hash>(k: u64, q: u64, p: u64, item: T) -> u64 {
-            let mut me = Self::new(k, q, p);
-            item.hash64(&mut me)
-        }
-    }
-
-    impl Hasher for MyHasher {
-        fn finish(&self) -> u64 {
-            let mut h = 0u64;
-            self.bytes.iter().enumerate().for_each(|(i, b)| {
-                h += (*b as u64) << i * 8;
-            });
-
-            (self.k * h + self.q) % self.p
-        }
-
-        fn write(&mut self, bytes: &[u8]) {
-            self.bytes.extend(bytes);
-        }
-    }
 
     #[test]
     fn simple_() {
@@ -110,50 +72,6 @@ mod utests {
         });
 
         (cmn, ttl)
-    }
-
-    fn sim1(mhsig: &Vec<Vec<usize>>, d1: usize, d2: usize) -> (usize, usize) {
-        let mut cmn = 0usize;
-        let mut ttl = 0usize;
-
-        mhsig.iter().for_each(|row| {
-            ttl += 1;
-
-            if row[d1] == row[d2] {
-                cmn += 1;
-            }
-        });
-
-        (cmn, ttl)
-    }
-
-    fn min_hash_sig(
-        documents: &Vec<Vec<i32>>,
-        indexes: &Vec<Vec<usize>>,
-        f: usize,
-    ) -> Vec<Vec<usize>> {
-        let h = indexes.len();
-        let d = documents.len();
-
-        let mut mhs: Vec<Vec<usize>> = (0..h)
-            .map(|_| (0..d).map(|_| usize::MAX).collect::<Vec<_>>())
-            .collect();
-
-        (0..f).for_each(|fidx| {
-            let idx: Vec<_> = indexes.iter().map(|ys: &Vec<usize>| ys[fidx]).collect();
-
-            documents.iter().enumerate().for_each(|(col, doc)| {
-                if doc[fidx] == 0 {
-                    return;
-                }
-
-                idx.iter().enumerate().for_each(|(row, value)| {
-                    mhs[row][col] = min(mhs[row][col], *value);
-                })
-            });
-        });
-
-        mhs
     }
 
     #[test]
